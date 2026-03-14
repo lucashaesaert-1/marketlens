@@ -5,6 +5,72 @@
 
 ---
 
+## Team Collaboration Guide
+
+This repo is shared across 4 contributors. Everyone works on the same files — here's how to do it without breaking each other's work.
+
+### Branch structure
+
+```
+main                ← stable, always working — never commit here directly
+├── fabrizio        ← Fabrizio's branch (already exists)
+├── person2         ← each teammate creates their own
+├── person3
+└── person4
+```
+
+### Daily workflow
+
+**Before you start — always sync first:**
+```powershell
+git checkout your-branch-name
+git pull origin main          # get everyone else's latest changes
+```
+
+**While you work — commit often, in small chunks:**
+```powershell
+git add .
+git commit -m "short description of what you changed"
+git push origin your-branch-name
+```
+
+**When your piece is ready — open a Pull Request on GitHub:**
+1. Go to the repo → click **"Compare & pull request"**
+2. Set base: `main`, compare: `your-branch`
+3. A teammate gives it a quick look, then merges it
+4. Everyone pulls `main` before continuing
+
+### Why this prevents problems
+
+Git merges line by line — as long as two people aren't editing the **exact same lines at the same time**, it resolves changes automatically. Most merges are instant with no conflicts.
+
+The main causes of conflicts and how to avoid them:
+
+| Situation | Risk | Fix |
+|-----------|------|-----|
+| Two people edit different parts of the same file | 🟢 No conflict | Git handles it |
+| Two people edit the same lines simultaneously | 🔴 Conflict | Quick heads-up in group chat before starting |
+| Working for days without pulling | 🔴 Big conflict | Pull every session |
+| Small, frequent commits | 🟢 Easy merges | Default to this habit |
+
+### The one rule that prevents most issues
+
+**Merge to `main` often — not at the end.** The longer branches diverge, the harder the merge. Aim to open a PR at the end of every working session, even if it's a small change.
+
+### When a conflict does happen
+
+VS Code has a built-in merge editor. When `git pull` triggers a conflict, it highlights the clashing lines and lets you click **"Accept Current"** or **"Accept Incoming"** for each one. Takes about 2 minutes.
+
+### Heads-up in group chat before touching a section
+
+Since everyone works on the same files, a quick message like:
+
+> *"Working on the radar chart function now"*
+
+…prevents the only scenario Git can't auto-resolve: two people rewriting the same lines at the same time.
+
+---
+
 ## What This Is
 
 A working prototype that ingests customer reviews, runs aspect-based sentiment analysis via LLM, computes competitive dimension scores, and generates strategic insights — delivered as a static HTML report.

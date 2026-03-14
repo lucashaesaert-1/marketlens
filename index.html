@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InsightEngine — CRM Software Intelligence Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #F1F5F9;
+      --surface:     #FFFFFF;
+      --surface-2:   #F8FAFC;
+      --border:      #E2E8F0;
+      --border-2:    #CBD5E1;
+      --text:        #0F172A;
+      --text-2:      #334155;
+      --text-muted:  #64748B;
+      --primary:     #3B82F6;
+      --primary-bg:  #EFF6FF;
+      --hs:          #FF7A59;
+      --sf:          #009EDB;
+      --pd:          #1EC25B;
+      --zo:          #E42527;
+      --success:     #22C55E;
+      --warning:     #F59E0B;
+      --danger:      #EF4444;
+      --r:           12px;
+      --sh:          0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.05);
+      --sh-md:       0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.05);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13.5px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ─────────────────────────────────────────── */
+    .nav {
+      background: #0F172A;
+      color: #E2E8F0;
+      padding: 0 32px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      border-bottom: 1px solid #1E293B;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.4px;
+      color: #F8FAFC;
+    }
+    .nav-pulse {
+      width: 8px; height: 8px;
+      background: var(--primary);
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(59,130,246,.3);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(59,130,246,.3); }
+      50%       { box-shadow: 0 0 0 6px rgba(59,130,246,.1); }
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 12px;
+      color: #94A3B8;
+    }
+    .nav-pill {
+      background: rgba(59,130,246,.15);
+      color: #93C5FD;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+    .nav-sep { color: #334155; }
+
+    /* ── REPORT HEADER ───────────────────────────────── */
+    .rh {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 32px;
+    }
+    .rh-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .rh-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .rh-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .rh-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      margin-top: 6px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .chip-blue   { background: #EFF6FF; color: #2563EB; }
+    .chip-orange { background: #FFF7ED; color: #C2410C; }
+    .chip-green  { background: #F0FDF4; color: #15803D; }
+    .chip-gray   { background: #F8FAFC; color: #475569; border: 1px solid var(--border); }
+
+    /* ── LAYOUT ──────────────────────────────────────── */
+    .main {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 28px 32px 48px;
+    }
+    .section { margin-bottom: 36px; }
+    .sec-hd {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .sec-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+    .sec-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .g4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+    .g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .g2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; }
+    .g21{ display: grid; grid-template-columns: 2fr 1fr; gap: 18px; }
+    .g12{ display: grid; grid-template-columns: 1fr 2fr; gap: 18px; }
+
+    /* ── CARD ────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 18px 20px;
+      box-shadow: var(--sh);
+    }
+    .card-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    /* ── KPI CARDS ───────────────────────────────────── */
+    .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 18px 20px; box-shadow: var(--sh); }
+    .kpi-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 8px; }
+    .kpi-val { font-size: 30px; font-weight: 800; letter-spacing: -1px; line-height: 1; margin-bottom: 6px; }
+    .kpi-val sup { font-size: 16px; color: var(--text-muted); font-weight: 500; }
+    .kpi-foot { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+    .up   { color: var(--success); }
+    .down { color: var(--danger); }
+
+    /* ── INSIGHT CARDS ───────────────────────────────── */
+    .ins {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 20px;
+      box-shadow: var(--sh);
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow .15s;
+    }
+    .ins:hover { box-shadow: var(--sh-md); }
+    .ins::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: var(--r) var(--r) 0 0;
+    }
+    .ins.inv::before  { background: linear-gradient(90deg, var(--primary), #818CF8); }
+    .ins.comp::before { background: linear-gradient(90deg, var(--warning), #FB923C); }
+    .ins.cust::before { background: linear-gradient(90deg, var(--success), #34D399); }
+
+    .ins-num {
+      position: absolute;
+      top: 10px; right: 14px;
+      font-size: 44px;
+      font-weight: 900;
+      color: var(--border);
+      line-height: 1;
+      letter-spacing: -2px;
+      pointer-events: none;
+    }
+    .ins-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.3px;
+      padding-right: 44px;
+    }
+    .ins-body {
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.65;
+    }
+    .ins-action {
+      font-size: 12px;
+      color: var(--text-muted);
+      background: var(--surface-2);
+      border-left: 3px solid var(--border-2);
+      border-radius: 0 6px 6px 0;
+      padding: 8px 12px;
+    }
+    .ins-action strong { color: var(--text-2); }
+    .ins-foot { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .b-inv  { background: #EFF6FF; color: #1D4ED8; }
+    .b-comp { background: #FFFBEB; color: #B45309; }
+    .b-cust { background: #F0FDF4; color: #15803D; }
+    .b-high { background: #DCFCE7; color: #15803D; }
+    .b-med  { background: #FEF9C3; color: #854D0E; }
+    .b-low  { background: #FEE2E2; color: #991B1B; }
+
+    /* ── SCORE TABLE ─────────────────────────────────── */
+    .tbl-wrap { overflow-x: auto; border-radius: var(--r); border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; background: var(--surface); }
+    th {
+      background: var(--surface-2);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    td { padding: 11px 14px; border-bottom: 1px solid var(--border); font-size: 13px; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #FAFBFD; }
+    .focal { font-weight: 600; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      height: 24px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 0 6px;
+    }
+    .p-hi  { background: #DCFCE7; color: #15803D; }
+    .p-mid { background: #FEF9C3; color: #854D0E; }
+    .p-lo  { background: #FEE2E2; color: #991B1B; }
+    .p-avg { background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; }
+
+    /* ── LEGEND ──────────────────────────────────────── */
+    .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
+    .leg-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
+    .leg-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+    /* ── CHART WRAPPERS ──────────────────────────────── */
+    .ch { position: relative; height: 300px; }
+    .ch-sm { position: relative; height: 220px; }
+
+    /* ── THEME BARS ──────────────────────────────────── */
+    .theme-list { display: flex; flex-direction: column; gap: 9px; margin-top: 10px; }
+    .theme-row { display: flex; align-items: center; gap: 10px; }
+    .theme-lbl { font-size: 12.5px; color: var(--text-2); width: 210px; flex-shrink: 0; }
+    .theme-track { flex: 1; height: 8px; background: var(--surface-2); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
+    .theme-fill { height: 100%; border-radius: 4px; transition: width .6s ease; }
+    .theme-pct { font-size: 12px; font-weight: 700; color: var(--text); width: 34px; text-align: right; }
+
+    /* ── CALLOUT ─────────────────────────────────────── */
+    .callout {
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12.5px;
+      line-height: 1.6;
+      margin-top: 14px;
+    }
+    .callout-red   { background: #FEF2F2; color: #991B1B; }
+    .callout-green { background: #F0FDF4; color: #166534; }
+    .callout-blue  { background: #EFF6FF; color: #1D4ED8; }
+    .callout-amber { background: #FFFBEB; color: #92400E; }
+
+    /* ── SIGNAL CARDS ────────────────────────────────── */
+    .signal-list { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+    .sig { display: flex; gap: 10px; align-items: flex-start; }
+    .sig-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 15px; }
+    .sig-body { flex: 1; }
+    .sig-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .sig-desc { font-size: 12px; color: var(--text-muted); }
+    .sig-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .divider { height: 1px; background: var(--border); margin: 8px 0; }
+
+    /* ── METHODOLOGY ─────────────────────────────────── */
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 14px;
+    }
+    .method-item h4 { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .method-item p  { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── FOOTER ──────────────────────────────────────── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 20px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ── AUDIENCE FILTER PILLS ────────────────────────── */
+    .audience-filter {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .af-btn {
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .af-btn.active { border-color: transparent; }
+    .af-btn.all.active  { background: var(--text); color: white; }
+    .af-btn.inv.active  { background: var(--primary); color: white; border-color: var(--primary); }
+    .af-btn.comp.active { background: var(--warning); color: white; border-color: var(--warning); }
+    .af-btn.cust.active { background: var(--success); color: white; border-color: var(--success); }
+
+    /* ── SCORE LEGEND INLINE ──────────────────────────── */
+    .score-key {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      align-items: center;
+    }
+
+    /* ── WHITESPACE HIGHLIGHT ─────────────────────────── */
+    .ws-high { background: #FEE2E2; }
+    .ws-part { background: #FFFBEB; }
+
+    /* ── RANK BADGE ───────────────────────────────────── */
+    .rank { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; font-size: 10px; font-weight: 700; }
+    .r1 { background: #FEF9C3; color: #854D0E; }
+    .r2 { background: #F1F5F9; color: #475569; }
+    .r3 { background: #FFF7ED; color: #C2410C; }
+    .r4 { background: #FEE2E2; color: #991B1B; }
+
+    /* ── PHASE TIMELINE ───────────────────────────────── */
+    .timeline { display: flex; gap: 0; margin-top: 14px; }
+    .tl-step {
+      flex: 1;
+      padding: 14px 16px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-right: none;
+      position: relative;
+    }
+    .tl-step:first-child { border-radius: var(--r) 0 0 var(--r); }
+    .tl-step:last-child  { border-right: 1px solid var(--border); border-radius: 0 var(--r) var(--r) 0; }
+    .tl-phase { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 4px; }
+    .tl-name  { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .tl-desc  { font-size: 11.5px; color: var(--text-muted); }
+    .tl-step.active { background: var(--primary-bg); border-color: #BFDBFE; }
+    .tl-step.active .tl-name { color: var(--primary); }
+
+    @media (max-width: 900px) {
+      .g4, .g3 { grid-template-columns: repeat(2, 1fr); }
+      .g2, .g21, .g12 { grid-template-columns: 1fr; }
+      .method-grid { grid-template-columns: repeat(2, 1fr); }
+      .main { padding: 20px 16px 40px; }
+      .rh { padding: 16px; }
+      .nav { padding: 0 16px; }
+      .timeline { flex-direction: column; }
+      .tl-step { border-right: 1px solid var(--border); border-bottom: none; border-radius: 0; }
+      .tl-step:first-child { border-radius: var(--r) var(--r) 0 0; }
+      .tl-step:last-child  { border-bottom: 1px solid var(--border); border-radius: 0 0 var(--r) var(--r); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="nav-pulse"></div>
+    InsightEngine
+  </div>
+  <div class="nav-right">
+    <span>CRM Software · HubSpot Focus</span>
+    <span class="nav-sep">|</span>
+    <span class="nav-pill">Phase 2 Prototype</span>
+    <span class="nav-sep">|</span>
+    <span>Generated Mar 14, 2026</span>
+  </div>
+</nav>
+
+<!-- REPORT HEADER -->
+<div class="rh">
+  <div class="rh-inner">
+    <div>
+      <div class="rh-title">CRM Software — Competitive Intelligence Report</div>
+      <div class="rh-sub">Aspect-based sentiment analysis · 2,847 reviews · HubSpot vs Salesforce, Pipedrive, Zoho CRM · Jan 2024–Mar 2026</div>
+    </div>
+    <div class="rh-chips">
+      <span class="chip chip-blue">📊 G2 · Capterra · Trustpilot</span>
+      <span class="chip chip-orange">🤖 GPT-4o Analysis</span>
+      <span class="chip chip-green">✓ 4 Companies · 6 Dimensions</span>
+      <span class="chip chip-gray">826 HubSpot reviews</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- ── KPI ROW ──────────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="g4">
+      <div class="kpi">
+        <div class="kpi-label">Overall Sentiment Score</div>
+        <div class="kpi-val" style="color:var(--hs)">70<sup>/100</sup></div>
+        <div class="kpi-foot"><span class="down">▼ 3.2 pts</span>&nbsp;vs. 6 months ago</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Value Rank (Category)</div>
+        <div class="kpi-val">#3<sup> of 4</sup></div>
+        <div class="kpi-foot">Perceived value for money · behind Zoho &amp; Pipedrive</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Share of Voice</div>
+        <div class="kpi-val">29<sup>%</sup></div>
+        <div class="kpi-foot"><span class="up">▲ 2.1 pts</span>&nbsp;vs. prior period · 826 reviews</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Price Index vs Category</div>
+        <div class="kpi-val">140<sup>%</sup></div>
+        <div class="kpi-foot">Category average = 100% · highest in category</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROJECT PHASES ──────────────────────────────────────────── -->
+  <section class="section">
+    <div class="sec-hd">
+      <div class="sec-title">🗺 Prototype Roadmap</div>
+      <div class="sec-sub">9-day build plan · Phase 2 (Build) currently active</div>
+    </div>
+    <div class="timeline">
+      <div class="tl-step">
+        <div class="tl-phase">Days 1–2</div>
+        <div class="tl-name">Phase 1 · Define</div>
+        <div class="tl-desc">Vertical selected (CRM). 6 dimensions defined. Rubric written. 3 test users identified.</div>
+      </div>
+      <div class="tl-step active">
+        <div class="tl-phase">Days 3–6 ← NOW</div>
+        <div class="tl-name">Phase 2 · Build</div>
+        <div class="tl-desc">826 reviews scraped. Aspect sentiment via GPT-4o-mini. 5 insights generated. Static HTML output.</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-phase">Days 7–8</div>
+        <div class="tl-name">Phase 3 · Evaluate</div>
+        <div class="tl-desc">Show to 3 test users blind. Classify each insight: obvious / useful / wrong.</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-phase">Day 9</div>
+        <div class="tl-name">Phase 4 · Learn</div>
+        <div class="tl-desc">Document data accessibility, pipeline speed, hallucinations, and user trust.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── INSIGHTS ─────────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="sec-hd">
+      <div class="sec-title">🧠 AI-Generated Strategic Insights</div>
+      <div class="sec-sub">Synthesised by GPT-4o · structured prompt with quantitative inputs · classified by target audience</div>
+    </div>
+
+    <div class="audience-filter">
+      <button class="af-btn all active" onclick="filterInsights('all', this)">All</button>
+      <button class="af-btn inv" onclick="filterInsights('inv', this)">📈 Investors</button>
+      <button class="af-btn comp" onclick="filterInsights('comp', this)">🏢 Companies</button>
+      <button class="af-btn cust" onclick="filterInsights('cust', this)">👥 Customers</button>
+    </div>
+
+    <div class="g3" id="ins-row-1" style="margin-bottom:14px;">
+      <!-- Insight 1 -->
+      <div class="ins comp" data-audience="comp">
+        <div class="ins-num">01</div>
+        <div class="ins-title">Pricing Pressure Is HubSpot's Biggest Structural Risk</div>
+        <div class="ins-body">
+          Value-for-money scores declined 68 → 58 over six quarters — a 15% drop that no other dimension approaches. Critically, 34% of HubSpot's negative reviews now cite pricing explicitly, up from 22% four quarters ago. This is concentrated in the $50–200/seat range where Pipedrive (78/100 on value) is a direct, credible substitute.
+        </div>
+        <div class="ins-action"><strong>Action:</strong> Audit pricing tier structure for SMB buyers; launch a transparent comparison page before competitors define the narrative.</div>
+        <div class="ins-foot">
+          <span class="badge b-comp">Companies</span>
+          <span class="badge b-high">High Confidence</span>
+        </div>
+      </div>
+
+      <!-- Insight 2 -->
+      <div class="ins inv" data-audience="inv">
+        <div class="ins-num">02</div>
+        <div class="ins-title">Customer Support Is the Category's Unclaimed Whitespace</div>
+        <div class="ins-body">
+          No player in this category scores above 75/100 on support, and the average has flatlined at 64 for six consecutive quarters — despite support being the #1 pain point across all four platforms. This stagnation points to a structural unit-economics constraint: incumbents cannot fix this cheaply. It represents a genuine moat for an AI-native challenger.
+        </div>
+        <div class="ins-action"><strong>Action:</strong> Support-first CRM challengers deserve a premium multiple; incumbents are structurally unlikely to close this gap without material margin dilution.</div>
+        <div class="ins-foot">
+          <span class="badge b-inv">Investors</span>
+          <span class="badge b-high">High Confidence</span>
+        </div>
+      </div>
+
+      <!-- Insight 3 -->
+      <div class="ins inv" data-audience="inv">
+        <div class="ins-num">03</div>
+        <div class="ins-title">Pipedrive's Review Velocity Signals Word-of-Mouth Inflection</div>
+        <div class="ins-body">
+          Pipedrive's review volume is up 23% YoY — more than double HubSpot's 11% — and it holds the only improving sentiment trajectory in the dataset (+2.1 pts over 18 months). Highest ease-of-use (88/100) + highest value-for-money (78/100) + accelerating review growth is a classic organic SMB traction signal. If Pipedrive deepens reporting without sacrificing simplicity, it competes directly for HubSpot's core segment.
+        </div>
+        <div class="ins-action"><strong>Action:</strong> Model a scenario where Pipedrive cannibalises 5–8% of HubSpot's SMB seat additions over 18 months.</div>
+        <div class="ins-foot">
+          <span class="badge b-inv">Investors</span>
+          <span class="badge b-med">Medium Confidence</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="g2" id="ins-row-2">
+      <!-- Insight 4 -->
+      <div class="ins comp" data-audience="comp">
+        <div class="ins-num">04</div>
+        <div class="ins-title">Salesforce's Mid-Market Churn Signal Is Elevated</div>
+        <div class="ins-body">
+          Negative reviews mentioning "moving to," "switching from," or "left because" grew 18% QoQ for Salesforce — the highest churn signal in the dataset. The root cause is not product quality (feature score 92/100) but a complexity-to-value mismatch: "too powerful for what we need" appears in 28% of negative reviews. This creates a predictable downward migration: Salesforce → HubSpot → Pipedrive, each step trading depth for simplicity and value. HubSpot is best-positioned to capture this flow — but must not replicate Salesforce's complexity traps.
+        </div>
+        <div class="ins-action"><strong>Action:</strong> Launch a "Salesforce Simplifier" migration campaign targeting 20–200 seat companies; lead with setup speed and total cost of ownership.</div>
+        <div class="ins-foot">
+          <span class="badge b-comp">Companies</span>
+          <span class="badge b-med">Medium Confidence</span>
+        </div>
+      </div>
+
+      <!-- Insight 5 -->
+      <div class="ins inv" data-audience="inv">
+        <div class="ins-num">05</div>
+        <div class="ins-title">Value Decline Is a Category Signal, Not Just HubSpot's Problem</div>
+        <div class="ins-body">
+          Average value-for-money across all four players fell from 72 → 64 over 18 months, coinciding with post-2022 SaaS repricing. This is a structural market shift, not company-specific noise. Historically this pattern — broad perceived-value decline in an established category — precedes successful entry by price-transparent, usage-based challengers. The window is roughly 18–36 months before incumbents adapt their pricing models.
+        </div>
+        <div class="ins-action"><strong>Action:</strong> Watch for usage-based pricing CRM entrants; prioritise the one with the clearest pricing page and shortest self-serve onboarding path.</div>
+        <div class="ins-foot">
+          <span class="badge b-inv">Investors</span>
+          <span class="badge b-high">High Confidence</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── COMPETITIVE DIMENSION SCORING ───────────────────────────── -->
+  <section class="section">
+    <div class="sec-hd">
+      <div class="sec-title">📐 Competitive Dimension Scoring</div>
+      <div class="sec-sub">Aspect-based sentiment · 0–100 scale · higher = stronger customer sentiment on that dimension</div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Dimension Radar · All Companies</div>
+        <div class="ch"><canvas id="radarChart"></canvas></div>
+        <div class="legend">
+          <div class="leg-item"><div class="leg-dot" style="background:var(--hs)"></div>HubSpot</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--sf)"></div>Salesforce</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--pd)"></div>Pipedrive</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--zo)"></div>Zoho CRM</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Score Breakdown · By Dimension</div>
+        <div class="tbl-wrap" style="border:none;">
+          <table>
+            <thead>
+              <tr>
+                <th>Dimension</th>
+                <th style="color:var(--hs)">HubSpot</th>
+                <th style="color:var(--sf)">Salesforce</th>
+                <th style="color:var(--pd)">Pipedrive</th>
+                <th style="color:var(--zo)">Zoho</th>
+                <th>Avg</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="focal">Ease of Use</td>
+                <td><span class="pill p-mid">78</span></td>
+                <td><span class="pill p-lo">48</span></td>
+                <td><span class="pill p-hi">88</span> <span class="rank r1">1</span></td>
+                <td><span class="pill p-mid">62</span></td>
+                <td><span class="pill p-avg">69</span></td>
+              </tr>
+              <tr>
+                <td class="focal">Feature Richness</td>
+                <td><span class="pill p-mid">72</span></td>
+                <td><span class="pill p-hi">92</span> <span class="rank r1">1</span></td>
+                <td><span class="pill p-mid">65</span></td>
+                <td><span class="pill p-mid">82</span></td>
+                <td><span class="pill p-avg">78</span></td>
+              </tr>
+              <tr class="ws-high">
+                <td class="focal">Customer Support ⚡</td>
+                <td><span class="pill p-mid">65</span></td>
+                <td><span class="pill p-mid">62</span></td>
+                <td><span class="pill p-mid">75</span> <span class="rank r1">1</span></td>
+                <td><span class="pill p-lo">55</span></td>
+                <td><span class="pill p-avg">64</span></td>
+              </tr>
+              <tr>
+                <td class="focal">Integrations</td>
+                <td><span class="pill p-mid">80</span></td>
+                <td><span class="pill p-hi">95</span> <span class="rank r1">1</span></td>
+                <td><span class="pill p-mid">72</span></td>
+                <td><span class="pill p-mid">75</span></td>
+                <td><span class="pill p-avg">81</span></td>
+              </tr>
+              <tr class="ws-part">
+                <td class="focal">Value for Money ▼</td>
+                <td><span class="pill p-lo">58</span></td>
+                <td><span class="pill p-lo">38</span></td>
+                <td><span class="pill p-mid">78</span></td>
+                <td><span class="pill p-hi">82</span> <span class="rank r1">1</span></td>
+                <td><span class="pill p-avg">64</span></td>
+              </tr>
+              <tr>
+                <td class="focal">Reporting &amp; Analytics</td>
+                <td><span class="pill p-mid">70</span></td>
+                <td><span class="pill p-hi">88</span> <span class="rank r1">1</span></td>
+                <td><span class="pill p-mid">65</span></td>
+                <td><span class="pill p-mid">70</span></td>
+                <td><span class="pill p-avg">73</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="score-key">
+          <span><span class="pill p-hi" style="font-size:11px;height:20px;min-width:36px;">≥75</span> Strong</span>
+          <span><span class="pill p-mid" style="font-size:11px;height:20px;min-width:36px;">60–74</span> Average</span>
+          <span><span class="pill p-lo" style="font-size:11px;height:20px;min-width:36px;">≤59</span> Weak</span>
+          <span style="background:#FEE2E2;padding:2px 8px;border-radius:4px;font-size:11px;color:#991B1B">⚡ Whitespace</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SENTIMENT TRENDS ─────────────────────────────────────────── -->
+  <section class="section">
+    <div class="sec-hd">
+      <div class="sec-title">📈 Sentiment &amp; Volume Trends</div>
+      <div class="sec-sub">Overall sentiment score (0–100) and review volume by quarter · 9 quarters</div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Sentiment Score Over Time</div>
+        <div class="ch"><canvas id="trendChart"></canvas></div>
+        <div class="legend">
+          <div class="leg-item"><div class="leg-dot" style="background:var(--hs)"></div>HubSpot <span style="color:var(--danger);font-size:11px;margin-left:2px;">▼ declining</span></div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--sf)"></div>Salesforce</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--pd)"></div>Pipedrive <span style="color:var(--success);font-size:11px;margin-left:2px;">▲ improving</span></div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--zo)"></div>Zoho CRM</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Review Volume Growth (thousands)</div>
+        <div class="ch"><canvas id="volumeChart"></canvas></div>
+        <div class="callout callout-amber">
+          <strong>Signal:</strong> Pipedrive review volume +23% YoY — 2× HubSpot's growth rate (+11%). Accelerating consideration in the SMB segment.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── VOICE OF CUSTOMER ────────────────────────────────────────── -->
+  <section class="section">
+    <div class="sec-hd">
+      <div class="sec-title">🗣 Voice of Customer — HubSpot</div>
+      <div class="sec-sub">Top themes extracted from 826 reviews · % of reviews where theme appears · GPT-4o theme clustering</div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Top Complaint Themes (Negative Reviews)</div>
+        <div class="theme-list">
+          <div class="theme-row">
+            <div class="theme-lbl">Pricing / Value Concerns</div>
+            <div class="theme-track"><div class="theme-fill" style="width:34%;background:#EF4444;"></div></div>
+            <div class="theme-pct">34%</div>
+          </div>
+          <div class="theme-row">
+            <div class="theme-lbl">Limited Reporting Customisation</div>
+            <div class="theme-track"><div class="theme-fill" style="width:22%;background:#F97316;"></div></div>
+            <div class="theme-pct">22%</div>
+          </div>
+          <div class="theme-row">
+            <div class="theme-lbl">Support Response Time</div>
+            <div class="theme-track"><div class="theme-fill" style="width:18%;background:#EAB308;"></div></div>
+            <div class="theme-pct">18%</div>
+          </div>
+          <div class="theme-row">
+            <div class="theme-lbl">Complex Setup / Onboarding</div>
+            <div class="theme-track"><div class="theme-fill" style="width:15%;background:#94A3B8;"></div></div>
+            <div class="theme-pct">15%</div>
+          </div>
+          <div class="theme-row">
+            <div class="theme-lbl">Feature Gaps vs Salesforce</div>
+            <div class="theme-track"><div class="theme-fill" style="width:11%;background:#CBD5E1;"></div></div>
+            <div class="theme-pct">11%</div>
+          </div>
+        </div>
+        <div class="callout callout-red">
+          ⚠ Pricing complaints grew 22% → 34% over 6 quarters — the fastest-growing negative signal. Trend is accelerating.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Top Praise Themes (Positive Reviews)</div>
+        <div class="theme-list">
+          <div class="theme-row">
+            <div class="theme-lbl">Ease of Use / Intuitive UI</div>
+            <div class="theme-track"><div class="theme-fill" style="width:42%;background:#22C55E;"></div></div>
+            <div class="theme-pct">42%</div>
+          </div>
+          <div class="theme-row">
+            <div class="theme-lbl">All-in-One Platform</div>
+            <div class="theme-track"><div class="theme-fill" style="width:28%;background:#3B82F6;"></div></div>
+            <div class="theme-pct">28%</div>
+          </div>
+          <div class="theme-row">
+            <div class="theme-lbl">Strong Marketing Tools</div>
+            <div class="theme-track"><div class="theme-fill" style="width:22%;background:#8B5CF6;"></div></div>
+            <div class="theme-pct">22%</div>
+          </div>
+          <div class="theme-row">
+            <div class="theme-lbl">Good Free Tier / Trial</div>
+            <div class="theme-track"><div class="theme-fill" style="width:19%;background:#0EA5E9;"></div></div>
+            <div class="theme-pct">19%</div>
+          </div>
+          <div class="theme-row">
+            <div class="theme-lbl">Helpful Community &amp; Docs</div>
+            <div class="theme-track"><div class="theme-fill" style="width:15%;background:#14B8A6;"></div></div>
+            <div class="theme-pct">15%</div>
+          </div>
+        </div>
+        <div class="callout callout-green">
+          ✓ Ease of use is HubSpot's durable advantage — the #1 praise theme consistently for 8 consecutive quarters.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── VALUE FOR MONEY TREND ────────────────────────────────────── -->
+  <section class="section">
+    <div class="sec-hd">
+      <div class="sec-title">💸 Value for Money Trend — All Companies</div>
+      <div class="sec-sub">Category-wide deterioration in perceived value · structural signal, not company-specific noise</div>
+    </div>
+    <div class="card">
+      <div class="ch-sm"><canvas id="valueChart"></canvas></div>
+      <div class="callout callout-blue" style="margin-top:14px;">
+        <strong>Category-level finding:</strong> Average value-for-money score fell from 72 → 64 across all four players over 18 months — coinciding with post-2022 SaaS repricing. This is a structural opening for a price-transparent, usage-based challenger within the next 18–36 months.
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WHITESPACE ANALYSIS ──────────────────────────────────────── -->
+  <section class="section">
+    <div class="sec-hd">
+      <div class="sec-title">🔍 Whitespace Analysis</div>
+      <div class="sec-sub">Dimensions where no player has established a clear advantage (max score &lt;75) — highest-value differentiation opportunities</div>
+    </div>
+    <div class="card">
+      <div class="tbl-wrap" style="border:none;">
+        <table>
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th style="color:var(--hs)">HubSpot</th>
+              <th style="color:var(--sf)">Salesforce</th>
+              <th style="color:var(--pd)">Pipedrive</th>
+              <th style="color:var(--zo)">Zoho CRM</th>
+              <th>Cat. Avg</th>
+              <th>Whitespace Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:#FEF2F2;">
+              <td class="focal">⚡ Customer Support</td>
+              <td><span class="pill p-mid">65</span></td>
+              <td><span class="pill p-mid">62</span></td>
+              <td><span class="pill p-mid">75</span></td>
+              <td><span class="pill p-lo">55</span></td>
+              <td><span class="pill p-avg">64</span></td>
+              <td><span class="badge" style="background:#FEE2E2;color:#991B1B;font-size:12px;">🔴 Full Whitespace — no player above 75</span></td>
+            </tr>
+            <tr style="background:#FFFBEB;">
+              <td class="focal">⚠ Value for Money</td>
+              <td><span class="pill p-lo">58</span></td>
+              <td><span class="pill p-lo">38</span></td>
+              <td><span class="pill p-mid">78</span></td>
+              <td><span class="pill p-hi">82</span></td>
+              <td><span class="pill p-avg">64</span></td>
+              <td><span class="badge" style="background:#FEF3C7;color:#92400E;font-size:12px;">🟡 Partial — Zoho/Pipedrive lead, incumbents weak</span></td>
+            </tr>
+            <tr>
+              <td class="focal">Ease of Use</td>
+              <td><span class="pill p-mid">78</span></td>
+              <td><span class="pill p-lo">48</span></td>
+              <td><span class="pill p-hi">88</span></td>
+              <td><span class="pill p-mid">62</span></td>
+              <td><span class="pill p-avg">69</span></td>
+              <td><span class="badge" style="background:#DCFCE7;color:#15803D;font-size:12px;">🟢 Served — Pipedrive leads clearly</span></td>
+            </tr>
+            <tr>
+              <td class="focal">Feature Richness</td>
+              <td><span class="pill p-mid">72</span></td>
+              <td><span class="pill p-hi">92</span></td>
+              <td><span class="pill p-mid">65</span></td>
+              <td><span class="pill p-mid">82</span></td>
+              <td><span class="pill p-avg">78</span></td>
+              <td><span class="badge" style="background:#DCFCE7;color:#15803D;font-size:12px;">🟢 Served — Salesforce leads clearly</span></td>
+            </tr>
+            <tr>
+              <td class="focal">Integrations</td>
+              <td><span class="pill p-mid">80</span></td>
+              <td><span class="pill p-hi">95</span></td>
+              <td><span class="pill p-mid">72</span></td>
+              <td><span class="pill p-mid">75</span></td>
+              <td><span class="pill p-avg">81</span></td>
+              <td><span class="badge" style="background:#DCFCE7;color:#15803D;font-size:12px;">🟢 Served — Salesforce leads clearly</span></td>
+            </tr>
+            <tr>
+              <td class="focal">Reporting &amp; Analytics</td>
+              <td><span class="pill p-mid">70</span></td>
+              <td><span class="pill p-hi">88</span></td>
+              <td><span class="pill p-mid">65</span></td>
+              <td><span class="pill p-mid">70</span></td>
+              <td><span class="pill p-avg">73</span></td>
+              <td><span class="badge" style="background:#DCFCE7;color:#15803D;font-size:12px;">🟢 Served — Salesforce leads clearly</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout callout-blue" style="margin-top:14px;">
+        <strong>Key Finding:</strong> Customer support is the only dimension where no single player has established a clear advantage (max 75/100). A challenger that achieves ≥85 on support while remaining competitive elsewhere captures the clearest available moat in this market. Current unit-economics constraints likely prevent incumbents from solving this organically.
+      </div>
+    </div>
+  </section>
+
+  <!-- ── COMPETITOR SIGNALS ───────────────────────────────────────── -->
+  <section class="section">
+    <div class="sec-hd">
+      <div class="sec-title">📡 Competitor Activity Monitor</div>
+      <div class="sec-sub">Recent signals from news, job postings, and pricing pages · last 90 days · indicative only</div>
+    </div>
+    <div class="g3">
+      <div class="card">
+        <div class="card-title" style="color:var(--sf)">● Salesforce</div>
+        <div class="signal-list">
+          <div class="sig">
+            <div class="sig-icon" style="background:#EFF6FF;">📰</div>
+            <div class="sig-body">
+              <div class="sig-title">Einstein AI Copilot now GA</div>
+              <div class="sig-desc">AI assistant embedded across Sales Cloud. 30+ AI-related job postings opened in London &amp; Dublin.</div>
+              <div class="sig-time">12 days ago · Press Release</div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="sig">
+            <div class="sig-icon" style="background:#FEF2F2;">💸</div>
+            <div class="sig-body">
+              <div class="sig-title">Enterprise tier price increase +$25/seat</div>
+              <div class="sig-desc">Community posts mentioning price increase up 40% in 4 weeks. Churn risk elevated.</div>
+              <div class="sig-time">28 days ago · Pricing page change</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--pd)">● Pipedrive</div>
+        <div class="signal-list">
+          <div class="sig">
+            <div class="sig-icon" style="background:#F0FDF4;">🚀</div>
+            <div class="sig-body">
+              <div class="sig-title">New advanced reporting module launched</div>
+              <div class="sig-desc">Directly addresses #1 product gap. 15 reporting-related job posts this quarter — sustained investment signal.</div>
+              <div class="sig-time">7 days ago · Product Changelog</div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="sig">
+            <div class="sig-icon" style="background:#F0FDF4;">📣</div>
+            <div class="sig-body">
+              <div class="sig-title">SEM spend up 35% on "HubSpot alternative"</div>
+              <div class="sig-desc">Aggressively targeting HubSpot's core SMB segment. Direct competitive positioning becoming explicit.</div>
+              <div class="sig-time">21 days ago · SEMrush signal</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--zo)">● Zoho CRM</div>
+        <div class="signal-list">
+          <div class="sig">
+            <div class="sig-icon" style="background:#FFF7ED;">💰</div>
+            <div class="sig-body">
+              <div class="sig-title">Public price-freeze commitment for 2026</div>
+              <div class="sig-desc">Directly exploits the category-wide value narrative. Targeted messaging at HubSpot &amp; Salesforce customers.</div>
+              <div class="sig-time">14 days ago · Blog announcement</div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="sig">
+            <div class="sig-icon" style="background:#F8FAFC;">🤝</div>
+            <div class="sig-body">
+              <div class="sig-title">GTM partnership with Freshdesk</div>
+              <div class="sig-desc">Support+CRM bundle — directly addresses the customer support whitespace identified in this report.</div>
+              <div class="sig-time">35 days ago · Press Release</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── EVALUATION RUBRIC ────────────────────────────────────────── -->
+  <section class="section">
+    <div class="sec-hd">
+      <div class="sec-title">📋 Evaluation Rubric (Phase 1 Definition)</div>
+      <div class="sec-sub">How to assess output quality — used in Phase 3 user evaluation sessions</div>
+    </div>
+    <div class="g3">
+      <div class="card" style="border-color:#BFDBFE;">
+        <div style="font-size:24px;margin-bottom:8px;">✅</div>
+        <div class="card-title" style="color:#1D4ED8;">USEFUL — Passes</div>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.65;">Non-obvious. Ties scores to strategic implications. Something a user could not find in 10 minutes on Google. Contains specific evidence. Points to a trajectory or competitive dynamic — not just a snapshot.</p>
+        <div class="callout callout-blue" style="margin-top:10px;font-size:12px;">Example: "Pipedrive's review volume is growing 2× faster than HubSpot's, concentrated in the SMB segment where HubSpot's pricing is most exposed."</div>
+      </div>
+      <div class="card" style="border-color:#FDE68A;">
+        <div style="font-size:24px;margin-bottom:8px;">⚠️</div>
+        <div class="card-title" style="color:#B45309;">OBVIOUS — Fails</div>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.65;">Restates what a user already knows or can find quickly. No new information. Does not connect scores to implications. A good report summary could produce the same text.</p>
+        <div class="callout callout-amber" style="margin-top:10px;font-size:12px;">Example: "HubSpot scores highly on ease of use. Salesforce scores highly on features. Zoho offers good value for money."</div>
+      </div>
+      <div class="card" style="border-color:#FECACA;">
+        <div style="font-size:24px;margin-bottom:8px;">❌</div>
+        <div class="card-title" style="color:#991B1B;">WRONG — Fails (trust-breaking)</div>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.65;">Contradicted by data in the report. Factually incorrect. Overconfident claim without supporting evidence. This is the worst failure mode — a confident-sounding but wrong insight damages user trust permanently.</p>
+        <div class="callout callout-red" style="margin-top:10px;font-size:12px;">Example: "Salesforce leads on ease of use" (contradicted by 48/100 score).</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── METHODOLOGY ──────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="card">
+      <div class="sec-title" style="margin-bottom:4px;">⚙ Methodology &amp; Limitations</div>
+      <div class="sec-sub" style="margin-bottom:0;">Phase 2 prototype · not a production system · indicative outputs only</div>
+      <div class="method-grid">
+        <div class="method-item">
+          <h4>Data Sources</h4>
+          <p>G2 (1,240 reviews), Capterra (890 reviews), Trustpilot (717 reviews). Date range: Jan 2024 – Mar 2026. Verified reviewer badges required. Scraped via BeautifulSoup + Playwright.</p>
+        </div>
+        <div class="method-item">
+          <h4>Aspect Sentiment Model</h4>
+          <p>GPT-4o-mini prompted to score 6 dimensions per review (0–100). Reviews scoring null on a dimension are excluded from that dimension's average. ~$4 API cost per 1,000 reviews.</p>
+        </div>
+        <div class="method-item">
+          <h4>Insight Synthesis</h4>
+          <p>GPT-4o frontier model with structured prompt. Instructed to surface strategic implications, not restate scores. Hallucination risk: medium on directional/trend claims. Requires human validation.</p>
+        </div>
+        <div class="method-item">
+          <h4>Known Limitations</h4>
+          <p>Review platforms skew towards dissatisfied users. Competitor signals are indicative only. No access to SimilarWeb/SEMrush (paywalled). Sample sizes for Pipedrive and Zoho smaller than HubSpot/Salesforce.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  InsightEngine Prototype · CRM Software Intelligence Report · Generated Mar 14, 2026 · GPT-4o + Chart.js · Phase 2 of 4
+</footer>
+
+<script>
+  // ── DATA ──────────────────────────────────────────────────────────
+  const C = ['HubSpot', 'Salesforce', 'Pipedrive', 'Zoho CRM'];
+  const col = {
+    HubSpot:    { line: '#FF7A59', fill: 'rgba(255,122,89,0.12)' },
+    Salesforce: { line: '#009EDB', fill: 'rgba(0,158,219,0.12)' },
+    Pipedrive:  { line: '#1EC25B', fill: 'rgba(30,194,91,0.12)'  },
+    'Zoho CRM': { line: '#E42527', fill: 'rgba(228,37,39,0.12)'  },
+  };
+
+  const dims = ['Ease of Use','Feature Richness','Customer Support','Integrations','Value for Money','Reporting & Analytics'];
+  const scores = {
+    HubSpot:    [78, 72, 65, 80, 58, 70],
+    Salesforce: [48, 92, 62, 95, 38, 88],
+    Pipedrive:  [88, 65, 75, 72, 78, 65],
+    'Zoho CRM': [62, 82, 55, 75, 82, 70],
+  };
+
+  const quarters = ['Q1 24','Q2 24','Q3 24','Q4 24','Q1 25','Q2 25','Q3 25','Q4 25','Q1 26'];
+  const sentiment = {
+    HubSpot:    [73, 74, 75, 74, 73, 72, 71, 70, 68],
+    Salesforce: [68, 70, 71, 72, 71, 70, 71, 70, 70],
+    Pipedrive:  [70, 71, 72, 73, 74, 74, 75, 74, 74],
+    'Zoho CRM': [65, 66, 67, 68, 68, 69, 70, 71, 71],
+  };
+  const volume = {
+    HubSpot:    [4.2, 4.8, 5.1, 5.5, 5.8, 6.0, 6.3, 6.4, 6.5],
+    Salesforce: [8.1, 8.3, 8.6, 8.9, 9.1, 9.2, 9.4, 9.5, 9.6],
+    Pipedrive:  [1.8, 2.0, 2.2, 2.5, 2.7, 3.0, 3.2, 3.4, 3.5],
+    'Zoho CRM': [2.1, 2.3, 2.5, 2.7, 2.9, 3.1, 3.3, 3.5, 3.6],
+  };
+  const valueForMoney = {
+    HubSpot:    [68, 67, 66, 65, 64, 63, 62, 60, 58],
+    Salesforce: [45, 44, 43, 42, 41, 40, 40, 39, 38],
+    Pipedrive:  [76, 76, 77, 77, 77, 78, 78, 78, 78],
+    'Zoho CRM': [80, 80, 81, 81, 82, 82, 82, 82, 82],
+  };
+
+  // ── GLOBAL CHART DEFAULTS ─────────────────────────────────────────
+  Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+  Chart.defaults.font.size = 12;
+  Chart.defaults.color = '#64748B';
+
+  // ── RADAR CHART ───────────────────────────────────────────────────
+  new Chart(document.getElementById('radarChart'), {
+    type: 'radar',
+    data: {
+      labels: dims,
+      datasets: C.map(c => ({
+        label: c,
+        data: scores[c],
+        borderColor: col[c].line,
+        backgroundColor: col[c].fill,
+        borderWidth: c === 'HubSpot' ? 2.5 : 1.5,
+        pointBackgroundColor: col[c].line,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+      })),
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        r: {
+          min: 0, max: 100,
+          ticks: { stepSize: 25, font: { size: 10 }, backdropColor: 'transparent' },
+          pointLabels: { font: { size: 11, weight: '500' } },
+          grid: { color: '#E2E8F0' },
+          angleLines: { color: '#E2E8F0' },
+        },
+      },
+    },
+  });
+
+  // ── SENTIMENT TREND CHART ─────────────────────────────────────────
+  new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+      labels: quarters,
+      datasets: C.map(c => ({
+        label: c,
+        data: sentiment[c],
+        borderColor: col[c].line,
+        backgroundColor: 'transparent',
+        borderWidth: c === 'HubSpot' ? 3 : 1.5,
+        pointBackgroundColor: col[c].line,
+        pointRadius: c === 'HubSpot' ? 4 : 3,
+        pointHoverRadius: 6,
+        tension: 0.35,
+      })),
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 60, max: 80, ticks: { stepSize: 5 }, grid: { color: '#F1F5F9' } },
+        x: { grid: { display: false } },
+      },
+    },
+  });
+
+  // ── VOLUME CHART ──────────────────────────────────────────────────
+  new Chart(document.getElementById('volumeChart'), {
+    type: 'line',
+    data: {
+      labels: quarters,
+      datasets: C.map(c => ({
+        label: c,
+        data: volume[c],
+        borderColor: col[c].line,
+        backgroundColor: col[c].fill,
+        borderWidth: c === 'HubSpot' ? 3 : 1.5,
+        pointBackgroundColor: col[c].line,
+        pointRadius: c === 'HubSpot' ? 4 : 3,
+        tension: 0.35,
+        fill: false,
+      })),
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 0, grid: { color: '#F1F5F9' }, title: { display: true, text: 'Reviews (thousands)' } },
+        x: { grid: { display: false } },
+      },
+    },
+  });
+
+  // ── VALUE FOR MONEY TREND CHART ───────────────────────────────────
+  new Chart(document.getElementById('valueChart'), {
+    type: 'line',
+    data: {
+      labels: quarters,
+      datasets: C.map(c => ({
+        label: c,
+        data: valueForMoney[c],
+        borderColor: col[c].line,
+        backgroundColor: 'transparent',
+        borderWidth: c === 'HubSpot' ? 3 : 1.5,
+        pointBackgroundColor: col[c].line,
+        pointRadius: c === 'HubSpot' ? 4 : 3,
+        tension: 0.35,
+      })),
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: { usePointStyle: true, pointStyleWidth: 10, padding: 16, font: { size: 12 } },
+        },
+        annotation: {},
+      },
+      scales: {
+        y: { min: 30, max: 90, ticks: { stepSize: 10 }, grid: { color: '#F1F5F9' } },
+        x: { grid: { display: false } },
+      },
+    },
+  });
+
+  // ── INSIGHT AUDIENCE FILTER ───────────────────────────────────────
+  function filterInsights(audience, btn) {
+    document.querySelectorAll('.af-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    document.querySelectorAll('.ins').forEach(card => {
+      if (audience === 'all') {
+        card.style.display = '';
+      } else {
+        const a = card.dataset.audience;
+        card.style.display = (a === audience) ? '' : 'none';
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

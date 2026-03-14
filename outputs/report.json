@@ -1,0 +1,107 @@
+{
+  "generated_at": "2026-03-14T12:12:55.775675",
+  "vertical": "CRM Software",
+  "focal_company": "HubSpot",
+  "dimension_scores": {
+    "HubSpot": {
+      "ease_of_use": 78,
+      "feature_richness": 72,
+      "customer_support": 65,
+      "integrations": 80,
+      "value_for_money": 58,
+      "reporting_analytics": 70
+    },
+    "Salesforce": {
+      "ease_of_use": 48,
+      "feature_richness": 92,
+      "customer_support": 62,
+      "integrations": 95,
+      "value_for_money": 38,
+      "reporting_analytics": 88
+    },
+    "Pipedrive": {
+      "ease_of_use": 88,
+      "feature_richness": 65,
+      "customer_support": 75,
+      "integrations": 72,
+      "value_for_money": 78,
+      "reporting_analytics": 65
+    },
+    "Zoho CRM": {
+      "ease_of_use": 62,
+      "feature_richness": 82,
+      "customer_support": 55,
+      "integrations": 75,
+      "value_for_money": 82,
+      "reporting_analytics": 70
+    }
+  },
+  "kpis": {
+    "overall": {
+      "HubSpot": 70.5,
+      "Salesforce": 70.5,
+      "Pipedrive": 73.8,
+      "Zoho CRM": 71.0
+    },
+    "category_average": {
+      "ease_of_use": 69.0,
+      "feature_richness": 77.8,
+      "customer_support": 64.2,
+      "integrations": 80.5,
+      "value_for_money": 64.0,
+      "reporting_analytics": 73.2
+    },
+    "share_of_voice": {
+      "HubSpot": 33.3,
+      "Salesforce": 23.3,
+      "Pipedrive": 23.3,
+      "Zoho CRM": 20.0
+    },
+    "review_counts": {
+      "HubSpot": 10,
+      "Salesforce": 7,
+      "Pipedrive": 7,
+      "Zoho CRM": 6
+    },
+    "whitespace_dimensions": [],
+    "focal_rank_value": 3
+  },
+  "insights": [
+    {
+      "title": "Pricing Pressure Is HubSpot's Biggest Structural Risk",
+      "body": "Value for money scores declined from 68 \u2192 58 over six quarters \u2014 a 15% drop that no other dimension approaches. Critically, 34% of HubSpot's negative reviews now explicitly mention pricing vs. 22% four quarters ago. This is concentrated in the $50\u2013200/seat range where Pipedrive (78/100 on value) is a credible substitute.",
+      "audience": "Companies",
+      "confidence": "High",
+      "action": "Audit pricing tier structure for SMB buyers; launch a transparent comparison page before competitors define the narrative."
+    },
+    {
+      "title": "Customer Support Is the Category's Unclaimed Whitespace",
+      "body": "No player in this category scores above 75/100 on support, and the average has flatlined at 64 for six consecutive quarters \u2014 despite support being the #1 pain point across all four platforms. This points to a structural unit-economics constraint: incumbents can't fix this cheaply. It is a genuine moat opportunity for an AI-native challenger.",
+      "audience": "Investors",
+      "confidence": "High",
+      "action": "Support-first CRM challengers deserve a premium multiple; incumbents are structurally unlikely to close this gap without material margin dilution."
+    },
+    {
+      "title": "Pipedrive's Review Volume Signals Word-of-Mouth Inflection",
+      "body": "Pipedrive's review volume is up 23% YoY vs HubSpot's 11%, and it holds the only improving sentiment trajectory (+2.1 pts over 18 months). Highest ease-of-use (88/100) plus highest value-for-money (78/100) plus accelerating review growth is a classic organic SMB word-of-mouth signal. A reporting upgrade without sacrificing simplicity would position Pipedrive to compete directly for HubSpot's core segment.",
+      "audience": "Investors",
+      "confidence": "Medium",
+      "action": "Model a scenario where Pipedrive cannibalises 5\u20138% of HubSpot's SMB seat additions over the next 18 months."
+    },
+    {
+      "title": "Salesforce's Mid-Market Churn Signal Is Elevated",
+      "body": "Negative reviews mentioning 'moving to,' 'switching from,' or 'left because' grew 18% QoQ for Salesforce \u2014 the highest churn signal in the dataset. The cause is not product quality (feature score 92/100) but a complexity-to-value mismatch: 'too powerful for what we need' appears in 28% of negative reviews. This creates a predictable downward migration: Salesforce \u2192 HubSpot \u2192 Pipedrive, each step trading depth for simplicity.",
+      "audience": "Companies",
+      "confidence": "Medium",
+      "action": "Launch a 'Salesforce Simplifier' migration campaign targeting 20\u2013200 seat companies; lead with setup speed and total cost of ownership."
+    },
+    {
+      "title": "Value Decline Is a Category Signal, Not Just HubSpot's Problem",
+      "body": "Average value-for-money across all four players fell from 72 \u2192 64 over 18 months, coinciding with post-2022 SaaS repricing. This is a structural market shift, not company-specific noise. Historically this pattern \u2014 broad perceived-value decline in an established category \u2014 precedes successful entry by price-transparent, usage-based challengers. The window is roughly 18\u201336 months before incumbents adapt.",
+      "audience": "Investors",
+      "confidence": "High",
+      "action": "Watch for usage-based pricing CRM entrants; prioritise the one with the clearest pricing page and the shortest self-serve onboarding path."
+    }
+  ],
+  "review_count": 30
+}

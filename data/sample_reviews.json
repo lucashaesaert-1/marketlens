@@ -1,0 +1,152 @@
+[
+  {
+    "id": "hs_001", "company": "HubSpot", "source": "G2", "rating": 4,
+    "date": "2025-11-14", "reviewer_type": "SMB",
+    "text": "HubSpot is genuinely easy to use — our sales team was onboarded in two days with zero training sessions. The marketing tools are world-class. My main frustration is the pricing: we started on the free tier, loved it, and now the jump to any paid tier is brutal. We're paying 3x what Pipedrive would cost for functionality we barely use. The reporting is also limited unless you go Enterprise."
+  },
+  {
+    "id": "hs_002", "company": "HubSpot", "source": "Capterra", "rating": 5,
+    "date": "2026-01-08", "reviewer_type": "SMB",
+    "text": "Best CRM I've used in 12 years of sales. The UI is intuitive, the integrations work seamlessly, and having marketing, sales and service in one place is a massive time saver. Support team was responsive when I had a setup issue. The free tier alone is better than paid versions of competitors."
+  },
+  {
+    "id": "hs_003", "company": "HubSpot", "source": "G2", "rating": 3,
+    "date": "2025-09-22", "reviewer_type": "Mid-market",
+    "text": "We've been on HubSpot for 3 years and the product quality is great. But the pricing increases have been relentless. We're now paying 40% more than when we started for the same features. Support has also gotten slower — used to get replies same day, now it's 48+ hours. Seriously considering Salesforce for the reporting capabilities or Pipedrive for the cost savings."
+  },
+  {
+    "id": "hs_004", "company": "HubSpot", "source": "Trustpilot", "rating": 2,
+    "date": "2026-02-03", "reviewer_type": "SMB",
+    "text": "The product is good but I feel trapped. Every feature I need is one tier up. The reporting customization is nowhere near what Salesforce offers and yet HubSpot charges almost as much for enterprise. When I contacted support about a billing issue it took 5 business days to get a useful response. For the price they charge I expected better."
+  },
+  {
+    "id": "hs_005", "company": "HubSpot", "source": "G2", "rating": 5,
+    "date": "2025-12-01", "reviewer_type": "Enterprise",
+    "text": "HubSpot has transformed our go-to-market motion. The platform is genuinely all-in-one — we replaced 6 tools with one. The integration ecosystem is impressive, connecting to everything in our stack without custom dev work. The community and resources (Academy, docs) are best-in-class. Would like deeper analytics but for our stage this is perfect."
+  },
+  {
+    "id": "hs_006", "company": "HubSpot", "source": "Capterra", "rating": 3,
+    "date": "2026-01-19", "reviewer_type": "SMB",
+    "text": "Easy to use, yes. Great marketing tools, yes. But the value for money has declined significantly. We used to love HubSpot but with the latest price increase I'm actively evaluating alternatives. Pipedrive does 80% of what we need at 40% of the cost. The setup complexity also caught us off guard — took 3 weeks to fully configure."
+  },
+  {
+    "id": "hs_007", "company": "HubSpot", "source": "G2", "rating": 4,
+    "date": "2025-10-30", "reviewer_type": "Mid-market",
+    "text": "Solid CRM with an intuitive interface that our non-technical team adopted quickly. The free tier is genuinely useful, not just a teaser. Integrations with Slack, Gmail and our e-commerce platform work without issues. The reporting could be more customizable — we often need to export to Excel for deeper analysis. Support is average."
+  },
+  {
+    "id": "hs_008", "company": "HubSpot", "source": "G2", "rating": 2,
+    "date": "2026-02-21", "reviewer_type": "Mid-market",
+    "text": "The pricing model is predatory. Core features that should be standard are locked behind expensive tiers. We're a 50-person company paying enterprise prices to access basic reporting filters. Customer support promised a solution to our integration issue for weeks and nothing happened. The product is good but the company behaviour around pricing and support is damaging trust."
+  },
+  {
+    "id": "hs_009", "company": "HubSpot", "source": "Capterra", "rating": 5,
+    "date": "2025-08-14", "reviewer_type": "SMB",
+    "text": "Switched from Salesforce 18 months ago and haven't looked back. The ease of use is night and day. Our team actually uses the CRM now, which was never the case with Salesforce. The marketing automation is powerful and intuitive. For a company our size (25 people) HubSpot hits the perfect balance of capability and usability."
+  },
+  {
+    "id": "hs_010", "company": "HubSpot", "source": "G2", "rating": 3,
+    "date": "2026-03-05", "reviewer_type": "SMB",
+    "text": "Used to be the best value CRM on the market. Now it's just expensive. The product hasn't dramatically improved in 18 months but prices keep going up. Support quality has also declined. I'd still recommend HubSpot to early-stage companies on the free tier but for growing teams the price jump is unjustifiable compared to Pipedrive or Zoho."
+  },
+  {
+    "id": "sf_001", "company": "Salesforce", "source": "G2", "rating": 4,
+    "date": "2025-11-08", "reviewer_type": "Enterprise",
+    "text": "Salesforce is the gold standard for enterprise CRM. The reporting and analytics capabilities are unmatched — we can build any report we need. The integration ecosystem (AppExchange) is massive. The problem? It takes months to implement, requires a dedicated admin, and the cost is astronomical. For a large enterprise with complex workflows it's worth it. For a 100-person company, run."
+  },
+  {
+    "id": "sf_002", "company": "Salesforce", "source": "Capterra", "rating": 2,
+    "date": "2026-01-14", "reviewer_type": "Mid-market",
+    "text": "Too complex for what we need. We spent $180k on implementation and still don't use 70% of the features. Moving to HubSpot next quarter — same core functionality at a fraction of the cost and our team will actually use it. Salesforce support is decent but the product feels built for Fortune 500 companies, not growing mid-market companies."
+  },
+  {
+    "id": "sf_003", "company": "Salesforce", "source": "G2", "rating": 5,
+    "date": "2025-09-15", "reviewer_type": "Enterprise",
+    "text": "For our 500-person sales org, Salesforce is irreplaceable. The customization depth, the AppExchange ecosystem, and the AI features (Einstein) are genuinely differentiating. Reporting and forecasting are best-in-class. Yes, it's expensive and requires expertise to configure, but the ROI at scale is clear. Support has been responsive for our enterprise contract."
+  },
+  {
+    "id": "sf_004", "company": "Salesforce", "source": "Trustpilot", "rating": 1,
+    "date": "2026-02-10", "reviewer_type": "SMB",
+    "text": "Completely overkill for our needs. The interface is bewildering, the learning curve is steep, and the pricing is outrageous for a small business. We left after 8 months and moved to Pipedrive. Night and day difference in usability and cost. Salesforce is a great product if you have a full-time admin and a large enterprise budget. For everyone else, it's a trap."
+  },
+  {
+    "id": "sf_005", "company": "Salesforce", "source": "G2", "rating": 3,
+    "date": "2025-12-20", "reviewer_type": "Mid-market",
+    "text": "The product power is undeniable but the value for money is terrible. We're switching to HubSpot because we're paying Salesforce enterprise prices but using maybe 30% of the functionality. The reporting is excellent, the integrations are extensive, but the total cost of ownership — license + admin + implementation — is unsustainable for a 150-person company."
+  },
+  {
+    "id": "sf_006", "company": "Salesforce", "source": "Capterra", "rating": 4,
+    "date": "2026-01-29", "reviewer_type": "Enterprise",
+    "text": "Salesforce remains the benchmark for enterprise CRM. The analytics and customization are unmatched. Einstein AI adds genuine value for sales forecasting. Support team is knowledgeable though response times for non-critical issues can be slow. The ecosystem of certified partners and apps is a major advantage for complex deployments."
+  },
+  {
+    "id": "sf_007", "company": "Salesforce", "source": "G2", "rating": 2,
+    "date": "2026-02-28", "reviewer_type": "Mid-market",
+    "text": "Migrating away from Salesforce after 4 years. The product is powerful but the complexity-to-value ratio no longer makes sense for us. Too powerful for what we need. The latest price increase was the final straw — 25% increase with no new features that matter to us. The onboarding for new team members takes weeks. Moving to HubSpot."
+  },
+  {
+    "id": "pd_001", "company": "Pipedrive", "source": "G2", "rating": 5,
+    "date": "2025-10-18", "reviewer_type": "SMB",
+    "text": "Pipedrive is exactly what a sales CRM should be. Clean, intuitive pipeline view, great mobile app, and the automations actually work. We moved from Salesforce 2 years ago and the adoption rate went from 40% to 95% of our team. Price is extremely reasonable for what you get. Support team replies within hours."
+  },
+  {
+    "id": "pd_002", "company": "Pipedrive", "source": "Capterra", "rating": 4,
+    "date": "2025-12-05", "reviewer_type": "SMB",
+    "text": "Love the pipeline-focused UX — it's built for sales people, not admins. The value for money is excellent, especially compared to HubSpot or Salesforce. My main gripe is the reporting capabilities — they're functional but nowhere near what I need for quarterly business reviews. I end up exporting to Google Sheets. Support has always been excellent."
+  },
+  {
+    "id": "pd_003", "company": "Pipedrive", "source": "G2", "rating": 5,
+    "date": "2026-01-22", "reviewer_type": "SMB",
+    "text": "Switched from HubSpot 6 months ago and immediately saved 60% on our CRM costs. The interface is more opinionated (pipeline-focused) which actually helped our team build better habits. The Zapier and native integrations cover everything we need. For a 15-person sales team, Pipedrive is perfect."
+  },
+  {
+    "id": "pd_004", "company": "Pipedrive", "source": "Trustpilot", "rating": 4,
+    "date": "2025-11-30", "reviewer_type": "Mid-market",
+    "text": "Genuinely the easiest CRM I've ever used. Set it up in a day, had the team trained in an afternoon. The value for money is excellent — we get 90% of what HubSpot offers at 40% of the price. The reporting module is the weakest part; basic dashboards are fine but custom analytics is limited. Customer support team is responsive and friendly."
+  },
+  {
+    "id": "pd_005", "company": "Pipedrive", "source": "G2", "rating": 3,
+    "date": "2026-02-14", "reviewer_type": "Mid-market",
+    "text": "Great for pure sales pipeline management. But as we've grown we're hitting limitations — the reporting is too basic for management reporting, the marketing features are minimal compared to HubSpot, and some integrations require workarounds. Considering moving to HubSpot for the all-in-one platform even though it costs significantly more."
+  },
+  {
+    "id": "pd_006", "company": "Pipedrive", "source": "Capterra", "rating": 5,
+    "date": "2026-03-01", "reviewer_type": "SMB",
+    "text": "Three years on Pipedrive and still loving it. The best pipeline visualization in the market. They recently added better reporting which is much improved. The mobile app is the best I've used on any CRM. Price has stayed competitive while the product keeps improving. When I've needed support the team has always gone above and beyond."
+  },
+  {
+    "id": "pd_007", "company": "Pipedrive", "source": "G2", "rating": 4,
+    "date": "2025-09-08", "reviewer_type": "SMB",
+    "text": "Pipedrive hits the sweet spot for small teams. Super easy to get started, affordable pricing tiers, and the core sales workflow is beautifully designed. Integration with Slack and email is smooth. The AI features are basic compared to Salesforce Einstein but they're improving. Would strongly recommend over HubSpot for companies that just need a sales CRM."
+  },
+  {
+    "id": "zo_001", "company": "Zoho CRM", "source": "G2", "rating": 4,
+    "date": "2025-10-05", "reviewer_type": "SMB",
+    "text": "Zoho CRM offers extraordinary value. We get features that Salesforce would charge 5x for. The AI assistant (Zia) is genuinely useful for lead scoring. Integration with the broader Zoho suite is seamless. The interface is dated compared to HubSpot or Pipedrive but functionality-wise you get everything. Support can be slow to resolve complex issues."
+  },
+  {
+    "id": "zo_002", "company": "Zoho CRM", "source": "Capterra", "rating": 3,
+    "date": "2025-11-22", "reviewer_type": "Mid-market",
+    "text": "The feature set is impressive for the price but the UI makes everything harder than it needs to be. The learning curve is steep and our team still struggles with some workflows after 6 months. The value for money is excellent. Reporting is decent. Support quality is inconsistent — sometimes great, sometimes weeks to resolve issues."
+  },
+  {
+    "id": "zo_003", "company": "Zoho CRM", "source": "G2", "rating": 5,
+    "date": "2026-01-11", "reviewer_type": "SMB",
+    "text": "For the price point Zoho CRM is unbeatable. We're getting enterprise-level features — AI lead scoring, workflow automation, advanced reporting — at SMB prices. The integration with other Zoho apps (Books, Desk, Campaigns) creates a powerful ecosystem. Would rate higher if the UI was more modern. Support tickets sometimes take longer than expected."
+  },
+  {
+    "id": "zo_004", "company": "Zoho CRM", "source": "Trustpilot", "rating": 2,
+    "date": "2026-02-08", "reviewer_type": "SMB",
+    "text": "The product has amazing features buried under a terrible UX. I wanted to love it because the price is right but after 4 months of frustration we moved to Pipedrive. The support was the worst part — took 3 weeks to get a migration issue resolved, with multiple agents giving conflicting advice. If they fixed the UI and support, they'd have a great product."
+  },
+  {
+    "id": "zo_005", "company": "Zoho CRM", "source": "G2", "rating": 4,
+    "date": "2025-12-18", "reviewer_type": "Mid-market",
+    "text": "Zoho is the best value CRM in the market, full stop. The breadth of features rivals Salesforce at a fraction of the cost. Analytics and reporting are solid. The ecosystem (Zoho One bundle) is incredible value. The UI is not as polished as HubSpot but it's functional. If your team can handle a steeper learning curve, the savings are significant."
+  },
+  {
+    "id": "zo_006", "company": "Zoho CRM", "source": "Capterra", "rating": 3,
+    "date": "2026-01-30", "reviewer_type": "Mid-market",
+    "text": "Feature-rich and affordable, which is why we chose it. But the ease of use is a constant challenge. New hires take 3-4 weeks to become proficient vs 2-3 days on HubSpot. The AI features (Zia) add real value once configured. Customer support quality varies massively by agent. Integration with third-party tools works but often needs custom configuration."
+  }
+]

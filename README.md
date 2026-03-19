@@ -1,7 +1,57 @@
 # InsightEngine — Market Intelligence Prototype
 
 > **Assignment Deliverable · Phase 2 Complete**  
-> Rapid topic exploration and insight generation tool — CRM Software vertical, HubSpot focus.
+> Rapid topic exploration and insight generation tool — multi-industry support, audience-tailored dashboards.
+
+---
+
+## Added Features
+
+| Feature | Description |
+|---------|-------------|
+| **12 industries** | CRM, Food Delivery, Ride-Sharing, SaaS, E-Commerce, Restaurants, Hospitality, Banking, Healthcare, Travel, Telecom, Insurance — each with its own companies, dimensions, and mock data |
+| **Audience-specific charts** | Investors see market share, churn flows, sentiment trends; Companies see radar, heatmap, praise/complaint, dimension deltas; Customers see positioning, radar, benchmarking |
+| **FastAPI backend** | REST API at `/api/industry/{industry}` and `/run-analysis` for live LLM insights |
+| **React + Vite frontend** | Figma-designed dashboard with Recharts, industry/audience routing |
+| **Windows charmap fix** | Unicode sanitization so analysis runs correctly on Windows (cp1252) |
+| **Mock insights per industry** | Pre-computed insights when no API key is set — demo-ready out of the box |
+
+---
+
+## How to Run the App
+
+**Prerequisites:** Python 3.10+, Node.js 18+
+
+### 1. Install dependencies
+
+```powershell
+# Python
+pip install -r requirements.txt
+
+# Frontend (first time only)
+cd figma_export
+npm install
+```
+
+### 2. Start the API (Terminal 1)
+
+```powershell
+python -m uvicorn api.main:app --reload --port 8001
+```
+
+### 3. Start the frontend (Terminal 2)
+
+```powershell
+cd figma_export
+npm run dev
+```
+
+### 4. Open the app
+
+- **Dashboard:** http://localhost:5173  
+- **API docs:** http://localhost:8001/docs  
+
+Use the Industry dropdown to switch between CRM, Food Delivery, Ride-Sharing, etc. Use the Audience tabs (Investors / Companies / Customers) to see tailored charts. **Run Analysis** triggers live LLM insights (requires `GROQ_API_KEY` or `OPENAI_API_KEY` in `.env`).
 
 ---
 
@@ -86,36 +136,28 @@ A working prototype that ingests customer reviews, runs aspect-based sentiment a
 
 ```
 .
-├── index.html                   ← Main deliverable — open this in a browser
-├── pipeline.py                  ← Analysis pipeline (Python)
+├── api/
+│   └── main.py                  ← FastAPI app — industry data, run-analysis endpoint
+├── figma_export/                ← React + Vite frontend (dashboard, charts)
+│   ├── src/
+│   └── package.json
+├── pipeline.py                  ← Analysis pipeline (LLM sentiment + insights)
+├── industry_config.py           ← 12 industries, mock scores & insights
 ├── data/
-│   └── sample_reviews.json      ← 30 representative reviews (demo dataset)
-├── outputs/                     ← Generated JSON results land here
-└── README.md                    ← This file
+│   ├── sample_reviews.json      ← CRM demo dataset
+│   └── sample_reviews_*.json    ← Per-industry sample reviews
+├── outputs/                     ← Generated JSON results
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
 ## Quickstart
 
-### Option A — MarketLens UI (Figma design + API backend)
+### Option A — MarketLens UI (recommended)
 
-Uses the Figma design with a FastAPI backend connected to the pipeline.
-
-```powershell
-# Terminal 1 — start the API
-python -m uvicorn api.main:app --reload --port 8001
-
-# Terminal 2 — start the React frontend
-cd figma_export
-npm install
-npm run dev
-```
-
-- **Frontend:** http://localhost:5173 (default route: CRM Software)
-- **API:** http://localhost:8001/docs
-
-Select **CRM Software (Live)** in the Industry dropdown to see pipeline data. Use **Run Analysis** (with `GROQ_API_KEY` or `OPENAI_API_KEY` set) for live LLM analysis.
+See **How to Run the App** above. Two terminals: API on 8001, frontend on 5173.
 
 ### Option B — Solara app (dark fintech UI)
 

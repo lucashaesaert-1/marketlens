@@ -98,15 +98,42 @@ A working prototype that ingests customer reviews, runs aspect-based sentiment a
 
 ## Quickstart
 
-### Option A — Streamlit app (recommended)
+### Option A — MarketLens UI (Figma design + API backend)
+
+Uses the Figma design with a FastAPI backend connected to the pipeline.
+
+```powershell
+# Terminal 1 — start the API
+python -m uvicorn api.main:app --reload --port 8001
+
+# Terminal 2 — start the React frontend
+cd figma_export
+npm install
+npm run dev
+```
+
+- **Frontend:** http://localhost:5173 (default route: CRM Software)
+- **API:** http://localhost:8001/docs
+
+Select **CRM Software (Live)** in the Industry dropdown to see pipeline data. Use **Run Analysis** (with `GROQ_API_KEY` or `OPENAI_API_KEY` set) for live LLM analysis.
+
+### Option B — Solara app (dark fintech UI)
+
+```powershell
+python -m solara run solara_app.py
+```
+
+Opens at **http://localhost:8766** with Plotly charts and audience tabs.
+
+### Option C — Streamlit app
 
 ```powershell
 python -m streamlit run app.py
 ```
 
-Opens at **http://localhost:8501** with interactive Plotly charts, audience filters, and a live analysis mode sidebar.
+Opens at **http://localhost:8501** with interactive Plotly charts.
 
-### Option B — Static HTML report (no setup needed)
+### Option D — Static HTML report (no setup needed)
 
 ```
 Open index.html in any browser
@@ -114,7 +141,7 @@ Open index.html in any browser
 
 Fully self-contained pre-generated report.
 
-### Option C — Pipeline only (terminal output + JSON)
+### Option E — Pipeline only (terminal output + JSON)
 
 ```powershell
 # Mock mode (no API key):

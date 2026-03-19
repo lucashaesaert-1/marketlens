@@ -1,0 +1,2278 @@
+<!DOCTYPE html><html><head>
+    <title>Solara ☀️</title>
+    <meta charset="utf-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <link rel="icon" type="image/png" sizes="any" href="/static/assets/favicon.png">
+    <link rel="icon" type="image/svg+xml" href="/static/assets/favicon.svg">
+
+    
+
+    
+    
+    <link href="https://cdn.jsdelivr.net/npm//@widgetti/solara-vuetify-app@10.0.3/dist/main8.css" rel="stylesheet" class="solara-template-css">
+    
+
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm//font-awesome@4.5.0/css/font-awesome.min.css" type="text/css">
+    
+    <style class="solara-template-css">/*
+path=/static/highlight.css
+*/
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: rgb(249 249 249); }
+.highlight .c { color: #008000 } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #0000ff } /* Keyword */
+.highlight .ch { color: #008000 } /* Comment.Hashbang */
+.highlight .cm { color: #008000 } /* Comment.Multiline */
+.highlight .cp { color: #0000ff } /* Comment.Preproc */
+.highlight .cpf { color: #008000 } /* Comment.PreprocFile */
+.highlight .c1 { color: #008000 } /* Comment.Single */
+.highlight .cs { color: #008000 } /* Comment.Special */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gh { font-weight: bold } /* Generic.Heading */
+.highlight .gp { font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { font-weight: bold } /* Generic.Subheading */
+.highlight .kc { color: #0000ff } /* Keyword.Constant */
+.highlight .kd { color: #0000ff } /* Keyword.Declaration */
+.highlight .kn { color: #0000ff } /* Keyword.Namespace */
+.highlight .kp { color: #0000ff } /* Keyword.Pseudo */
+.highlight .kr { color: #0000ff } /* Keyword.Reserved */
+.highlight .kt { color: #2b91af } /* Keyword.Type */
+.highlight .s { color: #a31515 } /* Literal.String */
+.highlight .nc { color: #2b91af } /* Name.Class */
+.highlight .ow { color: #0000ff } /* Operator.Word */
+.highlight .sa { color: #a31515 } /* Literal.String.Affix */
+.highlight .sb { color: #a31515 } /* Literal.String.Backtick */
+.highlight .sc { color: #a31515 } /* Literal.String.Char */
+.highlight .dl { color: #a31515 } /* Literal.String.Delimiter */
+.highlight .sd { color: #a31515 } /* Literal.String.Doc */
+.highlight .s2 { color: #a31515 } /* Literal.String.Double */
+.highlight .se { color: #a31515 } /* Literal.String.Escape */
+.highlight .sh { color: #a31515 } /* Literal.String.Heredoc */
+.highlight .si { color: #a31515 } /* Literal.String.Interpol */
+.highlight .sx { color: #a31515 } /* Literal.String.Other */
+.highlight .sr { color: #a31515 } /* Literal.String.Regex */
+.highlight .s1 { color: #a31515 } /* Literal.String.Single */
+.highlight .ss { color: #a31515 } /* Literal.String.Symbol */
+</style>
+    <style class="solara-template-css">/*
+path=/static/highlight-dark.css
+*/
+/* generated using: pygmentize -S vs -f html -S one-dark -a ".theme--dark.v-application .highlight" >! solara/server/static/highlight-dark.css
+   and then remove the overlapping first lines with highlight.css
+*/
+.theme--dark.v-application .highlight .hll { background-color: #ffffcc }
+.theme--dark.v-application .highlight { background: #1d1f22; color: #ABB2BF }
+.theme--dark.v-application .highlight .c { color: #7F848E } /* Comment */
+.theme--dark.v-application .highlight .err { color: #ABB2BF } /* Error */
+.theme--dark.v-application .highlight .esc { color: #ABB2BF } /* Escape */
+.theme--dark.v-application .highlight .g { color: #ABB2BF } /* Generic */
+.theme--dark.v-application .highlight .k { color: #C678DD } /* Keyword */
+.theme--dark.v-application .highlight .l { color: #ABB2BF } /* Literal */
+.theme--dark.v-application .highlight .n { color: #E06C75 } /* Name */
+.theme--dark.v-application .highlight .o { color: #56B6C2 } /* Operator */
+.theme--dark.v-application .highlight .x { color: #ABB2BF } /* Other */
+.theme--dark.v-application .highlight .p { color: #ABB2BF } /* Punctuation */
+.theme--dark.v-application .highlight .ch { color: #7F848E } /* Comment.Hashbang */
+.theme--dark.v-application .highlight .cm { color: #7F848E } /* Comment.Multiline */
+.theme--dark.v-application .highlight .cp { color: #7F848E } /* Comment.Preproc */
+.theme--dark.v-application .highlight .cpf { color: #7F848E } /* Comment.PreprocFile */
+.theme--dark.v-application .highlight .c1 { color: #7F848E } /* Comment.Single */
+.theme--dark.v-application .highlight .cs { color: #7F848E } /* Comment.Special */
+.theme--dark.v-application .highlight .gd { color: #ABB2BF } /* Generic.Deleted */
+.theme--dark.v-application .highlight .ge { color: #ABB2BF } /* Generic.Emph */
+.theme--dark.v-application .highlight .gr { color: #ABB2BF } /* Generic.Error */
+.theme--dark.v-application .highlight .gh { color: #ABB2BF } /* Generic.Heading */
+.theme--dark.v-application .highlight .gi { color: #ABB2BF } /* Generic.Inserted */
+.theme--dark.v-application .highlight .go { color: #ABB2BF } /* Generic.Output */
+.theme--dark.v-application .highlight .gp { color: #ABB2BF } /* Generic.Prompt */
+.theme--dark.v-application .highlight .gs { color: #ABB2BF } /* Generic.Strong */
+.theme--dark.v-application .highlight .gu { color: #ABB2BF } /* Generic.Subheading */
+.theme--dark.v-application .highlight .gt { color: #ABB2BF } /* Generic.Traceback */
+.theme--dark.v-application .highlight .kc { color: #E5C07B } /* Keyword.Constant */
+.theme--dark.v-application .highlight .kd { color: #C678DD } /* Keyword.Declaration */
+.theme--dark.v-application .highlight .kn { color: #C678DD } /* Keyword.Namespace */
+.theme--dark.v-application .highlight .kp { color: #C678DD } /* Keyword.Pseudo */
+.theme--dark.v-application .highlight .kr { color: #C678DD } /* Keyword.Reserved */
+.theme--dark.v-application .highlight .kt { color: #E5C07B } /* Keyword.Type */
+.theme--dark.v-application .highlight .ld { color: #ABB2BF } /* Literal.Date */
+.theme--dark.v-application .highlight .m { color: #D19A66 } /* Literal.Number */
+.theme--dark.v-application .highlight .s { color: #98C379 } /* Literal.String */
+.theme--dark.v-application .highlight .na { color: #E06C75 } /* Name.Attribute */
+.theme--dark.v-application .highlight .nb { color: #E5C07B } /* Name.Builtin */
+.theme--dark.v-application .highlight .nc { color: #E5C07B } /* Name.Class */
+.theme--dark.v-application .highlight .no { color: #E06C75 } /* Name.Constant */
+.theme--dark.v-application .highlight .nd { color: #61AFEF } /* Name.Decorator */
+.theme--dark.v-application .highlight .ni { color: #E06C75 } /* Name.Entity */
+.theme--dark.v-application .highlight .ne { color: #E06C75 } /* Name.Exception */
+.theme--dark.v-application .highlight .nf { color: #61AFEF; font-weight: bold } /* Name.Function */
+.theme--dark.v-application .highlight .nl { color: #E06C75 } /* Name.Label */
+.theme--dark.v-application .highlight .nn { color: #E06C75 } /* Name.Namespace */
+.theme--dark.v-application .highlight .nx { color: #E06C75 } /* Name.Other */
+.theme--dark.v-application .highlight .py { color: #E06C75 } /* Name.Property */
+.theme--dark.v-application .highlight .nt { color: #E06C75 } /* Name.Tag */
+.theme--dark.v-application .highlight .nv { color: #E06C75 } /* Name.Variable */
+.theme--dark.v-application .highlight .ow { color: #56B6C2 } /* Operator.Word */
+.theme--dark.v-application .highlight .p-Marker { color: #ABB2BF } /* Punctuation.Marker */
+.theme--dark.v-application .highlight .w { color: #ABB2BF } /* Text.Whitespace */
+.theme--dark.v-application .highlight .mb { color: #D19A66 } /* Literal.Number.Bin */
+.theme--dark.v-application .highlight .mf { color: #D19A66 } /* Literal.Number.Float */
+.theme--dark.v-application .highlight .mh { color: #D19A66 } /* Literal.Number.Hex */
+.theme--dark.v-application .highlight .mi { color: #D19A66 } /* Literal.Number.Integer */
+.theme--dark.v-application .highlight .mo { color: #D19A66 } /* Literal.Number.Oct */
+.theme--dark.v-application .highlight .sa { color: #98C379 } /* Literal.String.Affix */
+.theme--dark.v-application .highlight .sb { color: #98C379 } /* Literal.String.Backtick */
+.theme--dark.v-application .highlight .sc { color: #98C379 } /* Literal.String.Char */
+.theme--dark.v-application .highlight .dl { color: #98C379 } /* Literal.String.Delimiter */
+.theme--dark.v-application .highlight .sd { color: #98C379 } /* Literal.String.Doc */
+.theme--dark.v-application .highlight .s2 { color: #98C379 } /* Literal.String.Double */
+.theme--dark.v-application .highlight .se { color: #98C379 } /* Literal.String.Escape */
+.theme--dark.v-application .highlight .sh { color: #98C379 } /* Literal.String.Heredoc */
+.theme--dark.v-application .highlight .si { color: #98C379 } /* Literal.String.Interpol */
+.theme--dark.v-application .highlight .sx { color: #98C379 } /* Literal.String.Other */
+.theme--dark.v-application .highlight .sr { color: #98C379 } /* Literal.String.Regex */
+.theme--dark.v-application .highlight .s1 { color: #98C379 } /* Literal.String.Single */
+.theme--dark.v-application .highlight .ss { color: #98C379 } /* Literal.String.Symbol */
+.theme--dark.v-application .highlight .bp { color: #E5C07B } /* Name.Builtin.Pseudo */
+.theme--dark.v-application .highlight .fm { color: #56B6C2; font-weight: bold } /* Name.Function.Magic */
+.theme--dark.v-application .highlight .vc { color: #E06C75 } /* Name.Variable.Class */
+.theme--dark.v-application .highlight .vg { color: #E06C75 } /* Name.Variable.Global */
+.theme--dark.v-application .highlight .vi { color: #E06C75 } /* Name.Variable.Instance */
+.theme--dark.v-application .highlight .vm { color: #E06C75 } /* Name.Variable.Magic */
+.theme--dark.v-application .highlight .il { color: #D19A66 } /* Literal.Number.Integer.Long */
+</style>
+    <link rel="stylesheet" type="text/css" href="/static/assets/style.css?v=eb50ffa1d09f416e2f98dedc1b1296ae" class="solara-template-css">
+    <style id="jupyter-theme-css" class="solara-template-css">/*-----------------------------------------------------------------------------
+| Copyright (c) Jupyter Development Team.
+| Distributed under the terms of the Modified BSD License.
+|----------------------------------------------------------------------------*/
+
+/*
+The following CSS variables define the main, public API for styling JupyterLab.
+These variables should be used by all plugins wherever possible. In other
+words, plugins should not define custom colors, sizes, etc unless absolutely
+necessary. This enables users to change the visual theme of JupyterLab
+by changing these variables.
+
+Many variables appear in an ordered sequence (0,1,2,3). These sequences
+are designed to work well together, so for example, `--jp-border-color1` should
+be used with `--jp-layout-color1`. The numbers have the following meanings:
+
+* 0: super-primary, reserved for special emphasis
+* 1: primary, most important under normal situations
+* 2: secondary, next most important under normal situations
+* 3: tertiary, next most important under normal situations
+
+Throughout JupyterLab, we are mostly following principles from Google's
+Material Design when selecting colors. We are not, however, following
+all of MD as it is not optimized for dense, information rich UIs.
+*/
+
+:root {
+  /* Elevation
+   *
+   * We style box-shadows using Material Design's idea of elevation. These particular numbers are taken from here:
+   *
+   * https://github.com/material-components/material-components-web
+   * https://material-components-web.appspot.com/elevation.html
+   */
+
+  --jp-shadow-base-lightness: 0;
+  --jp-shadow-umbra-color: rgba(
+    var(--jp-shadow-base-lightness),
+    var(--jp-shadow-base-lightness),
+    var(--jp-shadow-base-lightness),
+    0.2
+  );
+  --jp-shadow-penumbra-color: rgba(
+    var(--jp-shadow-base-lightness),
+    var(--jp-shadow-base-lightness),
+    var(--jp-shadow-base-lightness),
+    0.14
+  );
+  --jp-shadow-ambient-color: rgba(
+    var(--jp-shadow-base-lightness),
+    var(--jp-shadow-base-lightness),
+    var(--jp-shadow-base-lightness),
+    0.12
+  );
+  --jp-elevation-z0: none;
+  --jp-elevation-z1: 0px 2px 1px -1px var(--jp-shadow-umbra-color),
+    0px 1px 1px 0px var(--jp-shadow-penumbra-color),
+    0px 1px 3px 0px var(--jp-shadow-ambient-color);
+  --jp-elevation-z2: 0px 3px 1px -2px var(--jp-shadow-umbra-color),
+    0px 2px 2px 0px var(--jp-shadow-penumbra-color),
+    0px 1px 5px 0px var(--jp-shadow-ambient-color);
+  --jp-elevation-z4: 0px 2px 4px -1px var(--jp-shadow-umbra-color),
+    0px 4px 5px 0px var(--jp-shadow-penumbra-color),
+    0px 1px 10px 0px var(--jp-shadow-ambient-color);
+  --jp-elevation-z6: 0px 3px 5px -1px var(--jp-shadow-umbra-color),
+    0px 6px 10px 0px var(--jp-shadow-penumbra-color),
+    0px 1px 18px 0px var(--jp-shadow-ambient-color);
+  --jp-elevation-z8: 0px 5px 5px -3px var(--jp-shadow-umbra-color),
+    0px 8px 10px 1px var(--jp-shadow-penumbra-color),
+    0px 3px 14px 2px var(--jp-shadow-ambient-color);
+  --jp-elevation-z12: 0px 7px 8px -4px var(--jp-shadow-umbra-color),
+    0px 12px 17px 2px var(--jp-shadow-penumbra-color),
+    0px 5px 22px 4px var(--jp-shadow-ambient-color);
+  --jp-elevation-z16: 0px 8px 10px -5px var(--jp-shadow-umbra-color),
+    0px 16px 24px 2px var(--jp-shadow-penumbra-color),
+    0px 6px 30px 5px var(--jp-shadow-ambient-color);
+  --jp-elevation-z20: 0px 10px 13px -6px var(--jp-shadow-umbra-color),
+    0px 20px 31px 3px var(--jp-shadow-penumbra-color),
+    0px 8px 38px 7px var(--jp-shadow-ambient-color);
+  --jp-elevation-z24: 0px 11px 15px -7px var(--jp-shadow-umbra-color),
+    0px 24px 38px 3px var(--jp-shadow-penumbra-color),
+    0px 9px 46px 8px var(--jp-shadow-ambient-color);
+
+  /* Borders
+   *
+   * The following variables, specify the visual styling of borders in JupyterLab.
+   */
+
+  --jp-border-width: 1px;
+  --jp-border-color0: var(--md-grey-400);
+  --jp-border-color1: var(--md-grey-400);
+  --jp-border-color2: var(--md-grey-300);
+  --jp-border-color3: var(--md-grey-200);
+  --jp-inverse-border-color: var(--md-grey-600);
+  --jp-border-radius: 2px;
+
+  /* UI Fonts
+   *
+   * The UI font CSS variables are used for the typography all of the JupyterLab
+   * user interface elements that are not directly user generated content.
+   *
+   * The font sizing here is done assuming that the body font size of --jp-ui-font-size1
+   * is applied to a parent element. When children elements, such as headings, are sized
+   * in em all things will be computed relative to that body size.
+   */
+
+  --jp-ui-font-scale-factor: 1.2;
+  --jp-ui-font-size0: 0.83333em;
+  --jp-ui-font-size1: 13px; /* Base font size */
+  --jp-ui-font-size2: 1.2em;
+  --jp-ui-font-size3: 1.44em;
+
+  --jp-ui-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+
+  /*
+   * Use these font colors against the corresponding main layout colors.
+   * In a light theme, these go from dark to light.
+   */
+
+  /* Defaults use Material Design specification */
+  --jp-ui-font-color0: rgba(0, 0, 0, 1);
+  --jp-ui-font-color1: rgba(0, 0, 0, 0.87);
+  --jp-ui-font-color2: rgba(0, 0, 0, 0.54);
+  --jp-ui-font-color3: rgba(0, 0, 0, 0.38);
+
+  /*
+   * Use these against the brand/accent/warn/error colors.
+   * These will typically go from light to darker, in both a dark and light theme.
+   */
+
+  --jp-ui-inverse-font-color0: rgba(255, 255, 255, 1);
+  --jp-ui-inverse-font-color1: rgba(255, 255, 255, 1);
+  --jp-ui-inverse-font-color2: rgba(255, 255, 255, 0.7);
+  --jp-ui-inverse-font-color3: rgba(255, 255, 255, 0.5);
+
+  /* Content Fonts
+   *
+   * Content font variables are used for typography of user generated content.
+   *
+   * The font sizing here is done assuming that the body font size of --jp-content-font-size1
+   * is applied to a parent element. When children elements, such as headings, are sized
+   * in em all things will be computed relative to that body size.
+   */
+
+  --jp-content-line-height: 1.6;
+  --jp-content-font-scale-factor: 1.2;
+  --jp-content-font-size0: 0.83333em;
+  --jp-content-font-size1: 14px; /* Base font size */
+  --jp-content-font-size2: 1.2em;
+  --jp-content-font-size3: 1.44em;
+  --jp-content-font-size4: 1.728em;
+  --jp-content-font-size5: 2.0736em;
+
+  /* This gives a magnification of about 125% in presentation mode over normal. */
+  --jp-content-presentation-font-size1: 17px;
+
+  --jp-content-heading-line-height: 1;
+  --jp-content-heading-margin-top: 1.2em;
+  --jp-content-heading-margin-bottom: 0.8em;
+  --jp-content-heading-font-weight: 500;
+
+  /* Defaults use Material Design specification */
+  --jp-content-font-color0: rgba(0, 0, 0, 1);
+  --jp-content-font-color1: rgba(0, 0, 0, 0.87);
+  --jp-content-font-color2: rgba(0, 0, 0, 0.54);
+  --jp-content-font-color3: rgba(0, 0, 0, 0.38);
+
+  --jp-content-link-color: var(--md-blue-700);
+
+  --jp-content-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol';
+
+  /*
+   * Code Fonts
+   *
+   * Code font variables are used for typography of code and other monospaces content.
+   */
+
+  --jp-code-font-size: 13px;
+  --jp-code-line-height: 1.3077; /* 17px for 13px base */
+  --jp-code-padding: 5px; /* 5px for 13px base, codemirror highlighting needs integer px value */
+  --jp-code-font-family-default: Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  --jp-code-font-family: var(--jp-code-font-family-default);
+
+  /* This gives a magnification of about 125% in presentation mode over normal. */
+  --jp-code-presentation-font-size: 16px;
+
+  /* may need to tweak cursor width if you change font size */
+  --jp-code-cursor-width0: 1.4px;
+  --jp-code-cursor-width1: 2px;
+  --jp-code-cursor-width2: 4px;
+
+  /* Layout
+   *
+   * The following are the main layout colors use in JupyterLab. In a light
+   * theme these would go from light to dark.
+   */
+
+  --jp-layout-color0: white;
+  --jp-layout-color1: white;
+  --jp-layout-color2: var(--md-grey-200);
+  --jp-layout-color3: var(--md-grey-400);
+  --jp-layout-color4: var(--md-grey-600);
+
+  /* Inverse Layout
+   *
+   * The following are the inverse layout colors use in JupyterLab. In a light
+   * theme these would go from dark to light.
+   */
+
+  --jp-inverse-layout-color0: #111111;
+  --jp-inverse-layout-color1: var(--md-grey-900);
+  --jp-inverse-layout-color2: var(--md-grey-800);
+  --jp-inverse-layout-color3: var(--md-grey-700);
+  --jp-inverse-layout-color4: var(--md-grey-600);
+
+  /* Brand/accent */
+
+  --jp-brand-color0: var(--md-blue-900);
+  --jp-brand-color1: var(--md-blue-700);
+  --jp-brand-color2: var(--md-blue-300);
+  --jp-brand-color3: var(--md-blue-100);
+  --jp-brand-color4: var(--md-blue-50);
+
+  --jp-accent-color0: var(--md-green-900);
+  --jp-accent-color1: var(--md-green-700);
+  --jp-accent-color2: var(--md-green-300);
+  --jp-accent-color3: var(--md-green-100);
+
+  /* State colors (warn, error, success, info) */
+
+  --jp-warn-color0: var(--md-orange-900);
+  --jp-warn-color1: var(--md-orange-700);
+  --jp-warn-color2: var(--md-orange-300);
+  --jp-warn-color3: var(--md-orange-100);
+
+  --jp-error-color0: var(--md-red-900);
+  --jp-error-color1: var(--md-red-700);
+  --jp-error-color2: var(--md-red-300);
+  --jp-error-color3: var(--md-red-100);
+
+  --jp-success-color0: var(--md-green-900);
+  --jp-success-color1: var(--md-green-700);
+  --jp-success-color2: var(--md-green-300);
+  --jp-success-color3: var(--md-green-100);
+
+  --jp-info-color0: var(--md-cyan-900);
+  --jp-info-color1: var(--md-cyan-700);
+  --jp-info-color2: var(--md-cyan-300);
+  --jp-info-color3: var(--md-cyan-100);
+
+  /* Cell specific styles */
+
+  --jp-cell-padding: 5px;
+
+  --jp-cell-collapser-width: 8px;
+  --jp-cell-collapser-min-height: 20px;
+  --jp-cell-collapser-not-active-hover-opacity: 0.6;
+
+  --jp-cell-editor-background: var(--md-grey-100);
+  --jp-cell-editor-border-color: var(--md-grey-300);
+  --jp-cell-editor-box-shadow: inset 0 0 2px var(--md-blue-300);
+  --jp-cell-editor-active-background: var(--jp-layout-color0);
+  --jp-cell-editor-active-border-color: var(--jp-brand-color1);
+
+  --jp-cell-prompt-width: 64px;
+  --jp-cell-prompt-font-family: var(--jp-code-font-family-default);
+  --jp-cell-prompt-letter-spacing: 0px;
+  --jp-cell-prompt-opacity: 1;
+  --jp-cell-prompt-not-active-opacity: 0.5;
+  --jp-cell-prompt-not-active-font-color: var(--md-grey-700);
+  /* A custom blend of MD grey and blue 600
+   * See https://meyerweb.com/eric/tools/color-blend/#546E7A:1E88E5:5:hex */
+  --jp-cell-inprompt-font-color: #307fc1;
+  /* A custom blend of MD grey and orange 600
+   * https://meyerweb.com/eric/tools/color-blend/#546E7A:F4511E:5:hex */
+  --jp-cell-outprompt-font-color: #bf5b3d;
+
+  /* Notebook specific styles */
+
+  --jp-notebook-padding: 10px;
+  --jp-notebook-select-background: var(--jp-layout-color1);
+  --jp-notebook-multiselected-color: var(--md-blue-50);
+
+  /* The scroll padding is calculated to fill enough space at the bottom of the
+  notebook to show one single-line cell (with appropriate padding) at the top
+  when the notebook is scrolled all the way to the bottom. We also subtract one
+  pixel so that no scrollbar appears if we have just one single-line cell in the
+  notebook. This padding is to enable a 'scroll past end' feature in a notebook.
+  */
+  --jp-notebook-scroll-padding: calc(
+    100% - var(--jp-code-font-size) * var(--jp-code-line-height) -
+      var(--jp-code-padding) - var(--jp-cell-padding) - 1px
+  );
+
+  /* Rendermime styles */
+
+  --jp-rendermime-error-background: #fdd;
+  --jp-rendermime-table-row-background: var(--md-grey-100);
+  --jp-rendermime-table-row-hover-background: var(--md-light-blue-50);
+
+  /* Dialog specific styles */
+
+  --jp-dialog-background: rgba(0, 0, 0, 0.25);
+
+  /* Console specific styles */
+
+  --jp-console-padding: 10px;
+
+  /* Toolbar specific styles */
+
+  --jp-toolbar-border-color: var(--jp-border-color1);
+  --jp-toolbar-micro-height: 8px;
+  --jp-toolbar-background: var(--jp-layout-color1);
+  --jp-toolbar-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.24);
+  --jp-toolbar-header-margin: 4px 4px 0px 4px;
+  --jp-toolbar-active-background: var(--md-grey-300);
+
+  /* Statusbar specific styles */
+
+  --jp-statusbar-height: 24px;
+
+  /* Input field styles */
+
+  --jp-input-box-shadow: inset 0 0 2px var(--md-blue-300);
+  --jp-input-active-background: var(--jp-layout-color1);
+  --jp-input-hover-background: var(--jp-layout-color1);
+  --jp-input-background: var(--md-grey-100);
+  --jp-input-border-color: var(--jp-inverse-border-color);
+  --jp-input-active-border-color: var(--jp-brand-color1);
+  --jp-input-active-box-shadow-color: rgba(19, 124, 189, 0.3);
+
+  /* General editor styles */
+
+  --jp-editor-selected-background: #d9d9d9;
+  --jp-editor-selected-focused-background: #d7d4f0;
+  --jp-editor-cursor-color: var(--jp-ui-font-color0);
+
+  /* Code mirror specific styles */
+
+  --jp-mirror-editor-keyword-color: #008000;
+  --jp-mirror-editor-atom-color: #88f;
+  --jp-mirror-editor-number-color: #080;
+  --jp-mirror-editor-def-color: #00f;
+  --jp-mirror-editor-variable-color: var(--md-grey-900);
+  --jp-mirror-editor-variable-2-color: #05a;
+  --jp-mirror-editor-variable-3-color: #085;
+  --jp-mirror-editor-punctuation-color: #05a;
+  --jp-mirror-editor-property-color: #05a;
+  --jp-mirror-editor-operator-color: #aa22ff;
+  --jp-mirror-editor-comment-color: #408080;
+  --jp-mirror-editor-string-color: #ba2121;
+  --jp-mirror-editor-string-2-color: #708;
+  --jp-mirror-editor-meta-color: #aa22ff;
+  --jp-mirror-editor-qualifier-color: #555;
+  --jp-mirror-editor-builtin-color: #008000;
+  --jp-mirror-editor-bracket-color: #997;
+  --jp-mirror-editor-tag-color: #170;
+  --jp-mirror-editor-attribute-color: #00c;
+  --jp-mirror-editor-header-color: blue;
+  --jp-mirror-editor-quote-color: #090;
+  --jp-mirror-editor-link-color: #00c;
+  --jp-mirror-editor-error-color: #f00;
+  --jp-mirror-editor-hr-color: #999;
+
+  /*
+    RTC user specific colors.
+    These colors are used for the cursor, username in the editor,
+    and the icon of the user.
+  */
+
+  --jp-collaborator-color1: #ffad8e;
+  --jp-collaborator-color2: #dac83d;
+  --jp-collaborator-color3: #72dd76;
+  --jp-collaborator-color4: #00e4d0;
+  --jp-collaborator-color5: #45d4ff;
+  --jp-collaborator-color6: #e2b1ff;
+  --jp-collaborator-color7: #ff9de6;
+
+  /* Vega extension styles */
+
+  --jp-vega-background: white;
+
+  /* Sidebar-related styles */
+
+  --jp-sidebar-min-width: 250px;
+
+  /* Search-related styles */
+
+  --jp-search-toggle-off-opacity: 0.5;
+  --jp-search-toggle-hover-opacity: 0.8;
+  --jp-search-toggle-on-opacity: 1;
+  --jp-search-selected-match-background-color: rgb(245, 200, 0);
+  --jp-search-selected-match-color: black;
+  --jp-search-unselected-match-background-color: var(
+    --jp-inverse-layout-color0
+  );
+  --jp-search-unselected-match-color: var(--jp-ui-inverse-font-color0);
+
+  /* Icon colors that work well with light or dark backgrounds */
+  --jp-icon-contrast-color0: var(--md-purple-600);
+  --jp-icon-contrast-color1: var(--md-green-600);
+  --jp-icon-contrast-color2: var(--md-pink-600);
+  --jp-icon-contrast-color3: var(--md-blue-600);
+
+  /* File or activity icons and switch semantic variables */
+  --jp-jupyter-icon-color: #f37626;
+  --jp-notebook-icon-color: #f37626;
+  --jp-json-icon-color: var(--md-orange-700);
+  --jp-console-icon-background-color: var(--md-blue-700);
+  --jp-console-icon-color: white;
+  --jp-terminal-icon-background-color: var(--md-grey-800);
+  --jp-terminal-icon-color: var(--md-grey-200);
+  --jp-text-editor-icon-color: var(--md-grey-700);
+  --jp-inspector-icon-color: var(--md-grey-700);
+  --jp-switch-color: var(--md-grey-400);
+  --jp-switch-true-position-color: var(--md-orange-900);
+}
+</style>
+    <style class="solara-template-css">/*
+path=/static/assets/custom.css
+*/
+/* not empty *
+</style>
+
+    <script id="jupyter-config-data" type="application/json">
+    {
+        "baseUrl": "/jupyter/",
+        "kernelId": "1234"
+    }
+    </script>
+    <style class="solara-template-css">
+        html,
+body {
+    height: 100vh;
+}
+
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(359deg);
+    }
+}
+
+@keyframes oscillate {
+    0% {
+        transform: scale(0.8);
+    }
+
+    50% {
+        transform: scale(1.0);
+    }
+
+    100% {
+        transform: scale(0.8);
+    }
+}
+
+#sun-spinner1 {
+    animation: spin 6s linear infinite;
+    padding: 10px;
+}
+
+#sun-spinner2 {
+    animation: spin 2s cubic-bezier(.79, .14, .15, .86) infinite;
+    padding: 10px;
+}
+
+#sun-spinner-container {
+    animation: oscillate 2s linear infinite;
+}
+
+@keyframes bounce-in {
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes bounce-out {
+    0% {
+        transform: translateZ(0) scale(1);
+    }
+
+    100% {
+        transform: translateZ(0) scale(50);
+    }
+}
+
+.solara-transition-enter-active {
+    transition: opacity 0.5s ease;
+    /* animation: bounce-in 0.5s ease; */
+}
+
+.solara-transition-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.solara-transition-leave-active .solara-loader {
+    animation: bounce-out 0.5s ease;
+}
+
+.solara-transition-leave-active #sun-spinner-container {
+    animation: unset;
+}
+
+.solara-transition-leave-active h1 {
+    visibility: hidden;
+}
+
+.solara-transition-enter,
+.solara-transition-leave-to {
+    opacity: 0;
+}
+
+#sun-spinner-container {
+    overflow: hidden;
+}
+
+#loader-container {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    z-index: 998;
+    display: flex;
+    align-items: center;
+}
+
+#loader {
+    position: absolute;
+    text-align: center;
+    z-index: 1000;
+    overflow: hidden;
+}
+    </style>
+    <!-- Include Vuetify background colours so static html from SSG renders the right general colour theme
+        before first render. We remove these after Vue takes over rendering to avoid collisions -->
+    
+    
+<script type="x-template" id="vue-app-template" style="display: none">
+    <v-app :key="forceUpdateTrigger" :class="loadingPage ? 'solara-page-loading' : ''">
+        <v-progress-linear :style="{visibility: (kernelBusyLong && isMounted) ? 'visible' : 'hidden'}" indeterminate
+            absolute></v-progress-linear>
+        <v-alert v-if="needsRefresh || cancelAutoRefresh" type="warning" border="left"
+            style="position: absolute; right: 0px; z-index: 100; left: 0px;">
+            App is disconnected, and may not function properly. Please refresh the page.
+        </v-alert>
+        
+        <transition name="solara-transition" :duration="{ enter: 500, leave: 500 }">
+    <div v-if="loading" id="loader-container">
+        <v-container id="loader" key="loader" class="solara-loader" fluid>
+            <v-row>
+                <v-col>
+                    <div id="sun-spinner-container">
+                        <!-- <img id="sun-spinner" height="100px" src="static/assets/favicon.svg" /> -->
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
+                            xmlns:svgjs="http://svgjs.com/svgjs" width="65" height="65"><svg width="65" height="65"
+                                viewBox="0 0 65 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path id="sun-spinner1" style="transform-origin: center;"
+                                    d="M57.11 30.64L61.47 17.87L48.7 13.51L42.76 1.39999L30.65 7.34999L17.87 2.97999L13.51 15.75L1.40002 21.7L7.35002 33.81L2.99002 46.58L15.76 50.94L21.71 63.06L33.82 57.11L46.59 61.47L50.95 48.7L63.06 42.75L57.11 30.64ZM54.26 34.39L34.39 54.26C33.19 55.46 31.25 55.46 30.05 54.26L10.2 34.4C9.00002 33.2 9.00002 31.26 10.2 30.07L30.06 10.2C31.26 8.99999 33.2 8.99999 34.4 10.2L54.27 30.07C55.47 31.27 55.47 33.21 54.27 34.4L54.26 34.39Z"
+                                    fill="#FFCF64"></path>
+                                <path id="sun-spinner2" style="transform-origin: center;"
+                                    d="M53.62 19.42L51.65 6.07L38.3 8.04L27.46 0L19.42 10.84L6.07 12.82L8.04 26.17L0 37L10.84 45.04L12.81 58.39L26.16 56.42L37 64.46L45.04 53.62L58.39 51.64L56.42 38.29L64.46 27.45L53.62 19.4V19.42ZM52.8 24.06L44.24 50.82C43.72 52.43 42 53.32 40.39 52.81L13.63 44.25C12.02 43.74 11.13 42.01 11.64 40.4L20.21 13.64C20.72 12.03 22.45 11.14 24.06 11.65L50.82 20.21C52.43 20.72 53.32 22.45 52.81 24.06H52.8Z"
+                                    fill="#FF8C3E"></path>
+                            </svg>
+                        </svg>
+
+                    </div>
+                    <h1>{{ loading_text }}</h1>
+
+                </v-col>
+            </v-row>
+        </v-container>
+        <div style="right: 50px; bottom: 10px; position: absolute;">
+            <b>Made with <a href="https://solara.dev">Solara</a></b>
+        </div>
+    </div>
+    <div v-else>
+        <jupyter-widget-mount-point mount-id="solara-main">
+            A widget with mount-id="solara-main" should go here
+        </jupyter-widget-mount-point>
+        <div v-if="showBanner" style="position: absolute; right: 0px; bottom: 0px; padding: 10px;">
+            <b>This website runs on <a href="https://solara.dev">Solara</a></b>
+        </div>
+    </div>
+</transition>
+
+        <v-overlay style="z-index: 100002;" :value="(connectionStatus != 'connected') & wasConnected">
+            <v-progress-circular indeterminate size="128" style="text-align: center;">Server
+                disconnected.</v-progress-circular>
+        </v-overlay>
+
+        <v-dialog v-model="needsRefresh" width="500">
+            <v-card>
+                <v-card-title class="text-h5 grey lighten-2">Please refresh the page</v-card-title>
+
+                
+                <v-card-text>
+                    Could not restore session. Will refresh in {{autoRefreshCount}} seconds.
+                    </v-card-text>
+                
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="secondary" text @click="reload()">
+                        Refresh now
+                    </v-btn>
+                    <v-btn color="primary" text @click="setCancelAutoRefresh()">
+                        Cancel
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-menu v-if="debug && solaraDebugMessages && solaraDebugMessages.length" offset-y top
+            :close-on-content-click="false">
+            <template v-slot:activator="{ on }">
+                <v-btn text v-on="on" style="position: fixed; bottom: 8px; right: 8px">
+                    <span style="color: red">{{ solaraDebugMessages.length }}</span>
+                    <v-icon right large color="red">mdi-bug-outline</v-icon>
+                </v-btn>
+            </template>
+            <v-sheet class="pa-2" style="overflow: auto; max-height: 80vh">
+                <div style="display: flex" v-for="message in solaraDebugMessages" :key="message.cell" class="pa-2">
+                    <div style="width: 50px">[{{ message.cell }}]</div>
+                    <div v-if="message.traceback" class="jp-RenderedText jp-OutputArea-output"
+                        data-mime-type="application/vnd.jupyter.stderr">
+                        <pre v-html="message.traceback" class="pa-2"></pre>
+                    </div>
+                    <pre v-else><span :style="message.name === 'stderr' ? 'background-color: var(--jp-rendermime-error-background)' : ''"
+                                class="pa-2"
+                            >{{ message.text }}</span>
+                    </pre>
+                </div>
+                <div class="d-flex justify-end">
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn icon v-bind="attrs" v-on="on" @click="solaraDebugMessages = []">
+                                <v-icon>mdi-trash-can-outline</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Clear messages</span>
+                    </v-tooltip>
+                </div>
+            </v-sheet>
+        </v-menu>
+
+        <!-- <v-menu v-if="debug && outputMessages && outputMessages.length" offset-y top
+            :close-on-content-click="false">
+            <template v-slot:activator="{ on }">
+                <v-btn text v-on="on" style="position: fixed; top: 8px; right: 8px">
+                    <span style="color: #333">{{ outputMessages.length }}</span>
+                    <v-icon right large color="#333">mdi-information-outline</v-icon>
+                </v-btn>
+            </template>
+            <v-sheet class="pa-2" style="overflow: auto; max-height: 80vh">
+                <div style="display: flex" v-for="message in outputMessages" :key="message.cell" class="pa-2">
+                    <div style="width: 50px">[{{ message.cell }}]</div>
+                    <div v-if="message.traceback" class="jp-RenderedText jp-OutputArea-output"
+                        data-mime-type="application/vnd.jupyter.stderr">
+                        <pre v-html="message.traceback" class="pa-2"></pre>
+                    </div>
+                    <pre v-else><span :style="message.name === 'stderr' ? 'background-color: var(--jp-rendermime-error-background)' : ''"
+                                class="pa-2"
+                            >{{ message.text }}</span>
+                    </pre>
+                </div>
+                <div class="d-flex justify-end">
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn icon v-bind="attrs" v-on="on" @click="outputMessages = []">
+                                <v-icon>mdi-trash-can-outline</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Clear messages</span>
+                    </v-tooltip>
+                </div>
+            </v-sheet>
+        </v-menu> -->
+    </v-app>
+</script><style>.f2s1awa{align-items:center;display:flex;flex-direction:row}.f1235lqo{color:var(--jp-ui-font-color1);font-family:var(--jp-ui-font-family);font-size:var(--jp-ui-font-size1);line-height:24px}.f14byud0{align-items:center;background:var(--jp-layout-color2);display:flex;justify-content:space-between;min-height:var(--jp-statusbar-height);padding-left:10px;padding-right:10px}.fddsvlq{align-items:center;display:flex}.fy1visq{flex-direction:row}.f1fwtl1j{flex-direction:row-reverse}.fk1s8g9{color:var(--jp-ui-font-color1);height:var(--jp-statusbar-height);margin-left:2px;margin-right:2px;max-height:var(--jp-statusbar-height);padding-left:6px;padding-right:6px;text-overflow:ellipsis;white-space:nowrap}.f1rbgl4n{background-color:var(--jp-brand-color1)}.f1rbgl4n .f1235lqo{color:white}.fwgmxe9:hover{background-color:var(--jp-layout-color3)}.fzt5yh7{box-shadow:0px 4px 4px rgba(0, 0, 0, 0.25)}.f1mm715f{background-color:var(--jp-layout-color2);box-shadow:var(--jp-toolbar-box-shadow);font-size:var(--jp-ui-font-size1);padding:4px 12px;z-index:2}.f4ilvu8{color:var(--jp-ui-font-color0);font-size:var(--jp-ui-font-size0);line-height:var(--jp-ui-font-size1);margin-top:4px}.f1958oj{background-position:center;background-repeat:no-repeat;background-size:16px;border:none;border-radius:0px;height:24px;outline:none;padding:0px 12px;position:absolute;right:8px;top:4px;width:12px}.fb0mcj4{background-color:var(--jp-brand-color1);background-position:center;background-repeat:no-repeat;background-size:16px;border:none;border-radius:0px;box-sizing:border-box;height:100%;outline:none;padding:4px 6px;position:absolute;right:0px;top:0px;width:100%}.fya4nu5{background-color:transparent;background-position:center;background-repeat:no-repeat;background-size:16px;border:none;border-radius:0px;box-sizing:border-box;height:100%;outline:none;position:absolute;right:0px;top:0px;width:100%}.f123ynex{background-color:var(--jp-input-active-background);border:1px solid var(--jp-border-color0);height:22px;overflow:hidden;padding:0px 8px}.f1bwa14q{border:var(--jp-border-width) solid var(--md-blue-500);box-shadow:inset 0 0 4px var(--md-blue-300)}.f13uy5em{background:transparent;border:none;color:var(--jp-ui-font-color0);height:100%;line-height:28px;outline:none;width:200px}</style><style type="text/css" id="vuetify-theme-stylesheet">.v-application a { color: #1976d2; }
+.v-application .primary {
+  background-color: #1976d2 !important;
+  border-color: #1976d2 !important;
+}
+.v-application .primary--text {
+  color: #1976d2 !important;
+  caret-color: #1976d2 !important;
+}
+.v-application .primary.lighten-5 {
+  background-color: #c7fdff !important;
+  border-color: #c7fdff !important;
+}
+.v-application .primary--text.text--lighten-5 {
+  color: #c7fdff !important;
+  caret-color: #c7fdff !important;
+}
+.v-application .primary.lighten-4 {
+  background-color: #a8e0ff !important;
+  border-color: #a8e0ff !important;
+}
+.v-application .primary--text.text--lighten-4 {
+  color: #a8e0ff !important;
+  caret-color: #a8e0ff !important;
+}
+.v-application .primary.lighten-3 {
+  background-color: #8ac5ff !important;
+  border-color: #8ac5ff !important;
+}
+.v-application .primary--text.text--lighten-3 {
+  color: #8ac5ff !important;
+  caret-color: #8ac5ff !important;
+}
+.v-application .primary.lighten-2 {
+  background-color: #6aaaff !important;
+  border-color: #6aaaff !important;
+}
+.v-application .primary--text.text--lighten-2 {
+  color: #6aaaff !important;
+  caret-color: #6aaaff !important;
+}
+.v-application .primary.lighten-1 {
+  background-color: #488fef !important;
+  border-color: #488fef !important;
+}
+.v-application .primary--text.text--lighten-1 {
+  color: #488fef !important;
+  caret-color: #488fef !important;
+}
+.v-application .primary.darken-1 {
+  background-color: #005eb6 !important;
+  border-color: #005eb6 !important;
+}
+.v-application .primary--text.text--darken-1 {
+  color: #005eb6 !important;
+  caret-color: #005eb6 !important;
+}
+.v-application .primary.darken-2 {
+  background-color: #00479b !important;
+  border-color: #00479b !important;
+}
+.v-application .primary--text.text--darken-2 {
+  color: #00479b !important;
+  caret-color: #00479b !important;
+}
+.v-application .primary.darken-3 {
+  background-color: #003180 !important;
+  border-color: #003180 !important;
+}
+.v-application .primary--text.text--darken-3 {
+  color: #003180 !important;
+  caret-color: #003180 !important;
+}
+.v-application .primary.darken-4 {
+  background-color: #001e67 !important;
+  border-color: #001e67 !important;
+}
+.v-application .primary--text.text--darken-4 {
+  color: #001e67 !important;
+  caret-color: #001e67 !important;
+}
+.v-application .secondary {
+  background-color: #424242 !important;
+  border-color: #424242 !important;
+}
+.v-application .secondary--text {
+  color: #424242 !important;
+  caret-color: #424242 !important;
+}
+.v-application .secondary.lighten-5 {
+  background-color: #c1c1c1 !important;
+  border-color: #c1c1c1 !important;
+}
+.v-application .secondary--text.text--lighten-5 {
+  color: #c1c1c1 !important;
+  caret-color: #c1c1c1 !important;
+}
+.v-application .secondary.lighten-4 {
+  background-color: #a6a6a6 !important;
+  border-color: #a6a6a6 !important;
+}
+.v-application .secondary--text.text--lighten-4 {
+  color: #a6a6a6 !important;
+  caret-color: #a6a6a6 !important;
+}
+.v-application .secondary.lighten-3 {
+  background-color: #8b8b8b !important;
+  border-color: #8b8b8b !important;
+}
+.v-application .secondary--text.text--lighten-3 {
+  color: #8b8b8b !important;
+  caret-color: #8b8b8b !important;
+}
+.v-application .secondary.lighten-2 {
+  background-color: #727272 !important;
+  border-color: #727272 !important;
+}
+.v-application .secondary--text.text--lighten-2 {
+  color: #727272 !important;
+  caret-color: #727272 !important;
+}
+.v-application .secondary.lighten-1 {
+  background-color: #595959 !important;
+  border-color: #595959 !important;
+}
+.v-application .secondary--text.text--lighten-1 {
+  color: #595959 !important;
+  caret-color: #595959 !important;
+}
+.v-application .secondary.darken-1 {
+  background-color: #2c2c2c !important;
+  border-color: #2c2c2c !important;
+}
+.v-application .secondary--text.text--darken-1 {
+  color: #2c2c2c !important;
+  caret-color: #2c2c2c !important;
+}
+.v-application .secondary.darken-2 {
+  background-color: #171717 !important;
+  border-color: #171717 !important;
+}
+.v-application .secondary--text.text--darken-2 {
+  color: #171717 !important;
+  caret-color: #171717 !important;
+}
+.v-application .secondary.darken-3 {
+  background-color: #000000 !important;
+  border-color: #000000 !important;
+}
+.v-application .secondary--text.text--darken-3 {
+  color: #000000 !important;
+  caret-color: #000000 !important;
+}
+.v-application .secondary.darken-4 {
+  background-color: #000000 !important;
+  border-color: #000000 !important;
+}
+.v-application .secondary--text.text--darken-4 {
+  color: #000000 !important;
+  caret-color: #000000 !important;
+}
+.v-application .accent {
+  background-color: #82b1ff !important;
+  border-color: #82b1ff !important;
+}
+.v-application .accent--text {
+  color: #82b1ff !important;
+  caret-color: #82b1ff !important;
+}
+.v-application .accent.lighten-5 {
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+.v-application .accent--text.text--lighten-5 {
+  color: #ffffff !important;
+  caret-color: #ffffff !important;
+}
+.v-application .accent.lighten-4 {
+  background-color: #f8ffff !important;
+  border-color: #f8ffff !important;
+}
+.v-application .accent--text.text--lighten-4 {
+  color: #f8ffff !important;
+  caret-color: #f8ffff !important;
+}
+.v-application .accent.lighten-3 {
+  background-color: #daffff !important;
+  border-color: #daffff !important;
+}
+.v-application .accent--text.text--lighten-3 {
+  color: #daffff !important;
+  caret-color: #daffff !important;
+}
+.v-application .accent.lighten-2 {
+  background-color: #bce8ff !important;
+  border-color: #bce8ff !important;
+}
+.v-application .accent--text.text--lighten-2 {
+  color: #bce8ff !important;
+  caret-color: #bce8ff !important;
+}
+.v-application .accent.lighten-1 {
+  background-color: #9fccff !important;
+  border-color: #9fccff !important;
+}
+.v-application .accent--text.text--lighten-1 {
+  color: #9fccff !important;
+  caret-color: #9fccff !important;
+}
+.v-application .accent.darken-1 {
+  background-color: #6596e2 !important;
+  border-color: #6596e2 !important;
+}
+.v-application .accent--text.text--darken-1 {
+  color: #6596e2 !important;
+  caret-color: #6596e2 !important;
+}
+.v-application .accent.darken-2 {
+  background-color: #467dc6 !important;
+  border-color: #467dc6 !important;
+}
+.v-application .accent--text.text--darken-2 {
+  color: #467dc6 !important;
+  caret-color: #467dc6 !important;
+}
+.v-application .accent.darken-3 {
+  background-color: #2364aa !important;
+  border-color: #2364aa !important;
+}
+.v-application .accent--text.text--darken-3 {
+  color: #2364aa !important;
+  caret-color: #2364aa !important;
+}
+.v-application .accent.darken-4 {
+  background-color: #004c90 !important;
+  border-color: #004c90 !important;
+}
+.v-application .accent--text.text--darken-4 {
+  color: #004c90 !important;
+  caret-color: #004c90 !important;
+}
+.v-application .error {
+  background-color: #ff5252 !important;
+  border-color: #ff5252 !important;
+}
+.v-application .error--text {
+  color: #ff5252 !important;
+  caret-color: #ff5252 !important;
+}
+.v-application .error.lighten-5 {
+  background-color: #ffe4d5 !important;
+  border-color: #ffe4d5 !important;
+}
+.v-application .error--text.text--lighten-5 {
+  color: #ffe4d5 !important;
+  caret-color: #ffe4d5 !important;
+}
+.v-application .error.lighten-4 {
+  background-color: #ffc6b9 !important;
+  border-color: #ffc6b9 !important;
+}
+.v-application .error--text.text--lighten-4 {
+  color: #ffc6b9 !important;
+  caret-color: #ffc6b9 !important;
+}
+.v-application .error.lighten-3 {
+  background-color: #ffa99e !important;
+  border-color: #ffa99e !important;
+}
+.v-application .error--text.text--lighten-3 {
+  color: #ffa99e !important;
+  caret-color: #ffa99e !important;
+}
+.v-application .error.lighten-2 {
+  background-color: #ff8c84 !important;
+  border-color: #ff8c84 !important;
+}
+.v-application .error--text.text--lighten-2 {
+  color: #ff8c84 !important;
+  caret-color: #ff8c84 !important;
+}
+.v-application .error.lighten-1 {
+  background-color: #ff6f6a !important;
+  border-color: #ff6f6a !important;
+}
+.v-application .error--text.text--lighten-1 {
+  color: #ff6f6a !important;
+  caret-color: #ff6f6a !important;
+}
+.v-application .error.darken-1 {
+  background-color: #df323b !important;
+  border-color: #df323b !important;
+}
+.v-application .error--text.text--darken-1 {
+  color: #df323b !important;
+  caret-color: #df323b !important;
+}
+.v-application .error.darken-2 {
+  background-color: #bf0025 !important;
+  border-color: #bf0025 !important;
+}
+.v-application .error--text.text--darken-2 {
+  color: #bf0025 !important;
+  caret-color: #bf0025 !important;
+}
+.v-application .error.darken-3 {
+  background-color: #9f0010 !important;
+  border-color: #9f0010 !important;
+}
+.v-application .error--text.text--darken-3 {
+  color: #9f0010 !important;
+  caret-color: #9f0010 !important;
+}
+.v-application .error.darken-4 {
+  background-color: #800000 !important;
+  border-color: #800000 !important;
+}
+.v-application .error--text.text--darken-4 {
+  color: #800000 !important;
+  caret-color: #800000 !important;
+}
+.v-application .info {
+  background-color: #2196f3 !important;
+  border-color: #2196f3 !important;
+}
+.v-application .info--text {
+  color: #2196f3 !important;
+  caret-color: #2196f3 !important;
+}
+.v-application .info.lighten-5 {
+  background-color: #d4ffff !important;
+  border-color: #d4ffff !important;
+}
+.v-application .info--text.text--lighten-5 {
+  color: #d4ffff !important;
+  caret-color: #d4ffff !important;
+}
+.v-application .info.lighten-4 {
+  background-color: #b5ffff !important;
+  border-color: #b5ffff !important;
+}
+.v-application .info--text.text--lighten-4 {
+  color: #b5ffff !important;
+  caret-color: #b5ffff !important;
+}
+.v-application .info.lighten-3 {
+  background-color: #95e8ff !important;
+  border-color: #95e8ff !important;
+}
+.v-application .info--text.text--lighten-3 {
+  color: #95e8ff !important;
+  caret-color: #95e8ff !important;
+}
+.v-application .info.lighten-2 {
+  background-color: #75ccff !important;
+  border-color: #75ccff !important;
+}
+.v-application .info--text.text--lighten-2 {
+  color: #75ccff !important;
+  caret-color: #75ccff !important;
+}
+.v-application .info.lighten-1 {
+  background-color: #51b0ff !important;
+  border-color: #51b0ff !important;
+}
+.v-application .info--text.text--lighten-1 {
+  color: #51b0ff !important;
+  caret-color: #51b0ff !important;
+}
+.v-application .info.darken-1 {
+  background-color: #007cd6 !important;
+  border-color: #007cd6 !important;
+}
+.v-application .info--text.text--darken-1 {
+  color: #007cd6 !important;
+  caret-color: #007cd6 !important;
+}
+.v-application .info.darken-2 {
+  background-color: #0064ba !important;
+  border-color: #0064ba !important;
+}
+.v-application .info--text.text--darken-2 {
+  color: #0064ba !important;
+  caret-color: #0064ba !important;
+}
+.v-application .info.darken-3 {
+  background-color: #004d9f !important;
+  border-color: #004d9f !important;
+}
+.v-application .info--text.text--darken-3 {
+  color: #004d9f !important;
+  caret-color: #004d9f !important;
+}
+.v-application .info.darken-4 {
+  background-color: #003784 !important;
+  border-color: #003784 !important;
+}
+.v-application .info--text.text--darken-4 {
+  color: #003784 !important;
+  caret-color: #003784 !important;
+}
+.v-application .success {
+  background-color: #4caf50 !important;
+  border-color: #4caf50 !important;
+}
+.v-application .success--text {
+  color: #4caf50 !important;
+  caret-color: #4caf50 !important;
+}
+.v-application .success.lighten-5 {
+  background-color: #dcffd6 !important;
+  border-color: #dcffd6 !important;
+}
+.v-application .success--text.text--lighten-5 {
+  color: #dcffd6 !important;
+  caret-color: #dcffd6 !important;
+}
+.v-application .success.lighten-4 {
+  background-color: #beffba !important;
+  border-color: #beffba !important;
+}
+.v-application .success--text.text--lighten-4 {
+  color: #beffba !important;
+  caret-color: #beffba !important;
+}
+.v-application .success.lighten-3 {
+  background-color: #a2ff9e !important;
+  border-color: #a2ff9e !important;
+}
+.v-application .success--text.text--lighten-3 {
+  color: #a2ff9e !important;
+  caret-color: #a2ff9e !important;
+}
+.v-application .success.lighten-2 {
+  background-color: #85e783 !important;
+  border-color: #85e783 !important;
+}
+.v-application .success--text.text--lighten-2 {
+  color: #85e783 !important;
+  caret-color: #85e783 !important;
+}
+.v-application .success.lighten-1 {
+  background-color: #69cb69 !important;
+  border-color: #69cb69 !important;
+}
+.v-application .success--text.text--lighten-1 {
+  color: #69cb69 !important;
+  caret-color: #69cb69 !important;
+}
+.v-application .success.darken-1 {
+  background-color: #2d9437 !important;
+  border-color: #2d9437 !important;
+}
+.v-application .success--text.text--darken-1 {
+  color: #2d9437 !important;
+  caret-color: #2d9437 !important;
+}
+.v-application .success.darken-2 {
+  background-color: #00791e !important;
+  border-color: #00791e !important;
+}
+.v-application .success--text.text--darken-2 {
+  color: #00791e !important;
+  caret-color: #00791e !important;
+}
+.v-application .success.darken-3 {
+  background-color: #006000 !important;
+  border-color: #006000 !important;
+}
+.v-application .success--text.text--darken-3 {
+  color: #006000 !important;
+  caret-color: #006000 !important;
+}
+.v-application .success.darken-4 {
+  background-color: #004700 !important;
+  border-color: #004700 !important;
+}
+.v-application .success--text.text--darken-4 {
+  color: #004700 !important;
+  caret-color: #004700 !important;
+}
+.v-application .warning {
+  background-color: #fb8c00 !important;
+  border-color: #fb8c00 !important;
+}
+.v-application .warning--text {
+  color: #fb8c00 !important;
+  caret-color: #fb8c00 !important;
+}
+.v-application .warning.lighten-5 {
+  background-color: #ffff9e !important;
+  border-color: #ffff9e !important;
+}
+.v-application .warning--text.text--lighten-5 {
+  color: #ffff9e !important;
+  caret-color: #ffff9e !important;
+}
+.v-application .warning.lighten-4 {
+  background-color: #fffb82 !important;
+  border-color: #fffb82 !important;
+}
+.v-application .warning--text.text--lighten-4 {
+  color: #fffb82 !important;
+  caret-color: #fffb82 !important;
+}
+.v-application .warning.lighten-3 {
+  background-color: #ffdf67 !important;
+  border-color: #ffdf67 !important;
+}
+.v-application .warning--text.text--lighten-3 {
+  color: #ffdf67 !important;
+  caret-color: #ffdf67 !important;
+}
+.v-application .warning.lighten-2 {
+  background-color: #ffc24b !important;
+  border-color: #ffc24b !important;
+}
+.v-application .warning--text.text--lighten-2 {
+  color: #ffc24b !important;
+  caret-color: #ffc24b !important;
+}
+.v-application .warning.lighten-1 {
+  background-color: #ffa72d !important;
+  border-color: #ffa72d !important;
+}
+.v-application .warning--text.text--lighten-1 {
+  color: #ffa72d !important;
+  caret-color: #ffa72d !important;
+}
+.v-application .warning.darken-1 {
+  background-color: #db7200 !important;
+  border-color: #db7200 !important;
+}
+.v-application .warning--text.text--darken-1 {
+  color: #db7200 !important;
+  caret-color: #db7200 !important;
+}
+.v-application .warning.darken-2 {
+  background-color: #bb5900 !important;
+  border-color: #bb5900 !important;
+}
+.v-application .warning--text.text--darken-2 {
+  color: #bb5900 !important;
+  caret-color: #bb5900 !important;
+}
+.v-application .warning.darken-3 {
+  background-color: #9d4000 !important;
+  border-color: #9d4000 !important;
+}
+.v-application .warning--text.text--darken-3 {
+  color: #9d4000 !important;
+  caret-color: #9d4000 !important;
+}
+.v-application .warning.darken-4 {
+  background-color: #802700 !important;
+  border-color: #802700 !important;
+}
+.v-application .warning--text.text--darken-4 {
+  color: #802700 !important;
+  caret-color: #802700 !important;
+}</style><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="/jupyter/nbextensions/anywidget/extension.js" src="/jupyter/nbextensions/anywidget/extension.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="/jupyter/nbextensions/catboost-widget/extension.js" src="/jupyter/nbextensions/catboost-widget/extension.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="nbextensions/jupyter-vuetify/nodeps" src="/jupyter/nbextensions/jupyter-vuetify/nodeps.js"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="nbextensions/jupyter-vue/nodeps" src="/jupyter/nbextensions/jupyter-vue/nodeps.js"></script><style>html {
+  /* font sizes in vuetify are in rem units. To get the correct font size, the html tag has to have a font size of 
+     * 16px */
+  font-size: 16px;
+}
+
+:where(.vuetify-styles) div.v-application--wrap {
+  /* disable min-height: 100vh set by vuetify */
+  min-height: unset;
+}
+
+.vuetify-styles {
+  /* Rules set on the html element in the vuetify styles are no longer applied after prefixing all selectors, so copy
+     * them here. */
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+  /* From _reset.scss */
+  box-sizing: border-box;
+}
+
+/* fix for override from jp-ThemedContainer button */
+button.v-btn--rounded {
+  border-radius: 28px;
+}
+
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL2xpYi9zdHlsZXMuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7YUFDVztFQUNYLGVBQWU7QUFDakI7O0FBRUE7RUFDRSw2Q0FBNkM7RUFDN0MsaUJBQWlCO0FBQ25COztBQUVBO0VBQ0U7bUJBQ2lCO0VBQ2pCLGtCQUFrQjtFQUNsQixrQ0FBa0M7RUFDbEMsbUNBQW1DO0VBQ25DLGtDQUFrQztFQUNsQyw2Q0FBNkM7O0VBRTdDLHFCQUFxQjtFQUNyQixzQkFBc0I7QUFDeEI7O0FBRUEsb0RBQW9EO0FBQ3BEO0VBQ0UsbUJBQW1CO0FBQ3JCIiwic291cmNlc0NvbnRlbnQiOlsiaHRtbCB7XG4gIC8qIGZvbnQgc2l6ZXMgaW4gdnVldGlmeSBhcmUgaW4gcmVtIHVuaXRzLiBUbyBnZXQgdGhlIGNvcnJlY3QgZm9udCBzaXplLCB0aGUgaHRtbCB0YWcgaGFzIHRvIGhhdmUgYSBmb250IHNpemUgb2YgXG4gICAgICogMTZweCAqL1xuICBmb250LXNpemU6IDE2cHg7XG59XG5cbjp3aGVyZSgudnVldGlmeS1zdHlsZXMpIGRpdi52LWFwcGxpY2F0aW9uLS13cmFwIHtcbiAgLyogZGlzYWJsZSBtaW4taGVpZ2h0OiAxMDB2aCBzZXQgYnkgdnVldGlmeSAqL1xuICBtaW4taGVpZ2h0OiB1bnNldDtcbn1cblxuLnZ1ZXRpZnktc3R5bGVzIHtcbiAgLyogUnVsZXMgc2V0IG9uIHRoZSBodG1sIGVsZW1lbnQgaW4gdGhlIHZ1ZXRpZnkgc3R5bGVzIGFyZSBubyBsb25nZXIgYXBwbGllZCBhZnRlciBwcmVmaXhpbmcgYWxsIHNlbGVjdG9ycywgc28gY29weVxuICAgICAqIHRoZW0gaGVyZS4gKi9cbiAgb3ZlcmZsb3cteDogaGlkZGVuO1xuICB0ZXh0LXJlbmRlcmluZzogb3B0aW1pemVMZWdpYmlsaXR5O1xuICAtd2Via2l0LWZvbnQtc21vb3RoaW5nOiBhbnRpYWxpYXNlZDtcbiAgLW1vei1vc3gtZm9udC1zbW9vdGhpbmc6IGdyYXlzY2FsZTtcbiAgLXdlYmtpdC10YXAtaGlnaGxpZ2h0LWNvbG9yOiByZ2JhKDAsIDAsIDAsIDApO1xuXG4gIC8qIEZyb20gX3Jlc2V0LnNjc3MgKi9cbiAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbn1cblxuLyogZml4IGZvciBvdmVycmlkZSBmcm9tIGpwLVRoZW1lZENvbnRhaW5lciBidXR0b24gKi9cbmJ1dHRvbi52LWJ0bi0tcm91bmRlZCB7XG4gIGJvcmRlci1yYWRpdXM6IDI4cHg7XG59XG4iXSwic291cmNlUm9vdCI6IiJ9 */</style><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="nbextensions/anywidget/index" src="/jupyter/nbextensions/anywidget/index.js"></script><style id="plotly.js-style-global"></style><style id="ce8d464691048653ffe3a57c6c18ab566e8366f186677868cf724621a857b4fe">.maplibregl-map{font:12px/20px Helvetica Neue,Arial,Helvetica,sans-serif;overflow:hidden;position:relative;-webkit-tap-highlight-color:rgb(0 0 0/0)}.maplibregl-canvas{left:0;position:absolute;top:0}.maplibregl-map:fullscreen{height:100%;width:100%}.maplibregl-ctrl-group button.maplibregl-ctrl-compass{touch-action:none}.maplibregl-canvas-container.maplibregl-interactive,.maplibregl-ctrl-group button.maplibregl-ctrl-compass{cursor:grab;-webkit-user-select:none;-moz-user-select:none;user-select:none}.maplibregl-canvas-container.maplibregl-interactive.maplibregl-track-pointer{cursor:pointer}.maplibregl-canvas-container.maplibregl-interactive:active,.maplibregl-ctrl-group button.maplibregl-ctrl-compass:active{cursor:grabbing}.maplibregl-canvas-container.maplibregl-touch-zoom-rotate,.maplibregl-canvas-container.maplibregl-touch-zoom-rotate .maplibregl-canvas{touch-action:pan-x pan-y}.maplibregl-canvas-container.maplibregl-touch-drag-pan,.maplibregl-canvas-container.maplibregl-touch-drag-pan .maplibregl-canvas{touch-action:pinch-zoom}.maplibregl-canvas-container.maplibregl-touch-zoom-rotate.maplibregl-touch-drag-pan,.maplibregl-canvas-container.maplibregl-touch-zoom-rotate.maplibregl-touch-drag-pan .maplibregl-canvas{touch-action:none}.maplibregl-canvas-container.maplibregl-touch-drag-pan.maplibregl-cooperative-gestures,.maplibregl-canvas-container.maplibregl-touch-drag-pan.maplibregl-cooperative-gestures .maplibregl-canvas{touch-action:pan-x pan-y}.maplibregl-ctrl-bottom-left,.maplibregl-ctrl-bottom-right,.maplibregl-ctrl-top-left,.maplibregl-ctrl-top-right{pointer-events:none;position:absolute;z-index:2}.maplibregl-ctrl-top-left{left:0;top:0}.maplibregl-ctrl-top-right{right:0;top:0}.maplibregl-ctrl-bottom-left{bottom:0;left:0}.maplibregl-ctrl-bottom-right{bottom:0;right:0}.maplibregl-ctrl{clear:both;pointer-events:auto;transform:translate(0)}.maplibregl-ctrl-top-left .maplibregl-ctrl{float:left;margin:10px 0 0 10px}.maplibregl-ctrl-top-right .maplibregl-ctrl{float:right;margin:10px 10px 0 0}.maplibregl-ctrl-bottom-left .maplibregl-ctrl{float:left;margin:0 0 10px 10px}.maplibregl-ctrl-bottom-right .maplibregl-ctrl{float:right;margin:0 10px 10px 0}.maplibregl-ctrl-group{background:#fff;border-radius:4px}.maplibregl-ctrl-group:not(:empty){box-shadow:0 0 0 2px rgba(0,0,0,.1)}@media (forced-colors:active){.maplibregl-ctrl-group:not(:empty){box-shadow:0 0 0 2px ButtonText}}.maplibregl-ctrl-group button{background-color:transparent;border:0;box-sizing:border-box;cursor:pointer;display:block;height:29px;outline:none;padding:0;width:29px}.maplibregl-ctrl-group button+button{border-top:1px solid #ddd}.maplibregl-ctrl button .maplibregl-ctrl-icon{background-position:50%;background-repeat:no-repeat;display:block;height:100%;width:100%}@media (forced-colors:active){.maplibregl-ctrl-icon{background-color:transparent}.maplibregl-ctrl-group button+button{border-top:1px solid ButtonText}}.maplibregl-ctrl button::-moz-focus-inner{border:0;padding:0}.maplibregl-ctrl-attrib-button:focus,.maplibregl-ctrl-group button:focus{box-shadow:0 0 2px 2px #0096ff}.maplibregl-ctrl button:disabled{cursor:not-allowed}.maplibregl-ctrl button:disabled .maplibregl-ctrl-icon{opacity:.25}.maplibregl-ctrl button:not(:disabled):hover{background-color:rgb(0 0 0/5%)}.maplibregl-ctrl-group button:focus:focus-visible{box-shadow:0 0 2px 2px #0096ff}.maplibregl-ctrl-group button:focus:not(:focus-visible){box-shadow:none}.maplibregl-ctrl-group button:focus:first-child{border-radius:4px 4px 0 0}.maplibregl-ctrl-group button:focus:last-child{border-radius:0 0 4px 4px}.maplibregl-ctrl-group button:focus:only-child{border-radius:inherit}.maplibregl-ctrl button.maplibregl-ctrl-zoom-out .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23333' viewBox='0 0 29 29'%3E%3Cpath d='M10 13c-.75 0-1.5.75-1.5 1.5S9.25 16 10 16h9c.75 0 1.5-.75 1.5-1.5S19.75 13 19 13z'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-zoom-in .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23333' viewBox='0 0 29 29'%3E%3Cpath d='M14.5 8.5c-.75 0-1.5.75-1.5 1.5v3h-3c-.75 0-1.5.75-1.5 1.5S9.25 16 10 16h3v3c0 .75.75 1.5 1.5 1.5S16 19.75 16 19v-3h3c.75 0 1.5-.75 1.5-1.5S19.75 13 19 13h-3v-3c0-.75-.75-1.5-1.5-1.5'/%3E%3C/svg%3E")}@media (forced-colors:active){.maplibregl-ctrl button.maplibregl-ctrl-zoom-out .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23fff' viewBox='0 0 29 29'%3E%3Cpath d='M10 13c-.75 0-1.5.75-1.5 1.5S9.25 16 10 16h9c.75 0 1.5-.75 1.5-1.5S19.75 13 19 13z'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-zoom-in .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23fff' viewBox='0 0 29 29'%3E%3Cpath d='M14.5 8.5c-.75 0-1.5.75-1.5 1.5v3h-3c-.75 0-1.5.75-1.5 1.5S9.25 16 10 16h3v3c0 .75.75 1.5 1.5 1.5S16 19.75 16 19v-3h3c.75 0 1.5-.75 1.5-1.5S19.75 13 19 13h-3v-3c0-.75-.75-1.5-1.5-1.5'/%3E%3C/svg%3E")}}@media (forced-colors:active) and (prefers-color-scheme:light){.maplibregl-ctrl button.maplibregl-ctrl-zoom-out .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' viewBox='0 0 29 29'%3E%3Cpath d='M10 13c-.75 0-1.5.75-1.5 1.5S9.25 16 10 16h9c.75 0 1.5-.75 1.5-1.5S19.75 13 19 13z'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-zoom-in .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' viewBox='0 0 29 29'%3E%3Cpath d='M14.5 8.5c-.75 0-1.5.75-1.5 1.5v3h-3c-.75 0-1.5.75-1.5 1.5S9.25 16 10 16h3v3c0 .75.75 1.5 1.5 1.5S16 19.75 16 19v-3h3c.75 0 1.5-.75 1.5-1.5S19.75 13 19 13h-3v-3c0-.75-.75-1.5-1.5-1.5'/%3E%3C/svg%3E")}}.maplibregl-ctrl button.maplibregl-ctrl-fullscreen .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23333' viewBox='0 0 29 29'%3E%3Cpath d='M24 16v5.5c0 1.75-.75 2.5-2.5 2.5H16v-1l3-1.5-4-5.5 1-1 5.5 4 1.5-3zM6 16l1.5 3 5.5-4 1 1-4 5.5 3 1.5v1H7.5C5.75 24 5 23.25 5 21.5V16zm7-11v1l-3 1.5 4 5.5-1 1-5.5-4L6 13H5V7.5C5 5.75 5.75 5 7.5 5zm11 2.5c0-1.75-.75-2.5-2.5-2.5H16v1l3 1.5-4 5.5 1 1 5.5-4 1.5 3h1z'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-shrink .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' viewBox='0 0 29 29'%3E%3Cpath d='M18.5 16c-1.75 0-2.5.75-2.5 2.5V24h1l1.5-3 5.5 4 1-1-4-5.5 3-1.5v-1zM13 18.5c0-1.75-.75-2.5-2.5-2.5H5v1l3 1.5L4 24l1 1 5.5-4 1.5 3h1zm3-8c0 1.75.75 2.5 2.5 2.5H24v-1l-3-1.5L25 5l-1-1-5.5 4L17 5h-1zM10.5 13c1.75 0 2.5-.75 2.5-2.5V5h-1l-1.5 3L5 4 4 5l4 5.5L5 12v1z'/%3E%3C/svg%3E")}@media (forced-colors:active){.maplibregl-ctrl button.maplibregl-ctrl-fullscreen .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23fff' viewBox='0 0 29 29'%3E%3Cpath d='M24 16v5.5c0 1.75-.75 2.5-2.5 2.5H16v-1l3-1.5-4-5.5 1-1 5.5 4 1.5-3zM6 16l1.5 3 5.5-4 1 1-4 5.5 3 1.5v1H7.5C5.75 24 5 23.25 5 21.5V16zm7-11v1l-3 1.5 4 5.5-1 1-5.5-4L6 13H5V7.5C5 5.75 5.75 5 7.5 5zm11 2.5c0-1.75-.75-2.5-2.5-2.5H16v1l3 1.5-4 5.5 1 1 5.5-4 1.5 3h1z'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-shrink .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23fff' viewBox='0 0 29 29'%3E%3Cpath d='M18.5 16c-1.75 0-2.5.75-2.5 2.5V24h1l1.5-3 5.5 4 1-1-4-5.5 3-1.5v-1zM13 18.5c0-1.75-.75-2.5-2.5-2.5H5v1l3 1.5L4 24l1 1 5.5-4 1.5 3h1zm3-8c0 1.75.75 2.5 2.5 2.5H24v-1l-3-1.5L25 5l-1-1-5.5 4L17 5h-1zM10.5 13c1.75 0 2.5-.75 2.5-2.5V5h-1l-1.5 3L5 4 4 5l4 5.5L5 12v1z'/%3E%3C/svg%3E")}}@media (forced-colors:active) and (prefers-color-scheme:light){.maplibregl-ctrl button.maplibregl-ctrl-fullscreen .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' viewBox='0 0 29 29'%3E%3Cpath d='M24 16v5.5c0 1.75-.75 2.5-2.5 2.5H16v-1l3-1.5-4-5.5 1-1 5.5 4 1.5-3zM6 16l1.5 3 5.5-4 1 1-4 5.5 3 1.5v1H7.5C5.75 24 5 23.25 5 21.5V16zm7-11v1l-3 1.5 4 5.5-1 1-5.5-4L6 13H5V7.5C5 5.75 5.75 5 7.5 5zm11 2.5c0-1.75-.75-2.5-2.5-2.5H16v1l3 1.5-4 5.5 1 1 5.5-4 1.5 3h1z'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-shrink .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' viewBox='0 0 29 29'%3E%3Cpath d='M18.5 16c-1.75 0-2.5.75-2.5 2.5V24h1l1.5-3 5.5 4 1-1-4-5.5 3-1.5v-1zM13 18.5c0-1.75-.75-2.5-2.5-2.5H5v1l3 1.5L4 24l1 1 5.5-4 1.5 3h1zm3-8c0 1.75.75 2.5 2.5 2.5H24v-1l-3-1.5L25 5l-1-1-5.5 4L17 5h-1zM10.5 13c1.75 0 2.5-.75 2.5-2.5V5h-1l-1.5 3L5 4 4 5l4 5.5L5 12v1z'/%3E%3C/svg%3E")}}.maplibregl-ctrl button.maplibregl-ctrl-compass .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23333' viewBox='0 0 29 29'%3E%3Cpath d='m10.5 14 4-8 4 8z'/%3E%3Cpath fill='%23ccc' d='m10.5 16 4 8 4-8z'/%3E%3C/svg%3E")}@media (forced-colors:active){.maplibregl-ctrl button.maplibregl-ctrl-compass .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23fff' viewBox='0 0 29 29'%3E%3Cpath d='m10.5 14 4-8 4 8z'/%3E%3Cpath fill='%23ccc' d='m10.5 16 4 8 4-8z'/%3E%3C/svg%3E")}}@media (forced-colors:active) and (prefers-color-scheme:light){.maplibregl-ctrl button.maplibregl-ctrl-compass .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' viewBox='0 0 29 29'%3E%3Cpath d='m10.5 14 4-8 4 8z'/%3E%3Cpath fill='%23ccc' d='m10.5 16 4 8 4-8z'/%3E%3C/svg%3E")}}.maplibregl-ctrl button.maplibregl-ctrl-terrain .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23333' viewBox='0 0 22 22'%3E%3Cpath d='m1.754 13.406 4.453-4.851 3.09 3.09 3.281 3.277.969-.969-3.309-3.312 3.844-4.121 6.148 6.886h1.082v-.855l-7.207-8.07-4.84 5.187L6.169 6.57l-5.48 5.965v.871ZM.688 16.844h20.625v1.375H.688Zm0 0'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-terrain-enabled .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%2333b5e5' viewBox='0 0 22 22'%3E%3Cpath d='m1.754 13.406 4.453-4.851 3.09 3.09 3.281 3.277.969-.969-3.309-3.312 3.844-4.121 6.148 6.886h1.082v-.855l-7.207-8.07-4.84 5.187L6.169 6.57l-5.48 5.965v.871ZM.688 16.844h20.625v1.375H.688Zm0 0'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-geolocate .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23333' viewBox='0 0 20 20'%3E%3Cpath d='M10 4C9 4 9 5 9 5v.1A5 5 0 0 0 5.1 9H5s-1 0-1 1 1 1 1 1h.1A5 5 0 0 0 9 14.9v.1s0 1 1 1 1-1 1-1v-.1a5 5 0 0 0 3.9-3.9h.1s1 0 1-1-1-1-1-1h-.1A5 5 0 0 0 11 5.1V5s0-1-1-1m0 2.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 1 1 0-7'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-geolocate:disabled .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23aaa' viewBox='0 0 20 20'%3E%3Cpath d='M10 4C9 4 9 5 9 5v.1A5 5 0 0 0 5.1 9H5s-1 0-1 1 1 1 1 1h.1A5 5 0 0 0 9 14.9v.1s0 1 1 1 1-1 1-1v-.1a5 5 0 0 0 3.9-3.9h.1s1 0 1-1-1-1-1-1h-.1A5 5 0 0 0 11 5.1V5s0-1-1-1m0 2.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 1 1 0-7'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3Cpath fill='red' d='m14 5 1 1-9 9-1-1z'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%2333b5e5' viewBox='0 0 20 20'%3E%3Cpath d='M10 4C9 4 9 5 9 5v.1A5 5 0 0 0 5.1 9H5s-1 0-1 1 1 1 1 1h.1A5 5 0 0 0 9 14.9v.1s0 1 1 1 1-1 1-1v-.1a5 5 0 0 0 3.9-3.9h.1s1 0 1-1-1-1-1-1h-.1A5 5 0 0 0 11 5.1V5s0-1-1-1m0 2.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 1 1 0-7'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active-error .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23e58978' viewBox='0 0 20 20'%3E%3Cpath d='M10 4C9 4 9 5 9 5v.1A5 5 0 0 0 5.1 9H5s-1 0-1 1 1 1 1 1h.1A5 5 0 0 0 9 14.9v.1s0 1 1 1 1-1 1-1v-.1a5 5 0 0 0 3.9-3.9h.1s1 0 1-1-1-1-1-1h-.1A5 5 0 0 0 11 5.1V5s0-1-1-1m0 2.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 1 1 0-7'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%2333b5e5' viewBox='0 0 20 20'%3E%3Cpath d='M10 4C9 4 9 5 9 5v.1A5 5 0 0 0 5.1 9H5s-1 0-1 1 1 1 1 1h.1A5 5 0 0 0 9 14.9v.1s0 1 1 1 1-1 1-1v-.1a5 5 0 0 0 3.9-3.9h.1s1 0 1-1-1-1-1-1h-.1A5 5 0 0 0 11 5.1V5s0-1-1-1m0 2.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 1 1 0-7'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background-error .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23e54e33' viewBox='0 0 20 20'%3E%3Cpath d='M10 4C9 4 9 5 9 5v.1A5 5 0 0 0 5.1 9H5s-1 0-1 1 1 1 1 1h.1A5 5 0 0 0 9 14.9v.1s0 1 1 1 1-1 1-1v-.1a5 5 0 0 0 3.9-3.9h.1s1 0 1-1-1-1-1-1h-.1A5 5 0 0 0 11 5.1V5s0-1-1-1m0 2.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 1 1 0-7'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-waiting .maplibregl-ctrl-icon{animation:maplibregl-spin 2s linear infinite}@media (forced-colors:active){.maplibregl-ctrl button.maplibregl-ctrl-geolocate .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23fff' viewBox='0 0 20 20'%3E%3Cpath d='M10 4C9 4 9 5 9 5v.1A5 5 0 0 0 5.1 9H5s-1 0-1 1 1 1 1 1h.1A5 5 0 0 0 9 14.9v.1s0 1 1 1 1-1 1-1v-.1a5 5 0 0 0 3.9-3.9h.1s1 0 1-1-1-1-1-1h-.1A5 5 0 0 0 11 5.1V5s0-1-1-1m0 2.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 1 1 0-7'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-geolocate:disabled .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23999' viewBox='0 0 20 20'%3E%3Cpath d='M10 4C9 4 9 5 9 5v.1A5 5 0 0 0 5.1 9H5s-1 0-1 1 1 1 1 1h.1A5 5 0 0 0 9 14.9v.1s0 1 1 1 1-1 1-1v-.1a5 5 0 0 0 3.9-3.9h.1s1 0 1-1-1-1-1-1h-.1A5 5 0 0 0 11 5.1V5s0-1-1-1m0 2.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 1 1 0-7'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3Cpath fill='red' d='m14 5 1 1-9 9-1-1z'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%2333b5e5' viewBox='0 0 20 20'%3E%3Cpath d='M10 4C9 4 9 5 9 5v.1A5 5 0 0 0 5.1 9H5s-1 0-1 1 1 1 1 1h.1A5 5 0 0 0 9 14.9v.1s0 1 1 1 1-1 1-1v-.1a5 5 0 0 0 3.9-3.9h.1s1 0 1-1-1-1-1-1h-.1A5 5 0 0 0 11 5.1V5s0-1-1-1m0 2.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 1 1 0-7'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active-error .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23e58978' viewBox='0 0 20 20'%3E%3Cpath d='M10 4C9 4 9 5 9 5v.1A5 5 0 0 0 5.1 9H5s-1 0-1 1 1 1 1 1h.1A5 5 0 0 0 9 14.9v.1s0 1 1 1 1-1 1-1v-.1a5 5 0 0 0 3.9-3.9h.1s1 0 1-1-1-1-1-1h-.1A5 5 0 0 0 11 5.1V5s0-1-1-1m0 2.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 1 1 0-7'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%2333b5e5' viewBox='0 0 20 20'%3E%3Cpath d='M10 4C9 4 9 5 9 5v.1A5 5 0 0 0 5.1 9H5s-1 0-1 1 1 1 1 1h.1A5 5 0 0 0 9 14.9v.1s0 1 1 1 1-1 1-1v-.1a5 5 0 0 0 3.9-3.9h.1s1 0 1-1-1-1-1-1h-.1A5 5 0 0 0 11 5.1V5s0-1-1-1m0 2.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 1 1 0-7'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-background-error .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23e54e33' viewBox='0 0 20 20'%3E%3Cpath d='M10 4C9 4 9 5 9 5v.1A5 5 0 0 0 5.1 9H5s-1 0-1 1 1 1 1 1h.1A5 5 0 0 0 9 14.9v.1s0 1 1 1 1-1 1-1v-.1a5 5 0 0 0 3.9-3.9h.1s1 0 1-1-1-1-1-1h-.1A5 5 0 0 0 11 5.1V5s0-1-1-1m0 2.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 1 1 0-7'/%3E%3C/svg%3E")}}@media (forced-colors:active) and (prefers-color-scheme:light){.maplibregl-ctrl button.maplibregl-ctrl-geolocate .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' viewBox='0 0 20 20'%3E%3Cpath d='M10 4C9 4 9 5 9 5v.1A5 5 0 0 0 5.1 9H5s-1 0-1 1 1 1 1 1h.1A5 5 0 0 0 9 14.9v.1s0 1 1 1 1-1 1-1v-.1a5 5 0 0 0 3.9-3.9h.1s1 0 1-1-1-1-1-1h-.1A5 5 0 0 0 11 5.1V5s0-1-1-1m0 2.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 1 1 0-7'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3C/svg%3E")}.maplibregl-ctrl button.maplibregl-ctrl-geolocate:disabled .maplibregl-ctrl-icon{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='%23666' viewBox='0 0 20 20'%3E%3Cpath d='M10 4C9 4 9 5 9 5v.1A5 5 0 0 0 5.1 9H5s-1 0-1 1 1 1 1 1h.1A5 5 0 0 0 9 14.9v.1s0 1 1 1 1-1 1-1v-.1a5 5 0 0 0 3.9-3.9h.1s1 0 1-1-1-1-1-1h-.1A5 5 0 0 0 11 5.1V5s0-1-1-1m0 2.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 1 1 0-7'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3Cpath fill='red' d='m14 5 1 1-9 9-1-1z'/%3E%3C/svg%3E")}}@keyframes maplibregl-spin{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}a.maplibregl-ctrl-logo{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='23' fill='none'%3E%3Cpath fill='%23000' fill-opacity='.4' fill-rule='evenodd' d='M17.408 16.796h-1.827l2.501-12.095h.198l3.324 6.533.988 2.19.988-2.19 3.258-6.533h.181l2.6 12.095h-1.81l-1.218-5.644-.362-1.71-.658 1.71-2.929 5.644h-.098l-2.914-5.644-.757-1.71-.345 1.71zm1.958-3.42-.726 3.663a1.255 1.255 0 0 1-1.232 1.011h-1.827a1.255 1.255 0 0 1-1.229-1.509l2.501-12.095a1.255 1.255 0 0 1 1.23-1.001h.197a1.25 1.25 0 0 1 1.12.685l3.19 6.273 3.125-6.263a1.25 1.25 0 0 1 1.123-.695h.181a1.255 1.255 0 0 1 1.227.991l1.443 6.71a5 5 0 0 1 .314-.787l.009-.016a4.6 4.6 0 0 1 1.777-1.887c.782-.46 1.668-.667 2.611-.667a4.6 4.6 0 0 1 1.7.32l.306.134c.21-.16.474-.256.759-.256h1.694a1.255 1.255 0 0 1 1.212.925 1.255 1.255 0 0 1 1.212-.925h1.711c.284 0 .545.094.755.252.613-.3 1.312-.45 2.075-.45 1.356 0 2.557.445 3.482 1.4q.47.48.763 1.064V4.701a1.255 1.255 0 0 1 1.255-1.255h1.86A1.255 1.255 0 0 1 54.44 4.7v9.194h2.217c.19 0 .37.043.532.118v-4.77c0-.356.147-.678.385-.906a2.42 2.42 0 0 1-.682-1.71c0-.665.267-1.253.735-1.7a2.45 2.45 0 0 1 1.722-.674 2.43 2.43 0 0 1 1.705.675q.318.302.504.683V4.7a1.255 1.255 0 0 1 1.255-1.255h1.744A1.255 1.255 0 0 1 65.812 4.7v3.335a4.8 4.8 0 0 1 1.526-.246c.938 0 1.817.214 2.59.69a4.47 4.47 0 0 1 1.67 1.743v-.98a1.255 1.255 0 0 1 1.256-1.256h1.777c.233 0 .451.064.639.174a3.4 3.4 0 0 1 1.567-.372c.346 0 .861.02 1.285.232a1.25 1.25 0 0 1 .689 1.004 4.7 4.7 0 0 1 .853-.588c.795-.44 1.675-.647 2.61-.647 1.385 0 2.65.39 3.525 1.396.836.938 1.168 2.173 1.168 3.528q-.001.515-.056 1.051a1.255 1.255 0 0 1-.947 1.09l.408.952a1.255 1.255 0 0 1-.477 1.552c-.418.268-.92.463-1.458.612-.613.171-1.304.244-2.049.244-1.06 0-2.043-.207-2.886-.698l-.015-.008c-.798-.48-1.419-1.135-1.818-1.963l-.004-.008a5.8 5.8 0 0 1-.548-2.512q0-.429.053-.843a1.3 1.3 0 0 1-.333-.086l-.166-.004c-.223 0-.426.062-.643.228-.03.024-.142.139-.142.59v3.883a1.255 1.255 0 0 1-1.256 1.256h-1.777a1.255 1.255 0 0 1-1.256-1.256V15.69l-.032.057a4.8 4.8 0 0 1-1.86 1.833 5.04 5.04 0 0 1-2.484.634 4.5 4.5 0 0 1-1.935-.424 1.25 1.25 0 0 1-.764.258h-1.71a1.255 1.255 0 0 1-1.256-1.255V7.687a2.4 2.4 0 0 1-.428.625c.253.23.412.561.412.93v7.553a1.255 1.255 0 0 1-1.256 1.255h-1.843a1.25 1.25 0 0 1-.894-.373c-.228.23-.544.373-.894.373H51.32a1.255 1.255 0 0 1-1.256-1.255v-1.251l-.061.117a4.7 4.7 0 0 1-1.782 1.884 4.77 4.77 0 0 1-2.485.67 5.6 5.6 0 0 1-1.485-.188l.009 2.764a1.255 1.255 0 0 1-1.255 1.259h-1.729a1.255 1.255 0 0 1-1.255-1.255v-3.537a1.255 1.255 0 0 1-1.167.793h-1.679a1.25 1.25 0 0 1-.77-.263 4.5 4.5 0 0 1-1.945.429c-.885 0-1.724-.21-2.495-.632l-.017-.01a5 5 0 0 1-1.081-.836 1.255 1.255 0 0 1-1.254 1.312h-1.81a1.255 1.255 0 0 1-1.228-.99l-.782-3.625-2.044 3.939a1.25 1.25 0 0 1-1.115.676h-.098a1.25 1.25 0 0 1-1.116-.68l-2.061-3.994zM35.92 16.63l.207-.114.223-.15q.493-.356.735-.785l.061-.118.033 1.332h1.678V9.242h-1.694l-.033 1.267q-.133-.329-.526-.658l-.032-.028a3.2 3.2 0 0 0-.668-.428l-.27-.12a3.3 3.3 0 0 0-1.235-.23q-1.136-.001-1.974.493a3.36 3.36 0 0 0-1.3 1.382q-.445.89-.444 2.074 0 1.2.51 2.107a3.8 3.8 0 0 0 1.382 1.381 3.9 3.9 0 0 0 1.893.477q.795 0 1.455-.33zm-2.789-5.38q-.576.675-.575 1.762 0 1.102.559 1.794.576.675 1.645.675a2.25 2.25 0 0 0 .934-.19 2.2 2.2 0 0 0 .468-.29l.178-.161a2.2 2.2 0 0 0 .397-.561q.244-.5.244-1.15v-.115q0-.708-.296-1.267l-.043-.077a2.2 2.2 0 0 0-.633-.709l-.13-.086-.047-.028a2.1 2.1 0 0 0-1.073-.285q-1.052 0-1.629.692zm2.316 2.706c.163-.17.28-.407.28-.83v-.114c0-.292-.06-.508-.15-.68a.96.96 0 0 0-.353-.389.85.85 0 0 0-.464-.127c-.4 0-.56.114-.664.239l-.01.012c-.148.174-.275.45-.275.945 0 .506.122.801.27.99.097.11.266.224.68.224.303 0 .504-.09.687-.269zm7.545 1.705a2.6 2.6 0 0 0 .331.423q.319.33.755.548l.173.074q.65.255 1.49.255 1.02 0 1.844-.493a3.45 3.45 0 0 0 1.316-1.4q.493-.904.493-2.089 0-1.909-.988-2.913-.988-1.02-2.584-1.02-.898 0-1.575.347a3 3 0 0 0-.415.262l-.199.166a3.4 3.4 0 0 0-.64.82V9.242h-1.712v11.553h1.729l-.017-5.134zm.53-1.138q.206.29.48.5l.155.11.053.034q.51.296 1.119.297 1.07 0 1.645-.675.577-.69.576-1.762 0-1.119-.576-1.777-.558-.675-1.645-.675-.435 0-.835.16a2 2 0 0 0-.284.136 2 2 0 0 0-.363.254 2.2 2.2 0 0 0-.46.569l-.082.162a2.6 2.6 0 0 0-.213 1.072v.115q0 .707.296 1.267l.135.211zm.964-.818a1.1 1.1 0 0 0 .367.385.94.94 0 0 0 .476.118c.423 0 .59-.117.687-.23.159-.194.28-.478.28-.95 0-.53-.133-.8-.266-.952l-.021-.025c-.078-.094-.231-.221-.68-.221a1 1 0 0 0-.503.135l-.012.007a.86.86 0 0 0-.335.343c-.073.133-.132.324-.132.614v.115a1.4 1.4 0 0 0 .14.66zm15.7-6.222q.347-.346.346-.856a1.05 1.05 0 0 0-.345-.79 1.18 1.18 0 0 0-.84-.329q-.51 0-.855.33a1.05 1.05 0 0 0-.346.79q0 .51.346.855.345.346.856.346.51 0 .839-.346zm4.337 9.314.033-1.332q.191.403.59.747l.098.081a4 4 0 0 0 .316.224l.223.122a3.2 3.2 0 0 0 1.44.322 3.8 3.8 0 0 0 1.875-.477 3.5 3.5 0 0 0 1.382-1.366q.527-.89.526-2.09 0-1.184-.444-2.073a3.24 3.24 0 0 0-1.283-1.399q-.823-.51-1.942-.51a3.5 3.5 0 0 0-1.527.344l-.086.043-.165.09a3 3 0 0 0-.33.214q-.432.315-.656.707a2 2 0 0 0-.099.198l.082-1.283V4.701h-1.744v12.095zm.473-2.509a2.5 2.5 0 0 0 .566.7q.117.098.245.18l.144.08a2.1 2.1 0 0 0 .975.232q1.07 0 1.645-.675.576-.69.576-1.778 0-1.102-.576-1.777-.56-.691-1.645-.692a2.2 2.2 0 0 0-1.015.235q-.22.113-.415.282l-.15.142a2.1 2.1 0 0 0-.42.594q-.223.479-.223 1.1v.115q0 .705.293 1.26zm2.616-.293c.157-.191.28-.479.28-.967 0-.51-.13-.79-.276-.961l-.021-.026c-.082-.1-.232-.225-.67-.225a.87.87 0 0 0-.681.279l-.012.011c-.154.155-.274.38-.274.807v.115c0 .285.057.499.144.669a1.1 1.1 0 0 0 .367.405c.137.082.28.123.455.123.423 0 .59-.118.686-.23zm8.266-3.013q.345-.13.724-.14l.069-.002q.493 0 .642.099l.247-1.794q-.196-.099-.717-.099a2.3 2.3 0 0 0-.545.063 2 2 0 0 0-.411.148 2.2 2.2 0 0 0-.4.249 2.5 2.5 0 0 0-.485.499 2.7 2.7 0 0 0-.32.581l-.05.137v-1.48h-1.778v7.553h1.777v-3.884q0-.546.159-.943a1.5 1.5 0 0 1 .466-.636 2.5 2.5 0 0 1 .399-.253 2 2 0 0 1 .224-.099zm9.784 2.656.05-.922q0-1.743-.856-2.698-.838-.97-2.584-.97-1.119-.001-2.007.493a3.46 3.46 0 0 0-1.4 1.382q-.493.906-.493 2.106 0 1.07.428 1.975.428.89 1.332 1.432.906.526 2.255.526.973 0 1.668-.185l.044-.012.135-.04q.613-.184.984-.421l-.542-1.267q-.3.162-.642.274l-.297.087q-.51.131-1.3.131-.954 0-1.497-.444a1.6 1.6 0 0 1-.192-.193q-.366-.44-.512-1.234l-.004-.021zm-5.427-1.256-.003.022h3.752v-.138q-.011-.727-.288-1.118a1 1 0 0 0-.156-.176q-.46-.428-1.316-.428-.986 0-1.494.604-.379.45-.494 1.234zm-27.053 2.77V4.7h-1.86v12.095h5.333V15.15zm7.103-5.908v7.553h-1.843V9.242h1.843z'/%3E%3Cpath fill='%23fff' d='m19.63 11.151-.757-1.71-.345 1.71-1.12 5.644h-1.827L18.083 4.7h.197l3.325 6.533.988 2.19.988-2.19L26.839 4.7h.181l2.6 12.095h-1.81l-1.218-5.644-.362-1.71-.658 1.71-2.93 5.644h-.098l-2.913-5.644zm14.836 5.81q-1.02 0-1.893-.478a3.8 3.8 0 0 1-1.381-1.382q-.51-.906-.51-2.106 0-1.185.444-2.074a3.36 3.36 0 0 1 1.3-1.382q.839-.494 1.974-.494a3.3 3.3 0 0 1 1.234.231 3.3 3.3 0 0 1 .97.575q.396.33.527.659l.033-1.267h1.694v7.553H37.18l-.033-1.332q-.279.593-1.02 1.053a3.17 3.17 0 0 1-1.662.444zm.296-1.482q.938 0 1.58-.642.642-.66.642-1.711v-.115q0-.708-.296-1.267a2.2 2.2 0 0 0-.807-.872 2.1 2.1 0 0 0-1.119-.313q-1.053 0-1.629.692-.575.675-.575 1.76 0 1.103.559 1.795.577.675 1.645.675zm6.521-6.237h1.711v1.4q.906-1.597 2.83-1.597 1.596 0 2.584 1.02.988 1.005.988 2.914 0 1.185-.493 2.09a3.46 3.46 0 0 1-1.316 1.399 3.5 3.5 0 0 1-1.844.493q-.954 0-1.662-.329a2.67 2.67 0 0 1-1.086-.97l.017 5.134h-1.728zm4.048 6.22q1.07 0 1.645-.674.577-.69.576-1.762 0-1.119-.576-1.777-.558-.675-1.645-.675-.592 0-1.12.296-.51.28-.822.823-.296.527-.296 1.234v.115q0 .708.296 1.267.313.543.823.855.51.296 1.119.297z'/%3E%3Cpath fill='%23e1e3e9' d='M51.325 4.7h1.86v10.45h3.473v1.646h-5.333zm7.12 4.542h1.843v7.553h-1.843zm.905-1.415a1.16 1.16 0 0 1-.856-.346 1.17 1.17 0 0 1-.346-.856 1.05 1.05 0 0 1 .346-.79q.346-.329.856-.329.494 0 .839.33a1.05 1.05 0 0 1 .345.79 1.16 1.16 0 0 1-.345.855q-.33.346-.84.346zm7.875 9.133a3.17 3.17 0 0 1-1.662-.444q-.723-.46-1.004-1.053l-.033 1.332h-1.71V4.701h1.743v4.657l-.082 1.283q.279-.658 1.086-1.119a3.5 3.5 0 0 1 1.778-.477q1.119 0 1.942.51a3.24 3.24 0 0 1 1.283 1.4q.445.888.444 2.072 0 1.201-.526 2.09a3.5 3.5 0 0 1-1.382 1.366 3.8 3.8 0 0 1-1.876.477zm-.296-1.481q1.069 0 1.645-.675.577-.69.577-1.778 0-1.102-.577-1.776-.56-.691-1.645-.692a2.12 2.12 0 0 0-1.58.659q-.642.641-.642 1.694v.115q0 .71.296 1.267a2.4 2.4 0 0 0 .807.872 2.1 2.1 0 0 0 1.119.313zm5.927-6.237h1.777v1.481q.263-.757.856-1.217a2.14 2.14 0 0 1 1.349-.46q.527 0 .724.098l-.247 1.794q-.149-.099-.642-.099-.774 0-1.416.494-.626.493-.626 1.58v3.883h-1.777V9.242zm9.534 7.718q-1.35 0-2.255-.526-.904-.543-1.332-1.432a4.6 4.6 0 0 1-.428-1.975q0-1.2.493-2.106a3.46 3.46 0 0 1 1.4-1.382q.889-.495 2.007-.494 1.744 0 2.584.97.855.956.856 2.7 0 .444-.05.92h-5.43q.18 1.005.708 1.45.542.443 1.497.443.79 0 1.3-.131a4 4 0 0 0 .938-.362l.542 1.267q-.411.263-1.119.46-.708.198-1.711.197zm1.596-4.558q.016-1.02-.444-1.432-.46-.428-1.316-.428-1.728 0-1.991 1.86z'/%3E%3Cpath d='M5.074 15.948a.484.657 0 0 0-.486.659v1.84a.484.657 0 0 0 .486.659h4.101a.484.657 0 0 0 .486-.659v-1.84a.484.657 0 0 0-.486-.659zm3.56 1.16H5.617v.838h3.017z' style='fill:%23fff;fill-rule:evenodd;stroke-width:1.03600001'/%3E%3Cg style='stroke-width:1.12603545'%3E%3Cpath d='M-9.408-1.416c-3.833-.025-7.056 2.912-7.08 6.615-.02 3.08 1.653 4.832 3.107 6.268.903.892 1.721 1.74 2.32 2.902l-.525-.004c-.543-.003-.992.304-1.24.639a1.87 1.87 0 0 0-.362 1.121l-.011 1.877c-.003.402.104.787.347 1.125.244.338.688.653 1.23.656l4.142.028c.542.003.99-.306 1.238-.641a1.87 1.87 0 0 0 .363-1.121l.012-1.875a1.87 1.87 0 0 0-.348-1.127c-.243-.338-.688-.653-1.23-.656l-.518-.004c.597-1.145 1.425-1.983 2.348-2.87 1.473-1.414 3.18-3.149 3.2-6.226-.016-3.59-2.923-6.684-6.993-6.707m-.006 1.1v.002c3.274.02 5.92 2.532 5.9 5.6-.017 2.706-1.39 4.026-2.863 5.44-1.034.994-2.118 2.033-2.814 3.633-.018.041-.052.055-.075.065q-.013.004-.02.01a.34.34 0 0 1-.226.084.34.34 0 0 1-.224-.086l-.092-.077c-.699-1.615-1.768-2.669-2.781-3.67-1.454-1.435-2.797-2.762-2.78-5.478.02-3.067 2.7-5.545 5.975-5.523m-.02 2.826c-1.62-.01-2.944 1.315-2.955 2.96-.01 1.646 1.295 2.988 2.916 2.999h.002c1.621.01 2.943-1.316 2.953-2.961.011-1.646-1.294-2.988-2.916-2.998m-.005 1.1c1.017.006 1.829.83 1.822 1.89s-.83 1.874-1.848 1.867c-1.018-.006-1.829-.83-1.822-1.89s.83-1.874 1.848-1.868m-2.155 11.857 4.14.025c.271.002.49.305.487.676l-.013 1.875c-.003.37-.224.67-.495.668l-4.14-.025c-.27-.002-.487-.306-.485-.676l.012-1.875c.003-.37.224-.67.494-.668' style='color:%23000;font-style:normal;font-variant:normal;font-weight:400;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:%23000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;clip-rule:evenodd;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:%23000;solid-opacity:1;vector-effect:none;fill:%23000;fill-opacity:.4;fill-rule:evenodd;stroke:none;stroke-width:2.47727823;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto' transform='translate(15.553 2.85)scale(.88807)'/%3E%3Cpath d='M-9.415-.316C-12.69-.338-15.37 2.14-15.39 5.207c-.017 2.716 1.326 4.041 2.78 5.477 1.013 1 2.081 2.055 2.78 3.67l.092.076a.34.34 0 0 0 .225.086.34.34 0 0 0 .227-.083l.019-.01c.022-.009.057-.024.074-.064.697-1.6 1.78-2.64 2.814-3.634 1.473-1.414 2.847-2.733 2.864-5.44.02-3.067-2.627-5.58-5.901-5.601m-.057 8.784c1.621.011 2.944-1.315 2.955-2.96.01-1.646-1.295-2.988-2.916-2.999-1.622-.01-2.945 1.315-2.955 2.96s1.295 2.989 2.916 3' style='clip-rule:evenodd;fill:%23e1e3e9;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.47727823;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:.4' transform='translate(15.553 2.85)scale(.88807)'/%3E%3Cpath d='M-11.594 15.465c-.27-.002-.492.297-.494.668l-.012 1.876c-.003.371.214.673.485.675l4.14.027c.271.002.492-.298.495-.668l.012-1.877c.003-.37-.215-.672-.485-.674z' style='clip-rule:evenodd;fill:%23fff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.47727823;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:.4' transform='translate(15.553 2.85)scale(.88807)'/%3E%3C/g%3E%3C/svg%3E");background-repeat:no-repeat;cursor:pointer;display:block;height:23px;margin:0 0 -4px -4px;overflow:hidden;width:88px}a.maplibregl-ctrl-logo.maplibregl-compact{width:14px}@media (forced-colors:active){a.maplibregl-ctrl-logo{background-color:transparent;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='23' fill='none'%3E%3Cpath fill='%23000' fill-opacity='.4' fill-rule='evenodd' d='M17.408 16.796h-1.827l2.501-12.095h.198l3.324 6.533.988 2.19.988-2.19 3.258-6.533h.181l2.6 12.095h-1.81l-1.218-5.644-.362-1.71-.658 1.71-2.929 5.644h-.098l-2.914-5.644-.757-1.71-.345 1.71zm1.958-3.42-.726 3.663a1.255 1.255 0 0 1-1.232 1.011h-1.827a1.255 1.255 0 0 1-1.229-1.509l2.501-12.095a1.255 1.255 0 0 1 1.23-1.001h.197a1.25 1.25 0 0 1 1.12.685l3.19 6.273 3.125-6.263a1.25 1.25 0 0 1 1.123-.695h.181a1.255 1.255 0 0 1 1.227.991l1.443 6.71a5 5 0 0 1 .314-.787l.009-.016a4.6 4.6 0 0 1 1.777-1.887c.782-.46 1.668-.667 2.611-.667a4.6 4.6 0 0 1 1.7.32l.306.134c.21-.16.474-.256.759-.256h1.694a1.255 1.255 0 0 1 1.212.925 1.255 1.255 0 0 1 1.212-.925h1.711c.284 0 .545.094.755.252.613-.3 1.312-.45 2.075-.45 1.356 0 2.557.445 3.482 1.4q.47.48.763 1.064V4.701a1.255 1.255 0 0 1 1.255-1.255h1.86A1.255 1.255 0 0 1 54.44 4.7v9.194h2.217c.19 0 .37.043.532.118v-4.77c0-.356.147-.678.385-.906a2.42 2.42 0 0 1-.682-1.71c0-.665.267-1.253.735-1.7a2.45 2.45 0 0 1 1.722-.674 2.43 2.43 0 0 1 1.705.675q.318.302.504.683V4.7a1.255 1.255 0 0 1 1.255-1.255h1.744A1.255 1.255 0 0 1 65.812 4.7v3.335a4.8 4.8 0 0 1 1.526-.246c.938 0 1.817.214 2.59.69a4.47 4.47 0 0 1 1.67 1.743v-.98a1.255 1.255 0 0 1 1.256-1.256h1.777c.233 0 .451.064.639.174a3.4 3.4 0 0 1 1.567-.372c.346 0 .861.02 1.285.232a1.25 1.25 0 0 1 .689 1.004 4.7 4.7 0 0 1 .853-.588c.795-.44 1.675-.647 2.61-.647 1.385 0 2.65.39 3.525 1.396.836.938 1.168 2.173 1.168 3.528q-.001.515-.056 1.051a1.255 1.255 0 0 1-.947 1.09l.408.952a1.255 1.255 0 0 1-.477 1.552c-.418.268-.92.463-1.458.612-.613.171-1.304.244-2.049.244-1.06 0-2.043-.207-2.886-.698l-.015-.008c-.798-.48-1.419-1.135-1.818-1.963l-.004-.008a5.8 5.8 0 0 1-.548-2.512q0-.429.053-.843a1.3 1.3 0 0 1-.333-.086l-.166-.004c-.223 0-.426.062-.643.228-.03.024-.142.139-.142.59v3.883a1.255 1.255 0 0 1-1.256 1.256h-1.777a1.255 1.255 0 0 1-1.256-1.256V15.69l-.032.057a4.8 4.8 0 0 1-1.86 1.833 5.04 5.04 0 0 1-2.484.634 4.5 4.5 0 0 1-1.935-.424 1.25 1.25 0 0 1-.764.258h-1.71a1.255 1.255 0 0 1-1.256-1.255V7.687a2.4 2.4 0 0 1-.428.625c.253.23.412.561.412.93v7.553a1.255 1.255 0 0 1-1.256 1.255h-1.843a1.25 1.25 0 0 1-.894-.373c-.228.23-.544.373-.894.373H51.32a1.255 1.255 0 0 1-1.256-1.255v-1.251l-.061.117a4.7 4.7 0 0 1-1.782 1.884 4.77 4.77 0 0 1-2.485.67 5.6 5.6 0 0 1-1.485-.188l.009 2.764a1.255 1.255 0 0 1-1.255 1.259h-1.729a1.255 1.255 0 0 1-1.255-1.255v-3.537a1.255 1.255 0 0 1-1.167.793h-1.679a1.25 1.25 0 0 1-.77-.263 4.5 4.5 0 0 1-1.945.429c-.885 0-1.724-.21-2.495-.632l-.017-.01a5 5 0 0 1-1.081-.836 1.255 1.255 0 0 1-1.254 1.312h-1.81a1.255 1.255 0 0 1-1.228-.99l-.782-3.625-2.044 3.939a1.25 1.25 0 0 1-1.115.676h-.098a1.25 1.25 0 0 1-1.116-.68l-2.061-3.994zM35.92 16.63l.207-.114.223-.15q.493-.356.735-.785l.061-.118.033 1.332h1.678V9.242h-1.694l-.033 1.267q-.133-.329-.526-.658l-.032-.028a3.2 3.2 0 0 0-.668-.428l-.27-.12a3.3 3.3 0 0 0-1.235-.23q-1.136-.001-1.974.493a3.36 3.36 0 0 0-1.3 1.382q-.445.89-.444 2.074 0 1.2.51 2.107a3.8 3.8 0 0 0 1.382 1.381 3.9 3.9 0 0 0 1.893.477q.795 0 1.455-.33zm-2.789-5.38q-.576.675-.575 1.762 0 1.102.559 1.794.576.675 1.645.675a2.25 2.25 0 0 0 .934-.19 2.2 2.2 0 0 0 .468-.29l.178-.161a2.2 2.2 0 0 0 .397-.561q.244-.5.244-1.15v-.115q0-.708-.296-1.267l-.043-.077a2.2 2.2 0 0 0-.633-.709l-.13-.086-.047-.028a2.1 2.1 0 0 0-1.073-.285q-1.052 0-1.629.692zm2.316 2.706c.163-.17.28-.407.28-.83v-.114c0-.292-.06-.508-.15-.68a.96.96 0 0 0-.353-.389.85.85 0 0 0-.464-.127c-.4 0-.56.114-.664.239l-.01.012c-.148.174-.275.45-.275.945 0 .506.122.801.27.99.097.11.266.224.68.224.303 0 .504-.09.687-.269zm7.545 1.705a2.6 2.6 0 0 0 .331.423q.319.33.755.548l.173.074q.65.255 1.49.255 1.02 0 1.844-.493a3.45 3.45 0 0 0 1.316-1.4q.493-.904.493-2.089 0-1.909-.988-2.913-.988-1.02-2.584-1.02-.898 0-1.575.347a3 3 0 0 0-.415.262l-.199.166a3.4 3.4 0 0 0-.64.82V9.242h-1.712v11.553h1.729l-.017-5.134zm.53-1.138q.206.29.48.5l.155.11.053.034q.51.296 1.119.297 1.07 0 1.645-.675.577-.69.576-1.762 0-1.119-.576-1.777-.558-.675-1.645-.675-.435 0-.835.16a2 2 0 0 0-.284.136 2 2 0 0 0-.363.254 2.2 2.2 0 0 0-.46.569l-.082.162a2.6 2.6 0 0 0-.213 1.072v.115q0 .707.296 1.267l.135.211zm.964-.818a1.1 1.1 0 0 0 .367.385.94.94 0 0 0 .476.118c.423 0 .59-.117.687-.23.159-.194.28-.478.28-.95 0-.53-.133-.8-.266-.952l-.021-.025c-.078-.094-.231-.221-.68-.221a1 1 0 0 0-.503.135l-.012.007a.86.86 0 0 0-.335.343c-.073.133-.132.324-.132.614v.115a1.4 1.4 0 0 0 .14.66zm15.7-6.222q.347-.346.346-.856a1.05 1.05 0 0 0-.345-.79 1.18 1.18 0 0 0-.84-.329q-.51 0-.855.33a1.05 1.05 0 0 0-.346.79q0 .51.346.855.345.346.856.346.51 0 .839-.346zm4.337 9.314.033-1.332q.191.403.59.747l.098.081a4 4 0 0 0 .316.224l.223.122a3.2 3.2 0 0 0 1.44.322 3.8 3.8 0 0 0 1.875-.477 3.5 3.5 0 0 0 1.382-1.366q.527-.89.526-2.09 0-1.184-.444-2.073a3.24 3.24 0 0 0-1.283-1.399q-.823-.51-1.942-.51a3.5 3.5 0 0 0-1.527.344l-.086.043-.165.09a3 3 0 0 0-.33.214q-.432.315-.656.707a2 2 0 0 0-.099.198l.082-1.283V4.701h-1.744v12.095zm.473-2.509a2.5 2.5 0 0 0 .566.7q.117.098.245.18l.144.08a2.1 2.1 0 0 0 .975.232q1.07 0 1.645-.675.576-.69.576-1.778 0-1.102-.576-1.777-.56-.691-1.645-.692a2.2 2.2 0 0 0-1.015.235q-.22.113-.415.282l-.15.142a2.1 2.1 0 0 0-.42.594q-.223.479-.223 1.1v.115q0 .705.293 1.26zm2.616-.293c.157-.191.28-.479.28-.967 0-.51-.13-.79-.276-.961l-.021-.026c-.082-.1-.232-.225-.67-.225a.87.87 0 0 0-.681.279l-.012.011c-.154.155-.274.38-.274.807v.115c0 .285.057.499.144.669a1.1 1.1 0 0 0 .367.405c.137.082.28.123.455.123.423 0 .59-.118.686-.23zm8.266-3.013q.345-.13.724-.14l.069-.002q.493 0 .642.099l.247-1.794q-.196-.099-.717-.099a2.3 2.3 0 0 0-.545.063 2 2 0 0 0-.411.148 2.2 2.2 0 0 0-.4.249 2.5 2.5 0 0 0-.485.499 2.7 2.7 0 0 0-.32.581l-.05.137v-1.48h-1.778v7.553h1.777v-3.884q0-.546.159-.943a1.5 1.5 0 0 1 .466-.636 2.5 2.5 0 0 1 .399-.253 2 2 0 0 1 .224-.099zm9.784 2.656.05-.922q0-1.743-.856-2.698-.838-.97-2.584-.97-1.119-.001-2.007.493a3.46 3.46 0 0 0-1.4 1.382q-.493.906-.493 2.106 0 1.07.428 1.975.428.89 1.332 1.432.906.526 2.255.526.973 0 1.668-.185l.044-.012.135-.04q.613-.184.984-.421l-.542-1.267q-.3.162-.642.274l-.297.087q-.51.131-1.3.131-.954 0-1.497-.444a1.6 1.6 0 0 1-.192-.193q-.366-.44-.512-1.234l-.004-.021zm-5.427-1.256-.003.022h3.752v-.138q-.011-.727-.288-1.118a1 1 0 0 0-.156-.176q-.46-.428-1.316-.428-.986 0-1.494.604-.379.45-.494 1.234zm-27.053 2.77V4.7h-1.86v12.095h5.333V15.15zm7.103-5.908v7.553h-1.843V9.242h1.843z'/%3E%3Cpath fill='%23fff' d='m19.63 11.151-.757-1.71-.345 1.71-1.12 5.644h-1.827L18.083 4.7h.197l3.325 6.533.988 2.19.988-2.19L26.839 4.7h.181l2.6 12.095h-1.81l-1.218-5.644-.362-1.71-.658 1.71-2.93 5.644h-.098l-2.913-5.644zm14.836 5.81q-1.02 0-1.893-.478a3.8 3.8 0 0 1-1.381-1.382q-.51-.906-.51-2.106 0-1.185.444-2.074a3.36 3.36 0 0 1 1.3-1.382q.839-.494 1.974-.494a3.3 3.3 0 0 1 1.234.231 3.3 3.3 0 0 1 .97.575q.396.33.527.659l.033-1.267h1.694v7.553H37.18l-.033-1.332q-.279.593-1.02 1.053a3.17 3.17 0 0 1-1.662.444zm.296-1.482q.938 0 1.58-.642.642-.66.642-1.711v-.115q0-.708-.296-1.267a2.2 2.2 0 0 0-.807-.872 2.1 2.1 0 0 0-1.119-.313q-1.053 0-1.629.692-.575.675-.575 1.76 0 1.103.559 1.795.577.675 1.645.675zm6.521-6.237h1.711v1.4q.906-1.597 2.83-1.597 1.596 0 2.584 1.02.988 1.005.988 2.914 0 1.185-.493 2.09a3.46 3.46 0 0 1-1.316 1.399 3.5 3.5 0 0 1-1.844.493q-.954 0-1.662-.329a2.67 2.67 0 0 1-1.086-.97l.017 5.134h-1.728zm4.048 6.22q1.07 0 1.645-.674.577-.69.576-1.762 0-1.119-.576-1.777-.558-.675-1.645-.675-.592 0-1.12.296-.51.28-.822.823-.296.527-.296 1.234v.115q0 .708.296 1.267.313.543.823.855.51.296 1.119.297z'/%3E%3Cpath fill='%23e1e3e9' d='M51.325 4.7h1.86v10.45h3.473v1.646h-5.333zm7.12 4.542h1.843v7.553h-1.843zm.905-1.415a1.16 1.16 0 0 1-.856-.346 1.17 1.17 0 0 1-.346-.856 1.05 1.05 0 0 1 .346-.79q.346-.329.856-.329.494 0 .839.33a1.05 1.05 0 0 1 .345.79 1.16 1.16 0 0 1-.345.855q-.33.346-.84.346zm7.875 9.133a3.17 3.17 0 0 1-1.662-.444q-.723-.46-1.004-1.053l-.033 1.332h-1.71V4.701h1.743v4.657l-.082 1.283q.279-.658 1.086-1.119a3.5 3.5 0 0 1 1.778-.477q1.119 0 1.942.51a3.24 3.24 0 0 1 1.283 1.4q.445.888.444 2.072 0 1.201-.526 2.09a3.5 3.5 0 0 1-1.382 1.366 3.8 3.8 0 0 1-1.876.477zm-.296-1.481q1.069 0 1.645-.675.577-.69.577-1.778 0-1.102-.577-1.776-.56-.691-1.645-.692a2.12 2.12 0 0 0-1.58.659q-.642.641-.642 1.694v.115q0 .71.296 1.267a2.4 2.4 0 0 0 .807.872 2.1 2.1 0 0 0 1.119.313zm5.927-6.237h1.777v1.481q.263-.757.856-1.217a2.14 2.14 0 0 1 1.349-.46q.527 0 .724.098l-.247 1.794q-.149-.099-.642-.099-.774 0-1.416.494-.626.493-.626 1.58v3.883h-1.777V9.242zm9.534 7.718q-1.35 0-2.255-.526-.904-.543-1.332-1.432a4.6 4.6 0 0 1-.428-1.975q0-1.2.493-2.106a3.46 3.46 0 0 1 1.4-1.382q.889-.495 2.007-.494 1.744 0 2.584.97.855.956.856 2.7 0 .444-.05.92h-5.43q.18 1.005.708 1.45.542.443 1.497.443.79 0 1.3-.131a4 4 0 0 0 .938-.362l.542 1.267q-.411.263-1.119.46-.708.198-1.711.197zm1.596-4.558q.016-1.02-.444-1.432-.46-.428-1.316-.428-1.728 0-1.991 1.86z'/%3E%3Cpath d='M5.074 15.948a.484.657 0 0 0-.486.659v1.84a.484.657 0 0 0 .486.659h4.101a.484.657 0 0 0 .486-.659v-1.84a.484.657 0 0 0-.486-.659zm3.56 1.16H5.617v.838h3.017z' style='fill:%23fff;fill-rule:evenodd;stroke-width:1.03600001'/%3E%3Cg style='stroke-width:1.12603545'%3E%3Cpath d='M-9.408-1.416c-3.833-.025-7.056 2.912-7.08 6.615-.02 3.08 1.653 4.832 3.107 6.268.903.892 1.721 1.74 2.32 2.902l-.525-.004c-.543-.003-.992.304-1.24.639a1.87 1.87 0 0 0-.362 1.121l-.011 1.877c-.003.402.104.787.347 1.125.244.338.688.653 1.23.656l4.142.028c.542.003.99-.306 1.238-.641a1.87 1.87 0 0 0 .363-1.121l.012-1.875a1.87 1.87 0 0 0-.348-1.127c-.243-.338-.688-.653-1.23-.656l-.518-.004c.597-1.145 1.425-1.983 2.348-2.87 1.473-1.414 3.18-3.149 3.2-6.226-.016-3.59-2.923-6.684-6.993-6.707m-.006 1.1v.002c3.274.02 5.92 2.532 5.9 5.6-.017 2.706-1.39 4.026-2.863 5.44-1.034.994-2.118 2.033-2.814 3.633-.018.041-.052.055-.075.065q-.013.004-.02.01a.34.34 0 0 1-.226.084.34.34 0 0 1-.224-.086l-.092-.077c-.699-1.615-1.768-2.669-2.781-3.67-1.454-1.435-2.797-2.762-2.78-5.478.02-3.067 2.7-5.545 5.975-5.523m-.02 2.826c-1.62-.01-2.944 1.315-2.955 2.96-.01 1.646 1.295 2.988 2.916 2.999h.002c1.621.01 2.943-1.316 2.953-2.961.011-1.646-1.294-2.988-2.916-2.998m-.005 1.1c1.017.006 1.829.83 1.822 1.89s-.83 1.874-1.848 1.867c-1.018-.006-1.829-.83-1.822-1.89s.83-1.874 1.848-1.868m-2.155 11.857 4.14.025c.271.002.49.305.487.676l-.013 1.875c-.003.37-.224.67-.495.668l-4.14-.025c-.27-.002-.487-.306-.485-.676l.012-1.875c.003-.37.224-.67.494-.668' style='color:%23000;font-style:normal;font-variant:normal;font-weight:400;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:%23000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;clip-rule:evenodd;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:%23000;solid-opacity:1;vector-effect:none;fill:%23000;fill-opacity:.4;fill-rule:evenodd;stroke:none;stroke-width:2.47727823;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto' transform='translate(15.553 2.85)scale(.88807)'/%3E%3Cpath d='M-9.415-.316C-12.69-.338-15.37 2.14-15.39 5.207c-.017 2.716 1.326 4.041 2.78 5.477 1.013 1 2.081 2.055 2.78 3.67l.092.076a.34.34 0 0 0 .225.086.34.34 0 0 0 .227-.083l.019-.01c.022-.009.057-.024.074-.064.697-1.6 1.78-2.64 2.814-3.634 1.473-1.414 2.847-2.733 2.864-5.44.02-3.067-2.627-5.58-5.901-5.601m-.057 8.784c1.621.011 2.944-1.315 2.955-2.96.01-1.646-1.295-2.988-2.916-2.999-1.622-.01-2.945 1.315-2.955 2.96s1.295 2.989 2.916 3' style='clip-rule:evenodd;fill:%23e1e3e9;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.47727823;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:.4' transform='translate(15.553 2.85)scale(.88807)'/%3E%3Cpath d='M-11.594 15.465c-.27-.002-.492.297-.494.668l-.012 1.876c-.003.371.214.673.485.675l4.14.027c.271.002.492-.298.495-.668l.012-1.877c.003-.37-.215-.672-.485-.674z' style='clip-rule:evenodd;fill:%23fff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.47727823;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:.4' transform='translate(15.553 2.85)scale(.88807)'/%3E%3C/g%3E%3C/svg%3E")}}@media (forced-colors:active) and (prefers-color-scheme:light){a.maplibregl-ctrl-logo{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='23' fill='none'%3E%3Cpath fill='%23000' fill-opacity='.4' fill-rule='evenodd' d='M17.408 16.796h-1.827l2.501-12.095h.198l3.324 6.533.988 2.19.988-2.19 3.258-6.533h.181l2.6 12.095h-1.81l-1.218-5.644-.362-1.71-.658 1.71-2.929 5.644h-.098l-2.914-5.644-.757-1.71-.345 1.71zm1.958-3.42-.726 3.663a1.255 1.255 0 0 1-1.232 1.011h-1.827a1.255 1.255 0 0 1-1.229-1.509l2.501-12.095a1.255 1.255 0 0 1 1.23-1.001h.197a1.25 1.25 0 0 1 1.12.685l3.19 6.273 3.125-6.263a1.25 1.25 0 0 1 1.123-.695h.181a1.255 1.255 0 0 1 1.227.991l1.443 6.71a5 5 0 0 1 .314-.787l.009-.016a4.6 4.6 0 0 1 1.777-1.887c.782-.46 1.668-.667 2.611-.667a4.6 4.6 0 0 1 1.7.32l.306.134c.21-.16.474-.256.759-.256h1.694a1.255 1.255 0 0 1 1.212.925 1.255 1.255 0 0 1 1.212-.925h1.711c.284 0 .545.094.755.252.613-.3 1.312-.45 2.075-.45 1.356 0 2.557.445 3.482 1.4q.47.48.763 1.064V4.701a1.255 1.255 0 0 1 1.255-1.255h1.86A1.255 1.255 0 0 1 54.44 4.7v9.194h2.217c.19 0 .37.043.532.118v-4.77c0-.356.147-.678.385-.906a2.42 2.42 0 0 1-.682-1.71c0-.665.267-1.253.735-1.7a2.45 2.45 0 0 1 1.722-.674 2.43 2.43 0 0 1 1.705.675q.318.302.504.683V4.7a1.255 1.255 0 0 1 1.255-1.255h1.744A1.255 1.255 0 0 1 65.812 4.7v3.335a4.8 4.8 0 0 1 1.526-.246c.938 0 1.817.214 2.59.69a4.47 4.47 0 0 1 1.67 1.743v-.98a1.255 1.255 0 0 1 1.256-1.256h1.777c.233 0 .451.064.639.174a3.4 3.4 0 0 1 1.567-.372c.346 0 .861.02 1.285.232a1.25 1.25 0 0 1 .689 1.004 4.7 4.7 0 0 1 .853-.588c.795-.44 1.675-.647 2.61-.647 1.385 0 2.65.39 3.525 1.396.836.938 1.168 2.173 1.168 3.528q-.001.515-.056 1.051a1.255 1.255 0 0 1-.947 1.09l.408.952a1.255 1.255 0 0 1-.477 1.552c-.418.268-.92.463-1.458.612-.613.171-1.304.244-2.049.244-1.06 0-2.043-.207-2.886-.698l-.015-.008c-.798-.48-1.419-1.135-1.818-1.963l-.004-.008a5.8 5.8 0 0 1-.548-2.512q0-.429.053-.843a1.3 1.3 0 0 1-.333-.086l-.166-.004c-.223 0-.426.062-.643.228-.03.024-.142.139-.142.59v3.883a1.255 1.255 0 0 1-1.256 1.256h-1.777a1.255 1.255 0 0 1-1.256-1.256V15.69l-.032.057a4.8 4.8 0 0 1-1.86 1.833 5.04 5.04 0 0 1-2.484.634 4.5 4.5 0 0 1-1.935-.424 1.25 1.25 0 0 1-.764.258h-1.71a1.255 1.255 0 0 1-1.256-1.255V7.687a2.4 2.4 0 0 1-.428.625c.253.23.412.561.412.93v7.553a1.255 1.255 0 0 1-1.256 1.255h-1.843a1.25 1.25 0 0 1-.894-.373c-.228.23-.544.373-.894.373H51.32a1.255 1.255 0 0 1-1.256-1.255v-1.251l-.061.117a4.7 4.7 0 0 1-1.782 1.884 4.77 4.77 0 0 1-2.485.67 5.6 5.6 0 0 1-1.485-.188l.009 2.764a1.255 1.255 0 0 1-1.255 1.259h-1.729a1.255 1.255 0 0 1-1.255-1.255v-3.537a1.255 1.255 0 0 1-1.167.793h-1.679a1.25 1.25 0 0 1-.77-.263 4.5 4.5 0 0 1-1.945.429c-.885 0-1.724-.21-2.495-.632l-.017-.01a5 5 0 0 1-1.081-.836 1.255 1.255 0 0 1-1.254 1.312h-1.81a1.255 1.255 0 0 1-1.228-.99l-.782-3.625-2.044 3.939a1.25 1.25 0 0 1-1.115.676h-.098a1.25 1.25 0 0 1-1.116-.68l-2.061-3.994zM35.92 16.63l.207-.114.223-.15q.493-.356.735-.785l.061-.118.033 1.332h1.678V9.242h-1.694l-.033 1.267q-.133-.329-.526-.658l-.032-.028a3.2 3.2 0 0 0-.668-.428l-.27-.12a3.3 3.3 0 0 0-1.235-.23q-1.136-.001-1.974.493a3.36 3.36 0 0 0-1.3 1.382q-.445.89-.444 2.074 0 1.2.51 2.107a3.8 3.8 0 0 0 1.382 1.381 3.9 3.9 0 0 0 1.893.477q.795 0 1.455-.33zm-2.789-5.38q-.576.675-.575 1.762 0 1.102.559 1.794.576.675 1.645.675a2.25 2.25 0 0 0 .934-.19 2.2 2.2 0 0 0 .468-.29l.178-.161a2.2 2.2 0 0 0 .397-.561q.244-.5.244-1.15v-.115q0-.708-.296-1.267l-.043-.077a2.2 2.2 0 0 0-.633-.709l-.13-.086-.047-.028a2.1 2.1 0 0 0-1.073-.285q-1.052 0-1.629.692zm2.316 2.706c.163-.17.28-.407.28-.83v-.114c0-.292-.06-.508-.15-.68a.96.96 0 0 0-.353-.389.85.85 0 0 0-.464-.127c-.4 0-.56.114-.664.239l-.01.012c-.148.174-.275.45-.275.945 0 .506.122.801.27.99.097.11.266.224.68.224.303 0 .504-.09.687-.269zm7.545 1.705a2.6 2.6 0 0 0 .331.423q.319.33.755.548l.173.074q.65.255 1.49.255 1.02 0 1.844-.493a3.45 3.45 0 0 0 1.316-1.4q.493-.904.493-2.089 0-1.909-.988-2.913-.988-1.02-2.584-1.02-.898 0-1.575.347a3 3 0 0 0-.415.262l-.199.166a3.4 3.4 0 0 0-.64.82V9.242h-1.712v11.553h1.729l-.017-5.134zm.53-1.138q.206.29.48.5l.155.11.053.034q.51.296 1.119.297 1.07 0 1.645-.675.577-.69.576-1.762 0-1.119-.576-1.777-.558-.675-1.645-.675-.435 0-.835.16a2 2 0 0 0-.284.136 2 2 0 0 0-.363.254 2.2 2.2 0 0 0-.46.569l-.082.162a2.6 2.6 0 0 0-.213 1.072v.115q0 .707.296 1.267l.135.211zm.964-.818a1.1 1.1 0 0 0 .367.385.94.94 0 0 0 .476.118c.423 0 .59-.117.687-.23.159-.194.28-.478.28-.95 0-.53-.133-.8-.266-.952l-.021-.025c-.078-.094-.231-.221-.68-.221a1 1 0 0 0-.503.135l-.012.007a.86.86 0 0 0-.335.343c-.073.133-.132.324-.132.614v.115a1.4 1.4 0 0 0 .14.66zm15.7-6.222q.347-.346.346-.856a1.05 1.05 0 0 0-.345-.79 1.18 1.18 0 0 0-.84-.329q-.51 0-.855.33a1.05 1.05 0 0 0-.346.79q0 .51.346.855.345.346.856.346.51 0 .839-.346zm4.337 9.314.033-1.332q.191.403.59.747l.098.081a4 4 0 0 0 .316.224l.223.122a3.2 3.2 0 0 0 1.44.322 3.8 3.8 0 0 0 1.875-.477 3.5 3.5 0 0 0 1.382-1.366q.527-.89.526-2.09 0-1.184-.444-2.073a3.24 3.24 0 0 0-1.283-1.399q-.823-.51-1.942-.51a3.5 3.5 0 0 0-1.527.344l-.086.043-.165.09a3 3 0 0 0-.33.214q-.432.315-.656.707a2 2 0 0 0-.099.198l.082-1.283V4.701h-1.744v12.095zm.473-2.509a2.5 2.5 0 0 0 .566.7q.117.098.245.18l.144.08a2.1 2.1 0 0 0 .975.232q1.07 0 1.645-.675.576-.69.576-1.778 0-1.102-.576-1.777-.56-.691-1.645-.692a2.2 2.2 0 0 0-1.015.235q-.22.113-.415.282l-.15.142a2.1 2.1 0 0 0-.42.594q-.223.479-.223 1.1v.115q0 .705.293 1.26zm2.616-.293c.157-.191.28-.479.28-.967 0-.51-.13-.79-.276-.961l-.021-.026c-.082-.1-.232-.225-.67-.225a.87.87 0 0 0-.681.279l-.012.011c-.154.155-.274.38-.274.807v.115c0 .285.057.499.144.669a1.1 1.1 0 0 0 .367.405c.137.082.28.123.455.123.423 0 .59-.118.686-.23zm8.266-3.013q.345-.13.724-.14l.069-.002q.493 0 .642.099l.247-1.794q-.196-.099-.717-.099a2.3 2.3 0 0 0-.545.063 2 2 0 0 0-.411.148 2.2 2.2 0 0 0-.4.249 2.5 2.5 0 0 0-.485.499 2.7 2.7 0 0 0-.32.581l-.05.137v-1.48h-1.778v7.553h1.777v-3.884q0-.546.159-.943a1.5 1.5 0 0 1 .466-.636 2.5 2.5 0 0 1 .399-.253 2 2 0 0 1 .224-.099zm9.784 2.656.05-.922q0-1.743-.856-2.698-.838-.97-2.584-.97-1.119-.001-2.007.493a3.46 3.46 0 0 0-1.4 1.382q-.493.906-.493 2.106 0 1.07.428 1.975.428.89 1.332 1.432.906.526 2.255.526.973 0 1.668-.185l.044-.012.135-.04q.613-.184.984-.421l-.542-1.267q-.3.162-.642.274l-.297.087q-.51.131-1.3.131-.954 0-1.497-.444a1.6 1.6 0 0 1-.192-.193q-.366-.44-.512-1.234l-.004-.021zm-5.427-1.256-.003.022h3.752v-.138q-.011-.727-.288-1.118a1 1 0 0 0-.156-.176q-.46-.428-1.316-.428-.986 0-1.494.604-.379.45-.494 1.234zm-27.053 2.77V4.7h-1.86v12.095h5.333V15.15zm7.103-5.908v7.553h-1.843V9.242h1.843z'/%3E%3Cpath fill='%23fff' d='m19.63 11.151-.757-1.71-.345 1.71-1.12 5.644h-1.827L18.083 4.7h.197l3.325 6.533.988 2.19.988-2.19L26.839 4.7h.181l2.6 12.095h-1.81l-1.218-5.644-.362-1.71-.658 1.71-2.93 5.644h-.098l-2.913-5.644zm14.836 5.81q-1.02 0-1.893-.478a3.8 3.8 0 0 1-1.381-1.382q-.51-.906-.51-2.106 0-1.185.444-2.074a3.36 3.36 0 0 1 1.3-1.382q.839-.494 1.974-.494a3.3 3.3 0 0 1 1.234.231 3.3 3.3 0 0 1 .97.575q.396.33.527.659l.033-1.267h1.694v7.553H37.18l-.033-1.332q-.279.593-1.02 1.053a3.17 3.17 0 0 1-1.662.444zm.296-1.482q.938 0 1.58-.642.642-.66.642-1.711v-.115q0-.708-.296-1.267a2.2 2.2 0 0 0-.807-.872 2.1 2.1 0 0 0-1.119-.313q-1.053 0-1.629.692-.575.675-.575 1.76 0 1.103.559 1.795.577.675 1.645.675zm6.521-6.237h1.711v1.4q.906-1.597 2.83-1.597 1.596 0 2.584 1.02.988 1.005.988 2.914 0 1.185-.493 2.09a3.46 3.46 0 0 1-1.316 1.399 3.5 3.5 0 0 1-1.844.493q-.954 0-1.662-.329a2.67 2.67 0 0 1-1.086-.97l.017 5.134h-1.728zm4.048 6.22q1.07 0 1.645-.674.577-.69.576-1.762 0-1.119-.576-1.777-.558-.675-1.645-.675-.592 0-1.12.296-.51.28-.822.823-.296.527-.296 1.234v.115q0 .708.296 1.267.313.543.823.855.51.296 1.119.297z'/%3E%3Cpath fill='%23e1e3e9' d='M51.325 4.7h1.86v10.45h3.473v1.646h-5.333zm7.12 4.542h1.843v7.553h-1.843zm.905-1.415a1.16 1.16 0 0 1-.856-.346 1.17 1.17 0 0 1-.346-.856 1.05 1.05 0 0 1 .346-.79q.346-.329.856-.329.494 0 .839.33a1.05 1.05 0 0 1 .345.79 1.16 1.16 0 0 1-.345.855q-.33.346-.84.346zm7.875 9.133a3.17 3.17 0 0 1-1.662-.444q-.723-.46-1.004-1.053l-.033 1.332h-1.71V4.701h1.743v4.657l-.082 1.283q.279-.658 1.086-1.119a3.5 3.5 0 0 1 1.778-.477q1.119 0 1.942.51a3.24 3.24 0 0 1 1.283 1.4q.445.888.444 2.072 0 1.201-.526 2.09a3.5 3.5 0 0 1-1.382 1.366 3.8 3.8 0 0 1-1.876.477zm-.296-1.481q1.069 0 1.645-.675.577-.69.577-1.778 0-1.102-.577-1.776-.56-.691-1.645-.692a2.12 2.12 0 0 0-1.58.659q-.642.641-.642 1.694v.115q0 .71.296 1.267a2.4 2.4 0 0 0 .807.872 2.1 2.1 0 0 0 1.119.313zm5.927-6.237h1.777v1.481q.263-.757.856-1.217a2.14 2.14 0 0 1 1.349-.46q.527 0 .724.098l-.247 1.794q-.149-.099-.642-.099-.774 0-1.416.494-.626.493-.626 1.58v3.883h-1.777V9.242zm9.534 7.718q-1.35 0-2.255-.526-.904-.543-1.332-1.432a4.6 4.6 0 0 1-.428-1.975q0-1.2.493-2.106a3.46 3.46 0 0 1 1.4-1.382q.889-.495 2.007-.494 1.744 0 2.584.97.855.956.856 2.7 0 .444-.05.92h-5.43q.18 1.005.708 1.45.542.443 1.497.443.79 0 1.3-.131a4 4 0 0 0 .938-.362l.542 1.267q-.411.263-1.119.46-.708.198-1.711.197zm1.596-4.558q.016-1.02-.444-1.432-.46-.428-1.316-.428-1.728 0-1.991 1.86z'/%3E%3Cpath d='M5.074 15.948a.484.657 0 0 0-.486.659v1.84a.484.657 0 0 0 .486.659h4.101a.484.657 0 0 0 .486-.659v-1.84a.484.657 0 0 0-.486-.659zm3.56 1.16H5.617v.838h3.017z' style='fill:%23fff;fill-rule:evenodd;stroke-width:1.03600001'/%3E%3Cg style='stroke-width:1.12603545'%3E%3Cpath d='M-9.408-1.416c-3.833-.025-7.056 2.912-7.08 6.615-.02 3.08 1.653 4.832 3.107 6.268.903.892 1.721 1.74 2.32 2.902l-.525-.004c-.543-.003-.992.304-1.24.639a1.87 1.87 0 0 0-.362 1.121l-.011 1.877c-.003.402.104.787.347 1.125.244.338.688.653 1.23.656l4.142.028c.542.003.99-.306 1.238-.641a1.87 1.87 0 0 0 .363-1.121l.012-1.875a1.87 1.87 0 0 0-.348-1.127c-.243-.338-.688-.653-1.23-.656l-.518-.004c.597-1.145 1.425-1.983 2.348-2.87 1.473-1.414 3.18-3.149 3.2-6.226-.016-3.59-2.923-6.684-6.993-6.707m-.006 1.1v.002c3.274.02 5.92 2.532 5.9 5.6-.017 2.706-1.39 4.026-2.863 5.44-1.034.994-2.118 2.033-2.814 3.633-.018.041-.052.055-.075.065q-.013.004-.02.01a.34.34 0 0 1-.226.084.34.34 0 0 1-.224-.086l-.092-.077c-.699-1.615-1.768-2.669-2.781-3.67-1.454-1.435-2.797-2.762-2.78-5.478.02-3.067 2.7-5.545 5.975-5.523m-.02 2.826c-1.62-.01-2.944 1.315-2.955 2.96-.01 1.646 1.295 2.988 2.916 2.999h.002c1.621.01 2.943-1.316 2.953-2.961.011-1.646-1.294-2.988-2.916-2.998m-.005 1.1c1.017.006 1.829.83 1.822 1.89s-.83 1.874-1.848 1.867c-1.018-.006-1.829-.83-1.822-1.89s.83-1.874 1.848-1.868m-2.155 11.857 4.14.025c.271.002.49.305.487.676l-.013 1.875c-.003.37-.224.67-.495.668l-4.14-.025c-.27-.002-.487-.306-.485-.676l.012-1.875c.003-.37.224-.67.494-.668' style='color:%23000;font-style:normal;font-variant:normal;font-weight:400;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:%23000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;clip-rule:evenodd;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:%23000;solid-opacity:1;vector-effect:none;fill:%23000;fill-opacity:.4;fill-rule:evenodd;stroke:none;stroke-width:2.47727823;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto' transform='translate(15.553 2.85)scale(.88807)'/%3E%3Cpath d='M-9.415-.316C-12.69-.338-15.37 2.14-15.39 5.207c-.017 2.716 1.326 4.041 2.78 5.477 1.013 1 2.081 2.055 2.78 3.67l.092.076a.34.34 0 0 0 .225.086.34.34 0 0 0 .227-.083l.019-.01c.022-.009.057-.024.074-.064.697-1.6 1.78-2.64 2.814-3.634 1.473-1.414 2.847-2.733 2.864-5.44.02-3.067-2.627-5.58-5.901-5.601m-.057 8.784c1.621.011 2.944-1.315 2.955-2.96.01-1.646-1.295-2.988-2.916-2.999-1.622-.01-2.945 1.315-2.955 2.96s1.295 2.989 2.916 3' style='clip-rule:evenodd;fill:%23e1e3e9;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.47727823;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:.4' transform='translate(15.553 2.85)scale(.88807)'/%3E%3Cpath d='M-11.594 15.465c-.27-.002-.492.297-.494.668l-.012 1.876c-.003.371.214.673.485.675l4.14.027c.271.002.492-.298.495-.668l.012-1.877c.003-.37-.215-.672-.485-.674z' style='clip-rule:evenodd;fill:%23fff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.47727823;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:.4' transform='translate(15.553 2.85)scale(.88807)'/%3E%3C/g%3E%3C/svg%3E")}}.maplibregl-ctrl.maplibregl-ctrl-attrib{background-color:hsla(0,0%,100%,.5);margin:0;padding:0 5px}@media screen{.maplibregl-ctrl-attrib.maplibregl-compact{background-color:#fff;border-radius:12px;box-sizing:content-box;color:#000;margin:10px;min-height:20px;padding:2px 24px 2px 0;position:relative}.maplibregl-ctrl-attrib.maplibregl-compact-show{padding:2px 28px 2px 8px;visibility:visible}.maplibregl-ctrl-bottom-left>.maplibregl-ctrl-attrib.maplibregl-compact-show,.maplibregl-ctrl-top-left>.maplibregl-ctrl-attrib.maplibregl-compact-show{border-radius:12px;padding:2px 8px 2px 28px}.maplibregl-ctrl-attrib.maplibregl-compact .maplibregl-ctrl-attrib-inner{display:none}.maplibregl-ctrl-attrib-button{background-color:hsla(0,0%,100%,.5);background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill-rule='evenodd' viewBox='0 0 20 20'%3E%3Cpath d='M4 10a6 6 0 1 0 12 0 6 6 0 1 0-12 0m5-3a1 1 0 1 0 2 0 1 1 0 1 0-2 0m0 3a1 1 0 1 1 2 0v3a1 1 0 1 1-2 0'/%3E%3C/svg%3E");border:0;border-radius:12px;box-sizing:border-box;cursor:pointer;display:none;height:24px;outline:none;position:absolute;right:0;top:0;width:24px}.maplibregl-ctrl-attrib summary.maplibregl-ctrl-attrib-button{-webkit-appearance:none;-moz-appearance:none;appearance:none;list-style:none}.maplibregl-ctrl-attrib summary.maplibregl-ctrl-attrib-button::-webkit-details-marker{display:none}.maplibregl-ctrl-bottom-left .maplibregl-ctrl-attrib-button,.maplibregl-ctrl-top-left .maplibregl-ctrl-attrib-button{left:0}.maplibregl-ctrl-attrib.maplibregl-compact .maplibregl-ctrl-attrib-button,.maplibregl-ctrl-attrib.maplibregl-compact-show .maplibregl-ctrl-attrib-inner{display:block}.maplibregl-ctrl-attrib.maplibregl-compact-show .maplibregl-ctrl-attrib-button{background-color:rgb(0 0 0/5%)}.maplibregl-ctrl-bottom-right>.maplibregl-ctrl-attrib.maplibregl-compact:after{bottom:0;right:0}.maplibregl-ctrl-top-right>.maplibregl-ctrl-attrib.maplibregl-compact:after{right:0;top:0}.maplibregl-ctrl-top-left>.maplibregl-ctrl-attrib.maplibregl-compact:after{left:0;top:0}.maplibregl-ctrl-bottom-left>.maplibregl-ctrl-attrib.maplibregl-compact:after{bottom:0;left:0}}@media screen and (forced-colors:active){.maplibregl-ctrl-attrib.maplibregl-compact:after{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='%23fff' fill-rule='evenodd' viewBox='0 0 20 20'%3E%3Cpath d='M4 10a6 6 0 1 0 12 0 6 6 0 1 0-12 0m5-3a1 1 0 1 0 2 0 1 1 0 1 0-2 0m0 3a1 1 0 1 1 2 0v3a1 1 0 1 1-2 0'/%3E%3C/svg%3E")}}@media screen and (forced-colors:active) and (prefers-color-scheme:light){.maplibregl-ctrl-attrib.maplibregl-compact:after{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill-rule='evenodd' viewBox='0 0 20 20'%3E%3Cpath d='M4 10a6 6 0 1 0 12 0 6 6 0 1 0-12 0m5-3a1 1 0 1 0 2 0 1 1 0 1 0-2 0m0 3a1 1 0 1 1 2 0v3a1 1 0 1 1-2 0'/%3E%3C/svg%3E")}}.maplibregl-ctrl-attrib a{color:rgba(0,0,0,.75);text-decoration:none}.maplibregl-ctrl-attrib a:hover{color:inherit;text-decoration:underline}.maplibregl-attrib-empty{display:none}.maplibregl-ctrl-scale{background-color:hsla(0,0%,100%,.75);border:2px solid #333;border-top:#333;box-sizing:border-box;color:#333;font-size:10px;padding:0 5px}.maplibregl-popup{display:flex;left:0;pointer-events:none;position:absolute;top:0;will-change:transform}.maplibregl-popup-anchor-top,.maplibregl-popup-anchor-top-left,.maplibregl-popup-anchor-top-right{flex-direction:column}.maplibregl-popup-anchor-bottom,.maplibregl-popup-anchor-bottom-left,.maplibregl-popup-anchor-bottom-right{flex-direction:column-reverse}.maplibregl-popup-anchor-left{flex-direction:row}.maplibregl-popup-anchor-right{flex-direction:row-reverse}.maplibregl-popup-tip{border:10px solid transparent;height:0;width:0;z-index:1}.maplibregl-popup-anchor-top .maplibregl-popup-tip{align-self:center;border-bottom-color:#fff;border-top:none}.maplibregl-popup-anchor-top-left .maplibregl-popup-tip{align-self:flex-start;border-bottom-color:#fff;border-left:none;border-top:none}.maplibregl-popup-anchor-top-right .maplibregl-popup-tip{align-self:flex-end;border-bottom-color:#fff;border-right:none;border-top:none}.maplibregl-popup-anchor-bottom .maplibregl-popup-tip{align-self:center;border-bottom:none;border-top-color:#fff}.maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip{align-self:flex-start;border-bottom:none;border-left:none;border-top-color:#fff}.maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip{align-self:flex-end;border-bottom:none;border-right:none;border-top-color:#fff}.maplibregl-popup-anchor-left .maplibregl-popup-tip{align-self:center;border-left:none;border-right-color:#fff}.maplibregl-popup-anchor-right .maplibregl-popup-tip{align-self:center;border-left-color:#fff;border-right:none}.maplibregl-popup-close-button{background-color:transparent;border:0;border-radius:0 3px 0 0;cursor:pointer;position:absolute;right:0;top:0}.maplibregl-popup-close-button:hover{background-color:rgb(0 0 0/5%)}.maplibregl-popup-content{background:#fff;border-radius:3px;box-shadow:0 1px 2px rgba(0,0,0,.1);padding:15px 10px;pointer-events:auto;position:relative}.maplibregl-popup-anchor-top-left .maplibregl-popup-content{border-top-left-radius:0}.maplibregl-popup-anchor-top-right .maplibregl-popup-content{border-top-right-radius:0}.maplibregl-popup-anchor-bottom-left .maplibregl-popup-content{border-bottom-left-radius:0}.maplibregl-popup-anchor-bottom-right .maplibregl-popup-content{border-bottom-right-radius:0}.maplibregl-popup-track-pointer{display:none}.maplibregl-popup-track-pointer *{pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.maplibregl-map:hover .maplibregl-popup-track-pointer{display:flex}.maplibregl-map:active .maplibregl-popup-track-pointer{display:none}.maplibregl-marker{left:0;position:absolute;top:0;transition:opacity .2s;will-change:transform}.maplibregl-user-location-dot,.maplibregl-user-location-dot:before{background-color:#1da1f2;border-radius:50%;height:15px;width:15px}.maplibregl-user-location-dot:before{animation:maplibregl-user-location-dot-pulse 2s infinite;content:"";position:absolute}.maplibregl-user-location-dot:after{border:2px solid #fff;border-radius:50%;box-shadow:0 0 3px rgba(0,0,0,.35);box-sizing:border-box;content:"";height:19px;left:-2px;position:absolute;top:-2px;width:19px}@keyframes maplibregl-user-location-dot-pulse{0%{opacity:1;transform:scale(1)}70%{opacity:0;transform:scale(3)}to{opacity:0;transform:scale(1)}}.maplibregl-user-location-dot-stale{background-color:#aaa}.maplibregl-user-location-dot-stale:after{display:none}.maplibregl-user-location-accuracy-circle{background-color:#1da1f233;border-radius:100%;height:1px;width:1px}.maplibregl-crosshair,.maplibregl-crosshair .maplibregl-interactive,.maplibregl-crosshair .maplibregl-interactive:active{cursor:crosshair}.maplibregl-boxzoom{background:#fff;border:2px dotted #202020;height:0;left:0;opacity:.5;position:absolute;top:0;width:0}.maplibregl-cooperative-gesture-screen{align-items:center;background:rgba(0,0,0,.4);color:#fff;display:flex;font-size:1.4em;inset:0;justify-content:center;line-height:1.2;opacity:0;padding:1rem;pointer-events:none;position:absolute;transition:opacity 1s ease 1s;z-index:99999}.maplibregl-cooperative-gesture-screen.maplibregl-show{opacity:1;transition:opacity .05s}.maplibregl-cooperative-gesture-screen .maplibregl-mobile-message{display:none}@media (hover:none),(width <= 480px){.maplibregl-cooperative-gesture-screen .maplibregl-desktop-message{display:none}.maplibregl-cooperative-gesture-screen .maplibregl-mobile-message{display:block}}.maplibregl-pseudo-fullscreen{height:100%!important;left:0!important;position:fixed!important;top:0!important;width:100%!important;z-index:99999}</style></head>
+
+<body data-base-url="/jupyter/" class="solara-no-ssg">
+    
+    
+    
+    <div data-app="true" class="v-application v-application--is-ltr theme--light" id="app"><div class="v-application--wrap"><div role="progressbar" aria-valuemin="0" aria-valuemax="100" class="v-progress-linear v-progress-linear--absolute theme--light" style="height: 4px; visibility: hidden;"><div class="v-progress-linear__background primary" style="opacity: 0.3; left: 0%; width: 100%;"></div><div class="v-progress-linear__buffer"></div><div class="v-progress-linear__indeterminate v-progress-linear__indeterminate--active"><div class="v-progress-linear__indeterminate long primary"></div><div class="v-progress-linear__indeterminate short primary"></div></div></div> <!----> <div id="loader-container"><div class="container solara-loader container--fluid" id="loader"><div class="row"><div class="col"><div id="sun-spinner-container"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" width="65" height="65"><svg width="65" height="65" viewBox="0 0 65 65" fill="none" xmlns="http://www.w3.org/2000/svg"><path id="sun-spinner1" d="M57.11 30.64L61.47 17.87L48.7 13.51L42.76 1.39999L30.65 7.34999L17.87 2.97999L13.51 15.75L1.40002 21.7L7.35002 33.81L2.99002 46.58L15.76 50.94L21.71 63.06L33.82 57.11L46.59 61.47L50.95 48.7L63.06 42.75L57.11 30.64ZM54.26 34.39L34.39 54.26C33.19 55.46 31.25 55.46 30.05 54.26L10.2 34.4C9.00002 33.2 9.00002 31.26 10.2 30.07L30.06 10.2C31.26 8.99999 33.2 8.99999 34.4 10.2L54.27 30.07C55.47 31.27 55.47 33.21 54.27 34.4L54.26 34.39Z" fill="#FFCF64" style="transform-origin: center center;"></path> <path id="sun-spinner2" d="M53.62 19.42L51.65 6.07L38.3 8.04L27.46 0L19.42 10.84L6.07 12.82L8.04 26.17L0 37L10.84 45.04L12.81 58.39L26.16 56.42L37 64.46L45.04 53.62L58.39 51.64L56.42 38.29L64.46 27.45L53.62 19.4V19.42ZM52.8 24.06L44.24 50.82C43.72 52.43 42 53.32 40.39 52.81L13.63 44.25C12.02 43.74 11.13 42.01 11.64 40.4L20.21 13.64C20.72 12.03 22.45 11.14 24.06 11.65L50.82 20.21C52.43 20.72 53.32 22.45 52.81 24.06H52.8Z" fill="#FF8C3E" style="transform-origin: center center;"></path></svg></svg></div> <h1>Loading app</h1></div></div></div> <div style="right: 50px; bottom: 10px; position: absolute;"><b>Made with <a href="https://solara.dev">Solara</a></b></div></div> <div class="v-overlay theme--dark" style="z-index: 100002;"><div class="v-overlay__scrim" style="opacity: 0; background-color: rgb(33, 33, 33); border-color: rgb(33, 33, 33);"></div></div> <div role="dialog" class="v-dialog__container"><!----></div> <!----></div></div>
+    <script>
+        var theme = {"force_refresh": false, "loader": "solara", "show_banner": true, "title": "Solara \u2600\ufe0f", "variant": "light"}
+        function getThemeVariant() {
+            if (localStorage.getItem(':solara:theme.variant')) {
+                return JSON.parse(localStorage.getItem(':solara:theme.variant'))
+            }
+            return theme.variant;
+        }
+        if (localStorage.getItem(':solara:theme.variant')) {
+            theme.variant = JSON.parse(localStorage.getItem(':solara:theme.variant'))
+        }
+        function prefersDarkScheme() {
+            return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        }
+        function inDarkMode() {
+            if (getThemeVariant() == 'auto') {
+                return prefersDarkScheme();
+            }
+            else {
+                return getThemeVariant() == 'dark';
+            }
+        }
+        // Init theme
+        let appContainer = document.getElementById('app');
+        const searchParams = new URLSearchParams(window.location.search);
+        if(searchParams.has('modelid')) {
+            // indicates that we are not mounting the application, but a specific
+            // widget (for instance using ipypopout)
+            document.body.classList.add('jupyter-widgets-popout-container');
+        }
+        if (inDarkMode()) {
+            appContainer.classList.remove('theme--light');
+            appContainer.classList.add('theme--dark');
+        } else {
+            appContainer.classList.remove('theme--dark');
+            appContainer.classList.add('theme--light');
+        }
+    </script>
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm//@widgetti/solara-vuetify-app@10.0.3/dist/fonts.css" rel="stylesheet" fetchpriority="low">
+        
+        <script src="https://cdn.jsdelivr.net/npm//@widgetti/solara-vuetify-app@10.0.3/dist/solara-vuetify-app8.js"></script>
+        
+    
+    <script>
+        solara.rootPath = "";
+        solara.jupyterRootPath = "/jupyter";
+        solara.cdn = "https://cdn.jsdelivr.net/npm/";
+        solara.forceRefresh = false;
+        // the vue templates expect it to not have a trailing slash
+        solara.cdn = solara.cdn.replace(/\/$/, '');
+        // keep this for backwards compatibility
+        window.solara_cdn = solara.cdn;
+        console.log("solara config", {rootPath: solara.rootPath, jupyterRootPath: solara.jupyterRootPath, cdn: solara.cdn});
+
+        async function changeThemeCSS(theme) {
+            let css = await fetch(`${solara.rootPath}/static/assets/theme-${theme}.css`).then(r => r.text());
+            document.getElementById('jupyter-theme-css').innerHTML = css;
+        }
+        changeThemeCSS(inDarkMode() ? 'dark' : 'light');
+    </script>
+
+    <script>/*
+path=/static/assets/custom.js
+*//* not empty */
+</script>
+    <script>/*
+path=/static/assets/theme.js
+*/vuetifyThemes = {
+
+}
+</script>
+
+    <script src="https://cdn.jsdelivr.net/npm//requirejs@2.3.6/require.js" crossorigin="anonymous">
+    </script>
+    <script>/*
+path=/static/main-vuetify.js
+*/
+var jupyterWidgetMountPoint = {
+    data() {
+        return {
+            renderFn: undefined,
+            elem: undefined,
+        }
+    },
+    props: ['mount-id'],
+    created() {
+        requestWidget(this.mountId);
+    },
+    mounted() {
+        const vue3 = Vue.version.startsWith('3');
+        requestWidget(this.mountId)
+            .then(widgetView => {
+                if (['VuetifyView', 'VuetifyTemplateView'].includes(widgetView.model.get('_view_name'))) {
+                    this.renderFn = createElement => widgetView.vueRender(createElement);
+                } else {
+                    while (this.$el.firstChild) {
+                        this.$el.removeChild(this.$el.firstChild);
+                    }
+
+                    requirejs(['@jupyter-widgets/base'], widgets =>
+                        widgets.JupyterPhosphorWidget.attach(widgetView.pWidget, this.$el)
+                    );
+                }
+            }
+            );
+    },
+    render(createElement) {
+        // in vue3 we have Vue.h, otherwise fall back to createElement (vue2)
+        let h = Vue.h || createElement;
+        if (this.renderFn) {
+            /* workaround for v-menu click */
+            if (!this.elem) {
+                this.elem = this.renderFn(createElement);
+            }
+            return this.elem;
+        }
+        return h('div', this.$slots.default ||
+            [h('v-chip', `[${this.mountId}]`)]);
+    }
+};
+
+const widgetResolveFns = {};
+const widgetPromises = {};
+
+function provideWidget(mountId, widgetView) {
+    if (widgetResolveFns[mountId]) {
+        widgetResolveFns[mountId](widgetView);
+    } else {
+        widgetPromises[mountId] = Promise.resolve(widgetView);
+    }
+}
+
+function requestWidget(mountId) {
+    if (!widgetPromises[mountId]) {
+        widgetPromises[mountId] = new Promise(resolve => widgetResolveFns[mountId] = resolve);
+    }
+    return widgetPromises[mountId];
+}
+
+function injectDebugMessageInterceptor(kernel) {
+    const _original_handle_message = kernel._handleMessage.bind(kernel)
+    kernel._handleMessage = ((msg) => {
+        if (msg.msg_type === 'error') {
+            app.$data.solaraDebugMessages.push({
+                cell: '_',
+                traceback: msg.content.traceback.map(line => ansiSpan(_.escape(line)))
+            });
+        } else if (msg.msg_type === 'stream' && (msg.content['name'] === 'stdout' || msg.content['name'] === 'stderr')) {
+            app.$data.solaraDebugMessages.push({
+                cell: '_',
+                name: msg.content.name,
+                text: msg.content.text
+            });
+        }
+        return _original_handle_message(msg);
+    })
+}
+
+
+function getCookiesMap(cookiesString) {
+    return cookiesString.split(";")
+        .map(function (cookieString) {
+            return cookieString.trim().split("=");
+        })
+        .reduce(function (acc, curr) {
+            acc[curr[0]] = curr[1];
+            return acc;
+        }, {});
+}
+const COOKIE_KEY_CONTEXT_ID = 'solara-session-id'
+
+
+// from https://gist.github.com/outbreak/316637cde245160c2579898b21837c1c
+function generateUuid() {
+    function getRandomSymbol(symbol) {
+        var array;
+
+        if (symbol === 'y') {
+            array = ['8', '9', 'a', 'b'];
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        array = new Uint8Array(1);
+        window.crypto.getRandomValues(array);
+        return (array[0] % 16).toString(16);
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, getRandomSymbol);
+}
+
+async function solaraInit(mountId, appName) {
+    console.log('solara init', mountId, appName);
+    define("vue", [], () => Vue);
+    define("vuetify", [], () => Vuetify);
+    cookies = getCookiesMap(document.cookie);
+    const searchParams = new URLSearchParams(window.location.search);
+    let kernelId = searchParams.get('kernelid') || generateUuid()
+    let unloading = false;
+    window.addEventListener('beforeunload', function (e) {
+        unloading = true;
+        kernel.dispose()
+        // allow to opt-out to make testing easier
+        if (!searchParams.has('solara-no-close-beacon')) {
+            window.navigator.sendBeacon(close_url);
+        }
+    });
+    let kernel = await solara.connectKernel(solara.jupyterRootPath, kernelId)
+    if (!kernel) {
+        return;
+    }
+    const close_url = `${solara.rootPath}/_solara/api/close/${kernelId}?session_id=${kernel.clientId}`;
+    let skipReconnectedCheck = true;
+    kernel.statusChanged.connect(() => {
+        app.$data.kernelBusy = kernel.status == 'busy';
+    });
+
+    window.addEventListener('solara.router', function (event) {
+        app.$data.urlHasChanged = true;
+        if(kernel.status == 'busy') {
+            app.$data.loadingPage = true;
+        }
+    });
+    kernel.statusChanged.connect(() => {
+        // When navigation is triggered from the front-end, kernel.status becoming busy and
+        // solara.router event happen in a different order than when navigating through Python, so
+        // if the URL has changed when the kernel becomes busy, we set loadingPage to true
+        if (kernel.status == 'busy' && app.$data.urlHasChanged) {
+            app.$data.loadingPage = true;
+        }
+        // the first idle after a loadingPage == true (a router event)
+        // will be used as indicator that the page is loaded
+        if (app.$data.loadingPage && kernel.status == 'idle') {
+            app.$data.loadingPage = false;
+            app.$data.urlHasChanged = false;
+            const event = new Event('solara.pageReady');
+            window.dispatchEvent(event);
+        }
+    });
+
+
+    kernel.connectionStatusChanged.connect((s) => {
+        if (unloading) {
+            // we don't want to show ui changes when hitting refresh
+            return;
+        }
+        app.$data.connectionStatus = s.connectionStatus;
+        if (s.connectionStatus == 'connected') {
+            app.$data.wasConnected = true;
+        }
+        if (s.connectionStatus == 'connected' && !skipReconnectedCheck) {
+            (async () => {
+                if (app.$data.needsRefresh) {
+                    // give up
+                    return;
+                }
+                // if we are reconnected, we expected the app to be in a started
+                // state. If it is not started, we will shutdown the kernel and
+                // Recommend to refresh the page. This situation can happen if
+                // we reconnect to a different node/worker, or when the server
+                // was restarted.
+                const status = await widgetManager.appStatus()
+                if (!status.started) {
+                    app.$data.needsRefresh = true;
+                    await solara.shutdownKernel(kernel);
+                } else {
+                    await widgetManager.fetchAll();
+                }
+            })();
+        }
+    })
+    const context = {
+        sessionContext: {
+            session: {
+                kernel,
+                kernelChanged: {
+                    connect: () => {
+                    }
+                },
+            },
+            statusChanged: {
+                connect: () => {
+                }
+            },
+            kernelChanged: {
+                connect: () => {
+                }
+            },
+            connectionStatusChanged: {
+                connect: (s) => {
+                }
+            },
+        },
+        saveState: {
+            connect: () => {
+            }
+        },
+    };
+
+    const settings = {
+        saveState: false
+    };
+
+    // override the latexTypesetter to use katex, in case there are any libraries that
+    // make use of that.
+    const rendermime = new solara.RenderMimeRegistry({
+        initialFactories: solara.extendedRendererFactories,
+        latexTypesetter: new solara.KatexTypesetter(),
+    });
+
+    let widgetManager = new solara.WidgetManager(context, rendermime, settings);
+    // it seems if we attach this to early, it will not be called
+    app.$data.loading_text = 'Loading app';
+    const path = window.location.pathname.slice(solara.rootPath.length) + window.location.search;
+    let widgetModelId = searchParams.get('modelid');
+    // if kernelid and modelid are given as query parameters, we will use them
+    // instead of running the current solara app. This allows usage such as
+    // ipypopout, which reconnects to an existing kernel and shows a particular
+    // widget.
+    if (kernelId && widgetModelId) {
+        await widgetManager.fetchAll();
+    } else {
+        widgetModelId = await widgetManager.run(appName, {path, dark: inDarkMode(), themes: vuetifyThemes});
+    }
+    await solaraMount(widgetManager, mountId || 'content', widgetModelId);
+    skipReconnectedCheck = false;
+    solara.renderKatex();
+}
+
+async function solaraMount(widgetManager, mountId, modelId) {
+    console.log(`will mount widget with id ${modelId} at mount id ${mountId}`)
+
+    async function init() {
+        await Promise.all(Object.values(widgetManager._models).map(async (modelPromise) => {
+            const model = await modelPromise;
+            if (model.model_id == modelId) {
+                const view = await widgetManager.create_view(model);
+                provideWidget(mountId, view);
+            }
+        }));
+        app.$data.loadingPercentage = 0;
+        app.$data.loading_text = 'Done';
+        app.$data.loading = false;
+    }
+    if (document.readyState === 'complete') {
+        init()
+    } else {
+        window.addEventListener('load', init);
+    }
+}
+</script>
+    <script>/*
+path=/static/ansi.js
+*//* Copied from: https://github.com/jupyterlab/jupyterlab/blob/9284892500c9338852532d79d6c5b467c61d797b/packages/rendermime/src/renderers.ts#L881 */
+const ANSI_COLORS = [
+    'ansi-black',
+    'ansi-red',
+    'ansi-green',
+    'ansi-yellow',
+    'ansi-blue',
+    'ansi-magenta',
+    'ansi-cyan',
+    'ansi-white',
+    'ansi-black-intense',
+    'ansi-red-intense',
+    'ansi-green-intense',
+    'ansi-yellow-intense',
+    'ansi-blue-intense',
+    'ansi-magenta-intense',
+    'ansi-cyan-intense',
+    'ansi-white-intense'
+];
+
+/**
+ * Create HTML tags for a string with given foreground, background etc. and
+ * add them to the `out` array.
+ */
+function pushColoredChunk(
+    chunk,
+    fg,
+    bg,
+    bold,
+    underline,
+    inverse,
+    out
+) {
+    if (chunk) {
+        const classes = [];
+        const styles = [];
+
+        if (bold && typeof fg === 'number' && 0 <= fg && fg < 8) {
+            fg += 8; // Bold text uses "intense" colors
+        }
+        if (inverse) {
+            [fg, bg] = [bg, fg];
+        }
+
+        if (typeof fg === 'number') {
+            classes.push(ANSI_COLORS[fg] + '-fg');
+        } else if (fg.length) {
+            styles.push(`color: rgb(${fg})`);
+        } else if (inverse) {
+            classes.push('ansi-default-inverse-fg');
+        }
+
+        if (typeof bg === 'number') {
+            classes.push(ANSI_COLORS[bg] + '-bg');
+        } else if (bg.length) {
+            styles.push(`background-color: rgb(${bg})`);
+        } else if (inverse) {
+            classes.push('ansi-default-inverse-bg');
+        }
+
+        if (bold) {
+            classes.push('ansi-bold');
+        }
+
+        if (underline) {
+            classes.push('ansi-underline');
+        }
+
+        if (classes.length || styles.length) {
+            out.push('<span');
+            if (classes.length) {
+                out.push(` class="${classes.join(' ')}"`);
+            }
+            if (styles.length) {
+                out.push(` style="${styles.join('; ')}"`);
+            }
+            out.push('>');
+            out.push(chunk);
+            out.push('</span>');
+        } else {
+            out.push(chunk);
+        }
+    }
+}
+
+/**
+ * Convert ANSI extended colors to R/G/B triple.
+ */
+function getExtendedColors(numbers) {
+    let r;
+    let g;
+    let b;
+    const n = numbers.shift();
+    if (n === 2 && numbers.length >= 3) {
+        // 24-bit RGB
+        r = numbers.shift();
+        g = numbers.shift();
+        b = numbers.shift();
+        if ([r, g, b].some(c => c < 0 || 255 < c)) {
+            throw new RangeError('Invalid range for RGB colors');
+        }
+    } else if (n === 5 && numbers.length >= 1) {
+        // 256 colors
+        const idx = numbers.shift();
+        if (idx < 0) {
+            throw new RangeError('Color index must be >= 0');
+        } else if (idx < 16) {
+            // 16 default terminal colors
+            return idx;
+        } else if (idx < 232) {
+            // 6x6x6 color cube, see https://stackoverflow.com/a/27165165/500098
+            r = Math.floor((idx - 16) / 36);
+            r = r > 0 ? 55 + r * 40 : 0;
+            g = Math.floor(((idx - 16) % 36) / 6);
+            g = g > 0 ? 55 + g * 40 : 0;
+            b = (idx - 16) % 6;
+            b = b > 0 ? 55 + b * 40 : 0;
+        } else if (idx < 256) {
+            // grayscale, see https://stackoverflow.com/a/27165165/500098
+            r = g = b = (idx - 232) * 10 + 8;
+        } else {
+            throw new RangeError('Color index must be < 256');
+        }
+    } else {
+        throw new RangeError('Invalid extended color specification');
+    }
+    return [r, g, b];
+}
+
+/**
+ * Transform ANSI color escape codes into HTML <span> tags with CSS
+ * classes such as "ansi-green-intense-fg".
+ * The actual colors used are set in the CSS file.
+ * This also removes non-color escape sequences.
+ * This is supposed to have the same behavior as nbconvert.filters.ansi2html()
+ */
+function ansiSpan(str) {
+    const ansiRe = /\x1b\[(.*?)([@-~])/g; // eslint-disable-line no-control-regex
+    let fg = [];
+    let bg = [];
+    let bold = false;
+    let underline = false;
+    let inverse = false;
+    let match;
+    const out = [];
+    const numbers = [];
+    let start = 0;
+
+    //str = _.escape(str);
+
+    str += '\x1b[m'; // Ensure markup for trailing text
+    // tslint:disable-next-line
+    while ((match = ansiRe.exec(str))) {
+        if (match[2] === 'm') {
+            const items = match[1].split(';');
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                if (item === '') {
+                    numbers.push(0);
+                } else if (item.search(/^\d+$/) !== -1) {
+                    numbers.push(parseInt(item, 10));
+                } else {
+                    // Ignored: Invalid color specification
+                    numbers.length = 0;
+                    break;
+                }
+            }
+        } else {
+            // Ignored: Not a color code
+        }
+        const chunk = str.substring(start, match.index);
+        pushColoredChunk(chunk, fg, bg, bold, underline, inverse, out);
+        start = ansiRe.lastIndex;
+
+        while (numbers.length) {
+            const n = numbers.shift();
+            switch (n) {
+                case 0:
+                    fg = bg = [];
+                    bold = false;
+                    underline = false;
+                    inverse = false;
+                    break;
+                case 1:
+                case 5:
+                    bold = true;
+                    break;
+                case 4:
+                    underline = true;
+                    break;
+                case 7:
+                    inverse = true;
+                    break;
+                case 21:
+                case 22:
+                    bold = false;
+                    break;
+                case 24:
+                    underline = false;
+                    break;
+                case 27:
+                    inverse = false;
+                    break;
+                case 30:
+                case 31:
+                case 32:
+                case 33:
+                case 34:
+                case 35:
+                case 36:
+                case 37:
+                    fg = n - 30;
+                    break;
+                case 38:
+                    try {
+                        fg = getExtendedColors(numbers);
+                    } catch (e) {
+                        numbers.length = 0;
+                    }
+                    break;
+                case 39:
+                    fg = [];
+                    break;
+                case 40:
+                case 41:
+                case 42:
+                case 43:
+                case 44:
+                case 45:
+                case 46:
+                case 47:
+                    bg = n - 40;
+                    break;
+                case 48:
+                    try {
+                        bg = getExtendedColors(numbers);
+                    } catch (e) {
+                        numbers.length = 0;
+                    }
+                    break;
+                case 49:
+                    bg = [];
+                    break;
+                case 90:
+                case 91:
+                case 92:
+                case 93:
+                case 94:
+                case 95:
+                case 96:
+                case 97:
+                    fg = n - 90 + 8;
+                    break;
+                case 100:
+                case 101:
+                case 102:
+                case 103:
+                case 104:
+                case 105:
+                case 106:
+                case 107:
+                    bg = n - 100 + 8;
+                    break;
+                default:
+                // Unknown codes are ignored
+            }
+        }
+    }
+    return out.join('');
+}
+</script>
+
+    <script>
+        solara.production = false;
+        const themeVariants = ['light', 'dark', 'auto']
+        solara.preRendered = 0 > 0
+        if(solara.preRendered) {
+            document.body.classList.add('solara-ssg', 'solara-pre-rendered');
+        } else {
+            document.body.classList.add('solara-no-ssg');
+        }
+
+    </script>
+
+    <script>
+        window.solara.browser_platform = false;
+        
+        var debug = true;
+
+        var appComponent = {
+            // if we do prerendering, keep it unmounted, and mount
+            // when loading becomes false
+            el: solara.preRendered ? null : '#app' ,
+            template: '#vue-app-template',
+            created() {
+                const original_$forceUpdate = this.$forceUpdate.bind(this);
+                this.$forceUpdate = (() => {
+                    this.forceUpdateTrigger += 1;
+                    original_$forceUpdate();
+                });
+                // in case we are showing a popop (e.g. using ipypopout), hide the banner
+                if(searchParams.has('modelid')) {
+                    this.showBanner = false;
+                }
+            },
+            mounted() {
+                document.querySelector('#app').removeAttribute("style");
+                // listen to change in preferred color scheme (e.g if choosing dark in OSX)
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+                    this.$vuetify.theme.dark = inDarkMode();
+                });
+                document.getElementById('pre-render-theme').remove();
+            },
+            methods: {
+                stateReset() {
+                    console.log('reset')
+                    msg = { "type": "state_reset", "reason": "user command" }
+                    wsWatchdog.send(JSON.stringify(msg))
+                },
+                setCancelAutoRefresh() {
+                    this.needsRefresh = false;
+                    this.cancelAutoRefresh = true;
+                },
+                reload() {
+                    location.reload();
+                },
+            },
+            watch: {
+                kernelBusy: function (value) {
+                    if(this._lastBusyTimer) {
+                        clearTimeout(this._lastBusyTimer)
+                    }
+                    if(value) {
+                        this._lastBusyTimer = setTimeout(() => {
+                            this.kernelBusyLong = value;
+                        }, 300);
+                    } else {
+                        this.kernelBusyLong = value;
+                    }
+                },
+                loading: function (value) {
+                    // if preRendered, the app is not mounted yet
+                    // so we mount it when loading becomes false
+                    if (solara.preRendered && !this.mounted) {
+                        function waitForAnimation(element) {
+                            return new Promise((resolve) => {
+                                element.addEventListener('animationend', resolve, { once: true });
+                            });
+                        }
+
+                        function waitForAllAnimations(elements) {
+                            const animationPromises = Array.from(elements).map(element => waitForAnimation(element));
+                            return Promise.all(animationPromises);
+                        }
+
+                        (async () => {
+                            await waitForAllAnimations(document.querySelectorAll('.solara-ssg-wait-for-animation'));
+                            console.log("animation finished");
+                            document.body.classList.remove('solara-pre-rendered');
+                            document.body.classList.add('solara-pre-rendered-finished');
+                            this.isMounted = true;
+                            this.$mount("#app")
+                        })();
+                    } else {
+                        this.isMounted = true;
+                    }
+                },
+                needsRefresh: function (value) {
+                    if(solara.forceRefresh) {
+                        this.reload();
+                    } else if (this.needsRefresh && !this.cancelAutoRefresh && !solara.production) {
+                        console.log('value for needRefresh', value);
+                        setTimeout(() => {
+                            console.log('this.autoRefreshCount', this.autoRefreshCount)
+                            this.autoRefreshCount = this.autoRefreshCount - 1;
+                        }, 1000);
+                    }
+                },
+                autoRefreshCount: function (value) {
+                    console.log('value for autoRefreshCount', value);
+                    if (value == 0) {
+                        if (!this.cancelAutoRefresh)
+                            this.reload();
+                    } else if (value > 0) {
+                        setTimeout(() => {
+                            console.log('this.autoRefreshCount!', this.autoRefreshCount)
+                            this.autoRefreshCount = this.autoRefreshCount - 1;
+                        }, 1000);
+                    }
+                },
+                '$vuetify.theme.dark': function (value) {
+                    if ( value ) {
+                        changeThemeCSS('dark');
+                        appContainer.classList.remove('theme--light');
+                        appContainer.classList.add('theme--dark');
+                    } else {
+                        changeThemeCSS('light');
+                        appContainer.classList.remove('theme--dark');
+                        appContainer.classList.add('theme--light');
+                    }
+                }
+            },
+            data() {
+                return {
+                    forceUpdateTrigger: 0,
+                    loading_text: "Loading resources",
+                    loadingPercentage: -1,
+                    loading: true,
+                    title: "No title",
+                    solaraDebugMessages: [],
+                    outputMessages: [],
+                    theme: theme,
+                    debug: debug,
+                    connectionStatus: null,
+                    wasConnected: false,
+                    needsRefresh: false,
+                    cancelAutoRefresh: false,
+                    autoRefreshCount: 3,
+                    kernelBusy: false,
+                    isMounted: false,
+                    loadingPage: false,
+                    _lastBusyTimer: null,
+                    kernelBusyLong: false,
+                    showBanner: theme.show_banner,
+                    // outputMessages: [{ name: 'stderr', text: 'lala' }],
+                }
+            }
+        };
+        const vue3 = Vue.version.startsWith('3');
+        if(vue3) {
+            var app = Vue.createApp(appComponent).use(vuetifyPlugin)
+                .component("jupyter-widget-mount-point", jupyterWidgetMountPoint)
+                .mount('#app');
+
+        } else {
+            Vue.component('jupyter-widget-mount-point', jupyterWidgetMountPoint);
+            Vue.use(Vuetify);
+            var app = new Vue({
+                vuetify: new Vuetify({
+                    theme: {
+                        dark: inDarkMode(),
+                        themes: vuetifyThemes,
+                    },
+                }),
+                ...appComponent,
+            });
+        }
+        // Loading classic notebook extensions.
+        window.enable_nbextensions = true;
+        nbextensionHashes = {"anywidget/extension": "c008a7119d3e0bb57947ef61ed0c0d30", "catboost-widget/extension": "c008a7119d3e0bb57947ef61ed0c0d30", "jupyter-vue/extension": "c008a7119d3e0bb57947ef61ed0c0d30", "jupyter-vuetify/extension": "c008a7119d3e0bb57947ef61ed0c0d30"};
+        requirejs.config({
+            baseUrl: '/jupyter',
+            waitSeconds: 3000,
+            map: {
+                '*': {
+                        'jupyter-vue': 'nbextensions/jupyter-vue/nodeps',
+            'jupyter-vuetify': 'nbextensions/jupyter-vuetify/nodeps',
+            },
+                },
+                // Add cache busting to the urlArgs to ensure latest versions of nbextensions are loaded
+                urlArgs: function (id, url) {
+                    const extensionName = id.replace("/static/nbextensions/", "").replace(".js", "");
+                    if (nbextensionHashes[extensionName] !== undefined) {
+                        // Check if the url already has a query string, if so, append the hash as an additional parameter
+                        return (url.indexOf('?') === -1 ? '?' : '&') + nbextensionHashes[extensionName];
+                    } else {
+                        return '';
+                    }
+                },
+            });
+        requirejs([
+            "/jupyter/nbextensions/anywidget/extension.js",
+            "/jupyter/nbextensions/catboost-widget/extension.js",
+            
+        ]);
+        (async function () {
+            await Promise.all([
+                solaraInit('solara-main')
+            ]);
+        })();
+
+    </script>
+
+</body></html>

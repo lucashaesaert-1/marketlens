@@ -1,0 +1,17 @@
+[
+  {"id": "sl_001", "company": "Slack", "source": "G2", "rating": 5, "date": "2025-11-14", "reviewer_type": "SMB", "text": "Easy to use. Best integrations. Our team adopted it in a day. Mobile experience is great."},
+  {"id": "sl_002", "company": "Slack", "source": "Capterra", "rating": 4, "date": "2026-01-08", "reviewer_type": "Enterprise", "text": "Integration ecosystem is unmatched. Ease of use is excellent. Video quality is okay. Pricing is fair."},
+  {"id": "sl_003", "company": "Slack", "source": "G2", "rating": 5, "date": "2025-09-22", "reviewer_type": "SMB", "text": "Intuitive. Best app for team communication. Security is solid. Mobile app works well."},
+  {"id": "mt_001", "company": "Microsoft Teams", "source": "G2", "rating": 4, "date": "2025-11-08", "reviewer_type": "Enterprise", "text": "Enterprise security is best. Bundled with M365. Video quality is good. Ease of use is okay."},
+  {"id": "mt_002", "company": "Microsoft Teams", "source": "Capterra", "rating": 3, "date": "2026-01-14", "reviewer_type": "Mid-market", "text": "Security is excellent. Mobile experience is lacking. Pricing value is good with M365 bundle."},
+  {"id": "zm_001", "company": "Zoom", "source": "G2", "rating": 5, "date": "2025-12-20", "reviewer_type": "SMB", "text": "Video quality is best. Easy to use. Reliable. Pricing is reasonable."},
+  {"id": "zm_002", "company": "Zoom", "source": "Trustpilot", "rating": 4, "date": "2026-02-10", "reviewer_type": "Enterprise", "text": "Video quality is unmatched. Integration ecosystem is okay. Security is good. Mobile works well."},
+  {"id": "dc_001", "company": "Discord", "source": "G2", "rating": 5, "date": "2025-11-25", "reviewer_type": "SMB", "text": "Best value. Free tier is generous. Mobile experience is excellent. Ease of use is great."},
+  {"id": "dc_002", "company": "Discord", "source": "Capterra", "rating": 5, "date": "2025-10-30", "reviewer_type": "SMB", "text": "Pricing value is unbeatable. Mobile is best. Ease of use is excellent. Enterprise security is weak."},
+  {"id": "wx_001", "company": "Webex", "source": "G2", "rating": 4, "date": "2026-01-29", "reviewer_type": "Enterprise", "text": "Enterprise security is excellent. Video quality is good. Ease of use is okay. Pricing is fair."},
+  {"id": "wx_002", "company": "Webex", "source": "Capterra", "rating": 3, "date": "2025-11-14", "reviewer_type": "Mid-market", "text": "Security is excellent. Mobile experience is lacking. Integration ecosystem is okay."},
+  {"id": "sl_004", "company": "Slack", "source": "G2", "rating": 5, "date": "2026-02-21", "reviewer_type": "SMB", "text": "Best integrations. Ease of use is top. Mobile is great. Pricing value is good."},
+  {"id": "mt_003", "company": "Microsoft Teams", "source": "G2", "rating": 4, "date": "2026-01-19", "reviewer_type": "Enterprise", "text": "Security is best. Integration with M365 is seamless. Video quality is good. Ease of use could improve."},
+  {"id": "zm_003", "company": "Zoom", "source": "Trustpilot", "rating": 5, "date": "2025-12-01", "reviewer_type": "SMB", "text": "Video quality is best. Reliable. Easy. Good value."},
+  {"id": "dc_003", "company": "Discord", "source": "G2", "rating": 5, "date": "2026-02-05", "reviewer_type": "SMB", "text": "Best value. Mobile is excellent. Ease of use is great. Not for enterprise security needs."}
+]

@@ -1,0 +1,17 @@
+[
+  {"id": "ub_001", "company": "Uber", "source": "Trustpilot", "rating": 4, "date": "2025-11-14", "reviewer_type": "Consumer", "text": "Reliable. Wait times are usually under 5 minutes. Safety features are good. Surge pricing is frustrating."},
+  {"id": "ub_002", "company": "Uber", "source": "App Store", "rating": 5, "date": "2026-01-08", "reviewer_type": "Consumer", "text": "Best ride app. Safety features like trip sharing. Driver quality is good. Payment options are flexible."},
+  {"id": "ub_003", "company": "Uber", "source": "Trustpilot", "rating": 2, "date": "2025-09-22", "reviewer_type": "Consumer", "text": "Surge pricing is opaque. Felt ripped off. Wait time was okay. App is reliable."},
+  {"id": "ly_001", "company": "Lyft", "source": "Trustpilot", "rating": 4, "date": "2025-11-08", "reviewer_type": "Consumer", "text": "Drivers are friendly. Wait time is good. Safety features are solid. Pricing transparency could improve."},
+  {"id": "ly_002", "company": "Lyft", "source": "App Store", "rating": 5, "date": "2026-01-14", "reviewer_type": "Consumer", "text": "Great driver quality. App is reliable. Safe rides. Good payment options."},
+  {"id": "bo_001", "company": "Bolt", "source": "Trustpilot", "rating": 5, "date": "2025-12-20", "reviewer_type": "Consumer", "text": "Fastest pickup. Upfront pricing, no surge. Best value. Driver quality is excellent."},
+  {"id": "bo_002", "company": "Bolt", "source": "Trustpilot", "rating": 4, "date": "2026-02-10", "reviewer_type": "Consumer", "text": "Transparent pricing. Wait time is short. App works well. Safety features are good."},
+  {"id": "bo_003", "company": "Bolt", "source": "App Store", "rating": 5, "date": "2025-11-25", "reviewer_type": "Consumer", "text": "Best value. No surprise surge. Fast pickups. Driver quality is high."},
+  {"id": "fn_001", "company": "FreeNow", "source": "Trustpilot", "rating": 3, "date": "2025-10-30", "reviewer_type": "Consumer", "text": "Decent app. Wait times vary. Driver quality is okay. Pricing is okay."},
+  {"id": "fn_002", "company": "FreeNow", "source": "Trustpilot", "rating": 4, "date": "2026-01-29", "reviewer_type": "Consumer", "text": "Good in Europe. Driver quality is good. Payment options work. App reliability is fine."},
+  {"id": "dd_001", "company": "DiDi", "source": "Trustpilot", "rating": 3, "date": "2025-11-14", "reviewer_type": "Consumer", "text": "Cheap. Wait time is okay. Driver quality varies. Payment options are good."},
+  {"id": "dd_002", "company": "DiDi", "source": "App Store", "rating": 4, "date": "2026-02-21", "reviewer_type": "Consumer", "text": "Good value. Driver quality is good. Safety features are adequate. App is reliable."},
+  {"id": "ub_004", "company": "Uber", "source": "Trustpilot", "rating": 4, "date": "2026-01-19", "reviewer_type": "Consumer", "text": "Safety features are best in class. Wait time is good. Surge pricing is the main complaint."},
+  {"id": "ly_003", "company": "Lyft", "source": "Trustpilot", "rating": 4, "date": "2025-12-01", "reviewer_type": "Consumer", "text": "Driver quality is excellent. Safety features are good. Pricing transparency needs work."},
+  {"id": "bo_004", "company": "Bolt", "source": "Trustpilot", "rating": 5, "date": "2026-02-05", "reviewer_type": "Consumer", "text": "Upfront pricing. Fastest pickup. Best value. Switched from Uber."}
+]

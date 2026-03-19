@@ -174,10 +174,11 @@ Respond with valid JSON only — no explanation, no markdown fences:
 {json_schema}"""
 
 
-def analyze_review_aspects(review_text: str, client, fast_model: str) -> dict:
+def analyze_review_aspects(review_text: str, client, fast_model: str, dimensions: Optional[dict] = None) -> dict:
     """Extract aspect-based sentiment scores for a single review."""
-    dim_lines = "\n".join(f"  - {k}: {v}" for k, v in DIMENSIONS.items())
-    schema = "{" + ", ".join(f'"{k}": <int 0-100 or null>' for k in DIMENSIONS) + "}"
+    dims = dimensions or DIMENSIONS
+    dim_lines = "\n".join(f"  - {k}: {v}" for k, v in dims.items())
+    schema = "{" + ", ".join(f'"{k}": <int 0-100 or null>' for k in dims) + "}"
 
     prompt = ASPECT_PROMPT_TEMPLATE.format(
         review_text=review_text,
@@ -194,27 +195,33 @@ def analyze_review_aspects(review_text: str, client, fast_model: str) -> dict:
     return json.loads(response.choices[0].message.content)
 
 
-def compute_dimension_scores(reviews: list, client=None, fast_model: str = "", use_mock: bool = False) -> dict:
+def compute_dimension_scores(reviews: list, client=None, fast_model: str = "", use_mock: bool = False,
+                            companies: Optional[list] = None, dimensions: Optional[dict] = None,
+                            mock_scores: Optional[dict] = None) -> dict:
     """
     Compute average dimension scores per company across all reviews.
-    Falls back to MOCK_SCORES if use_mock=True or no API client.
+    Falls back to mock_scores (or MOCK_SCORES) if use_mock=True or no API client.
     """
-    if use_mock or client is None:
-        print("  → Using pre-computed mock scores")
-        return MOCK_SCORES
+    comps = companies or ALL_COMPANIES
+    dims = dimensions or DIMENSIONS
+    mock = mock_scores or MOCK_SCORES
 
-    print(f"  → Analyzing {len(reviews)} reviews with {fast_model}...")
+    if use_mock or client is None:
+        print("  -> Using pre-computed mock scores")
+        return mock
+
+    print(f"  -> Analyzing {len(reviews)} reviews with {fast_model}...")
     company_buckets: dict[str, dict[str, list]] = {
-        c: {d: [] for d in DIMENSIONS} for c in ALL_COMPANIES
+        c: {d: [] for d in dims} for c in comps
     }
 
     for i, review in enumerate(reviews):
         company = review.get("company")
-        if company not in ALL_COMPANIES:
+        if company not in comps:
             continue
         try:
-            scores = analyze_review_aspects(review["text"], client, fast_model)
-            for dim in DIMENSIONS:
+            scores = analyze_review_aspects(review["text"], client, fast_model, dims)
+            for dim in dims:
                 val = scores.get(dim)
                 if isinstance(val, (int, float)):
                     company_buckets[company][dim].append(float(val))
@@ -247,7 +254,9 @@ Evaluation rubric:
 - OBVIOUS (fail): restates what a user finds in 10 minutes on Google
 - WRONG (fail): contradicted by the data
 
-Generate exactly 5 USEFUL insights. Each must cite specific evidence from the scores.
+Generate 8–12 USEFUL insights total. Distribute across Investors (3–4), Companies (4–5), Customers (2–3).
+Each insight must cite specific evidence from the scores. Prioritise insights that directly answer the audience questions below.
+{use_cases_section}
 
 Return JSON:
 {{
@@ -263,13 +272,23 @@ Return JSON:
 }}"""
 
 
-def generate_insights(scores: dict, client, smart_model: str) -> list:
+def generate_insights(scores: dict, client, smart_model: str,
+                     vertical: Optional[str] = None, focal: Optional[str] = None,
+                     competitors: Optional[list] = None,
+                     use_cases: Optional[list[str]] = None) -> list:
     """Synthesise 5 strategic insights using a frontier/smart model."""
+    v = vertical or VERTICAL
+    f = focal or FOCAL_COMPANY
+    c = competitors or COMPETITORS
+    uc_section = ""
+    if use_cases:
+        uc_section = "\nPrioritise insights that address these audience questions:\n" + "\n".join(f"  - {q}" for q in use_cases)
     prompt = SYNTHESIS_PROMPT.format(
-        vertical=VERTICAL,
-        focal=FOCAL_COMPANY,
-        competitors=", ".join(COMPETITORS),
+        vertical=v,
+        focal=f,
+        competitors=", ".join(c),
         scores_json=json.dumps(scores, indent=2),
+        use_cases_section=uc_section,
     )
     response = client.chat.completions.create(
         model=smart_model,
@@ -277,7 +296,15 @@ def generate_insights(scores: dict, client, smart_model: str) -> list:
         response_format={"type": "json_object"},
         temperature=0.7,
     )
-    return json.loads(response.choices[0].message.content)["insights"]
+    raw = response.choices[0].message.content
+    # Sanitize Unicode that can cause charmap errors on Windows (e.g. ->, –)
+    raw = raw.replace("\u2192", "->").replace("\u2013", "-").replace("\u2014", "-")
+    insights = json.loads(raw)["insights"]
+    for ins in insights:
+        for key in ("body", "title", "action"):
+            if key in ins and isinstance(ins[key], str):
+                ins[key] = ins[key].replace("\u2192", "->").replace("\u2013", "-").replace("\u2014", "-")
+    return insights
 
 
 # ── KPI Computation ──────────────────────────────────────────────────────────
@@ -359,7 +386,7 @@ def print_results(scores: dict, kpis: dict, insights: list) -> None:
     for i, ins in enumerate(insights, 1):
         print(f"\n{i}. [{ins['audience']}] [{ins['confidence']} confidence] {ins['title']}")
         print(f"   {ins['body'][:120]}...")
-        print(f"   → {ins['action']}")
+        print(f"   -> {ins['action']}")
 
 
 def build_client():
@@ -428,10 +455,10 @@ def main() -> None:
     print("[4/4] Generating strategic insights...")
     if client and not args.mock:
         insights = generate_insights(scores, client, smart_model)
-        print(f"  → {len(insights)} insights generated via {smart_model}")
+        print(f"  -> {len(insights)} insights generated via {smart_model}")
     else:
         insights = MOCK_INSIGHTS
-        print(f"  → Using {len(insights)} pre-computed insights")
+        print(f"  -> Using {len(insights)} pre-computed insights")
 
     # Compute KPIs
     kpis = compute_kpis(scores, reviews)

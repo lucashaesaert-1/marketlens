@@ -75,7 +75,12 @@ function InsightCard({ insight }: { insight: Insight }) {
         <div className={`${config.iconBg} p-2 rounded-lg`}>
           <Icon className={`w-5 h-5 ${config.iconColor}`} />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap justify-end">
+          {insight.source === "chat" && (
+            <span className="text-xs font-medium px-2 py-1 rounded bg-violet-100 text-violet-800">
+              From your questions
+            </span>
+          )}
           <span
             className={`text-xs font-medium px-2 py-1 rounded ${config.labelBg} ${config.labelColor}`}
           >

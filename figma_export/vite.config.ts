@@ -21,11 +21,23 @@ export default defineConfig({
   assetsInclude: ['**/*.svg', '**/*.csv'],
 
   server: {
+    host: '127.0.0.1',
+    port: 5173,
+    strictPort: false,
+    // OneDrive / cloud-synced folders can make file watching very slow; try excluding
+    // this repo from sync or moving it to e.g. C:\dev\...
+    watch: {
+      ignored: ['**/node_modules/**', '**/.git/**'],
+    },
     proxy: {
       '/api': {
-        target: 'http://localhost:8001',
+        target: 'http://127.0.0.1:8001',
         changeOrigin: true,
       },
     },
+  },
+  // Faster cold start / first paint in dev
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router', 'lucide-react', 'recharts'],
   },
 })

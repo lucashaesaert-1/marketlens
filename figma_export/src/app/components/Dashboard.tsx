@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
-import { type Industry, type Audience } from "../data/mockData";
+import { type Audience } from "../data/mockData";
 import type { IndustryData } from "../data/mockData";
 import { fetchIndustryData } from "../api";
 import { PositioningMap } from "./PositioningMap";
@@ -16,6 +16,8 @@ import {
   DimensionDeltasChart,
 } from "./charts";
 import { BarChart3, Target, TrendingUp, Lightbulb, Loader2 } from "lucide-react";
+import { PersonalizationSection } from "./PersonalizationSection";
+import { DashboardChat } from "./DashboardChat";
 
 /** Which charts each audience sees. Investors: market share, churn, growth. Companies: praise/complaint, gaps, support. Customers: value, ease of use. */
 const CHARTS_BY_AUDIENCE: Record<Audience, Set<string>> = {
@@ -26,7 +28,7 @@ const CHARTS_BY_AUDIENCE: Record<Audience, Set<string>> = {
 
 export function Dashboard() {
   const params = useParams();
-  const industry = (params.industry as Industry) || "crm";
+  const industry = (params.industry as string) || "crm";
   const audience = (params.audience as Audience) || "investors";
 
   const [data, setData] = useState<IndustryData | null>(null);
@@ -196,6 +198,10 @@ export function Dashboard() {
         </div>
       )}
 
+      {data.personalization && (
+        <PersonalizationSection data={data.personalization} />
+      )}
+
       {/* Dimension Benchmarking - all audiences */}
       {CHARTS_BY_AUDIENCE[audience].has("dimensionBenchmarking") && (
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
@@ -226,6 +232,8 @@ export function Dashboard() {
         </div>
         <InsightsPanel insights={data.insights[audience]} />
       </div>
+
+      <DashboardChat industry={industry} audience={audience} />
     </div>
   );
 }

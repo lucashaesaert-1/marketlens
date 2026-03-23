@@ -26,10 +26,12 @@ import json
 import os
 import argparse
 import sys
+import random
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from collections import defaultdict
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Tuple
 
 try:
     from groq import Groq
@@ -195,9 +197,61 @@ def analyze_review_aspects(review_text: str, client, fast_model: str, dimensions
     return json.loads(response.choices[0].message.content)
 
 
+def _env_int(name: str, default: int) -> int:
+    try:
+        return int(os.getenv(name, str(default)).strip())
+    except ValueError:
+        return default
+
+
+def stratified_subsample_reviews(reviews: list, comps: list, max_reviews: int) -> list:
+    """
+    Cap how many reviews we score (biggest latency win). Keeps a round-robin mix
+    across companies so scores stay representative.
+    """
+    if max_reviews <= 0 or len(reviews) <= max_reviews:
+        return reviews
+    buckets = {c: [] for c in comps}
+    for r in reviews:
+        co = r.get("company")
+        if co in buckets:
+            buckets[co].append(r)
+    for b in buckets.values():
+        random.shuffle(b)
+    out: list = []
+    while len(out) < max_reviews and any(buckets.values()):
+        for c in comps:
+            if len(out) >= max_reviews:
+                return out
+            if buckets[c]:
+                out.append(buckets[c].pop())
+    return out
+
+
+def _analyze_review_job(
+    review: dict,
+    client,
+    fast_model: str,
+    dim_keys: tuple,
+) -> Tuple[Optional[str], Optional[dict]]:
+    """Returns (company, aspect_scores) or (None, None) on skip/failure."""
+    company = review.get("company")
+    if not company:
+        return None, None
+    try:
+        scores = analyze_review_aspects(review["text"], client, fast_model, dict(dim_keys))
+        return company, scores
+    except Exception as e:
+        rid = review.get("id", "?")
+        print(f"  Warning: failed review {rid}: {e}")
+        return None, None
+
+
 def compute_dimension_scores(reviews: list, client=None, fast_model: str = "", use_mock: bool = False,
                             companies: Optional[list] = None, dimensions: Optional[dict] = None,
-                            mock_scores: Optional[dict] = None) -> dict:
+                            mock_scores: Optional[dict] = None,
+                            max_reviews: Optional[int] = None,
+                            parallel_workers: Optional[int] = None) -> dict:
     """
     Compute average dimension scores per company across all reviews.
     Falls back to mock_scores (or MOCK_SCORES) if use_mock=True or no API client.
@@ -210,33 +264,63 @@ def compute_dimension_scores(reviews: list, client=None, fast_model: str = "", u
         print("  -> Using pre-computed mock scores")
         return mock
 
-    print(f"  -> Analyzing {len(reviews)} reviews with {fast_model}...")
+    mr = max_reviews if max_reviews is not None else _env_int("PIPELINE_MAX_REVIEWS", 64)
+    workers = parallel_workers if parallel_workers is not None else _env_int("PIPELINE_PARALLEL_WORKERS", 8)
+    seq = os.getenv("PIPELINE_SEQUENTIAL", "").lower() in ("1", "true", "yes")
+    if seq:
+        workers = 1
+
+    sampled = stratified_subsample_reviews(reviews, comps, mr)
+    dim_keys = tuple(dims.items())
+    print(
+        f"  -> Analyzing {len(sampled)} reviews (of {len(reviews)}) with {fast_model} "
+        f"({'sequential' if workers <= 1 else f'parallel workers={workers}'})..."
+    )
+
     company_buckets: dict[str, dict[str, list]] = {
         c: {d: [] for d in dims} for c in comps
     }
 
-    for i, review in enumerate(reviews):
-        company = review.get("company")
-        if company not in comps:
-            continue
-        try:
-            scores = analyze_review_aspects(review["text"], client, fast_model, dims)
-            for dim in dims:
-                val = scores.get(dim)
-                if isinstance(val, (int, float)):
-                    company_buckets[company][dim].append(float(val))
-        except Exception as e:
-            print(f"  Warning: failed review {review.get('id', i)}: {e}")
+    def _merge(company: str, scores: dict) -> None:
+        for dim in dims:
+            val = scores.get(dim)
+            if isinstance(val, (int, float)):
+                company_buckets[company][dim].append(float(val))
 
-        if (i + 1) % 10 == 0:
-            print(f"    {i + 1}/{len(reviews)} reviews processed...")
+    if workers <= 1:
+        for i, review in enumerate(sampled):
+            company = review.get("company")
+            if company not in comps:
+                continue
+            try:
+                scores = analyze_review_aspects(review["text"], client, fast_model, dims)
+                _merge(company, scores)
+            except Exception as e:
+                print(f"  Warning: failed review {review.get('id', i)}: {e}")
+            if (i + 1) % 10 == 0:
+                print(f"    {i + 1}/{len(sampled)} reviews processed...")
+    else:
+        done = 0
+        total = len(sampled)
+        with ThreadPoolExecutor(max_workers=min(workers, max(1, total))) as ex:
+            futs = [
+                ex.submit(_analyze_review_job, r, client, fast_model, dim_keys)
+                for r in sampled
+            ]
+            for fut in as_completed(futs):
+                company, scores = fut.result()
+                done += 1
+                if company and scores:
+                    _merge(company, scores)
+                if done % 10 == 0 or done == total:
+                    print(f"    {done}/{total} reviews processed...")
 
     return {
         company: {
             dim: round(sum(vals) / len(vals), 1) if vals else None
-            for dim, vals in dims.items()
+            for dim, vals in bucket.items()
         }
-        for company, dims in company_buckets.items()
+        for company, bucket in company_buckets.items()
     }
 
 
@@ -287,14 +371,16 @@ def generate_insights(scores: dict, client, smart_model: str,
         vertical=v,
         focal=f,
         competitors=", ".join(c),
-        scores_json=json.dumps(scores, indent=2),
+        scores_json=json.dumps(scores, separators=(",", ":")),
         use_cases_section=uc_section,
     )
+    insight_tokens = _env_int("GROQ_INSIGHT_MAX_TOKENS", 3072)
     response = client.chat.completions.create(
         model=smart_model,
         messages=[{"role": "user", "content": prompt}],
         response_format={"type": "json_object"},
         temperature=0.7,
+        max_tokens=min(insight_tokens, 8192),
     )
     raw = response.choices[0].message.content
     # Sanitize Unicode that can cause charmap errors on Windows (e.g. ->, –)
@@ -398,12 +484,19 @@ def build_client():
     groq_key = os.getenv("GROQ_API_KEY")
     if groq_key and GROQ_AVAILABLE:
         client = Groq(api_key=groq_key)
-        return client, "llama-3.1-8b-instant", "llama-3.3-70b-versatile", "Groq"
+        fast = os.getenv("GROQ_FAST_MODEL", "llama-3.1-8b-instant")
+        smart = os.getenv(
+            "GROQ_INSIGHTS_MODEL",
+            os.getenv("GROQ_SMART_MODEL", "llama-3.3-70b-versatile"),
+        )
+        return client, fast, smart, "Groq"
 
     openai_key = os.getenv("OPENAI_API_KEY")
     if openai_key and OPENAI_AVAILABLE:
         client = openai.OpenAI(api_key=openai_key)
-        return client, "gpt-4o-mini", "gpt-4o", "OpenAI"
+        fast = os.getenv("OPENAI_FAST_MODEL", "gpt-4o-mini")
+        smart = os.getenv("OPENAI_INSIGHTS_MODEL", os.getenv("OPENAI_SMART_MODEL", "gpt-4o"))
+        return client, fast, smart, "OpenAI"
 
     return None, "", "", "none"
 

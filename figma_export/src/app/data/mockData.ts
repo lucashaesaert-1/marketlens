@@ -28,6 +28,8 @@ export interface Insight {
   description: string;
   impact: "high" | "medium" | "low";
   metrics?: string[];
+  /** pipeline = default analysis; chat = from onboarding/dashboard conversation */
+  source?: "pipeline" | "chat";
 }
 
 export interface PraiseComplaintTheme {
@@ -58,6 +60,14 @@ export interface DimensionDelta {
   delta: number;
 }
 
+export interface PersonalizationData {
+  narrative_summary?: string;
+  focus_dimensions?: { label: string; relevance: number; rationale?: string }[];
+  suggested_kpis?: { name: string; value: string; hint?: string }[];
+  chart_series?: { priority_scores?: { name: string; score: number }[] };
+  insights_from_chat?: { title: string; description: string; impact: string }[];
+}
+
 export interface IndustryData {
   companies: Company[];
   dimensions: Dimension[];
@@ -67,6 +77,7 @@ export interface IndustryData {
   shareOfVoice?: ShareOfVoiceItem[];
   churnFlows?: ChurnFlow[];
   dimensionDeltas?: DimensionDelta[];
+  personalization?: PersonalizationData;
 }
 
 export const industryData: Record<Industry, IndustryData> = {

@@ -15,6 +15,33 @@
 | **React + Vite frontend** | Figma-designed dashboard with Recharts, industry/audience routing |
 | **Windows charmap fix** | Unicode sanitization so analysis runs correctly on Windows (cp1252) |
 | **Mock insights per industry** | Pre-computed insights when no API key is set — demo-ready out of the box |
+| **Auth + SQLite** | Register/login (JWT), user profile, onboarding state, chat history — DB file: `data/insightengine.db` |
+| **Login + onboarding** | Split login (editable `content/login_panel.md`), then onboarding: audience + industry + Groq chat, then dashboard |
+| **Personalized dashboard** | After onboarding, extra KPIs/charts/insights from your chat (merged with pipeline insights; “From your questions” badge) |
+| **Dashboard chat** | Floating assistant on the main dashboard (same streaming API) |
+
+### Environment variables
+
+Create a `.env` in the project root:
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `GROQ_API_KEY` | **Yes** for chat & personalization | Groq API key |
+| `JWT_SECRET` | Optional | Secret for signing login tokens (defaults to dev-only value) |
+
+### Faster “Run analysis” (pipeline tuning)
+
+The pipeline scores **one LLM call per review** for aspect extraction, then **one** call for strategic insights. Defaults favor **speed** while staying useful:
+
+| Variable | Default | Effect |
+|----------|---------|--------|
+| `PIPELINE_MAX_REVIEWS` | `64` | Max reviews scored (stratified across companies). Lower = faster. |
+| `PIPELINE_PARALLEL_WORKERS` | `8` | Concurrent Groq calls for aspect scoring. Reduce to `4` if you hit rate limits (`429`). |
+| `PIPELINE_SEQUENTIAL` | unset | Set to `1` to disable parallelism (debug only; slower). |
+| `FETCH_REVIEW_LIMIT` | `150` | Caps how many reviews are fetched from live sources before scoring. |
+| `GROQ_FAST_MODEL` | `llama-3.1-8b-instant` | Model for per-review aspect scoring. |
+| `GROQ_INSIGHTS_MODEL` | `llama-3.3-70b-versatile` | Single-call insight synthesis. For **much faster** (lower quality) runs, try `llama-3.1-8b-instant`. |
+| `GROQ_INSIGHT_MAX_TOKENS` | `3072` | Max tokens for the insights JSON response. |
 
 ---
 
@@ -26,7 +53,7 @@
 
 ```powershell
 # Python
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 
 # Frontend (first time only)
 cd figma_export
@@ -48,10 +75,13 @@ npm run dev
 
 ### 4. Open the app
 
-- **Dashboard:** http://localhost:5173  
+- **App:** http://localhost:5173 — you’ll land on **Login** (not the dashboard).  
 - **API docs:** http://localhost:8001/docs  
 
-Use the Industry dropdown to switch between CRM, Food Delivery, Ride-Sharing, etc. Use the Audience tabs (Investors / Companies / Customers) to see tailored charts. **Run Analysis** triggers live LLM insights (requires `GROQ_API_KEY` or `OPENAI_API_KEY` in `.env`).
+**Demo account (seeded on first API start):** `demo@marketlens.ai` / `demo12345`
+
+Flow: **Login** → **Onboarding** (pick audience + industry, chat with the assistant) → **Dashboard** (audience-specific charts + personalized section + floating chat).  
+Use the Industry dropdown and Audience selector to switch views. **Run Analysis** runs the pipeline (requires `GROQ_API_KEY`). Chat requires `GROQ_API_KEY` — without it, onboarding completion still works but personalization uses a placeholder message.
 
 ---
 

@@ -1,7 +1,20 @@
 import { Outlet, useNavigate, useParams } from "react-router";
 import { useState, useEffect } from "react";
-import { Brain, TrendingUp, Users, Building2, Loader2, Play } from "lucide-react";
-import { runAnalysis, fetchIndustries } from "../api";
+import {
+  Brain,
+  TrendingUp,
+  Users,
+  Building2,
+  Loader2,
+  Play,
+  LogOut,
+  RotateCcw,
+  ChevronDown,
+  Key,
+} from "lucide-react";
+import { runAnalysis, fetchIndustries, resetOnboarding } from "../api";
+import { clearToken } from "../auth";
+import { Button } from "./ui/button";
 import {
   audienceDescriptions,
   type Audience,
@@ -19,8 +32,6 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "./ui/collapsible";
-import { ChevronDown, Key } from "lucide-react";
-
 export function Layout() {
   const navigate = useNavigate();
   const params = useParams();
@@ -178,6 +189,44 @@ export function Layout() {
                     })}
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-xs text-slate-500">Account</label>
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="text-xs h-9"
+                    title="Show setup wizard again (audience, industry, chat)"
+                    onClick={() => {
+                      void resetOnboarding()
+                        .then(() => {
+                          window.location.assign("/onboarding");
+                        })
+                        .catch((e: unknown) => {
+                          alert(e instanceof Error ? e.message : "Could not reset onboarding");
+                        });
+                    }}
+                  >
+                    <RotateCcw className="w-3.5 h-3.5 mr-1" />
+                    Setup again
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="text-xs h-9"
+                    onClick={() => {
+                      clearToken();
+                      window.location.assign("/login");
+                    }}
+                  >
+                    <LogOut className="w-3.5 h-3.5 mr-1" />
+                    Log out
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

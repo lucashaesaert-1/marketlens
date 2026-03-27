@@ -12,7 +12,7 @@ from api.auth_utils import create_access_token, hash_password, verify_password
 from api.chat_service import build_system_prompt, stream_groq_reply
 from api.database import get_db
 from api.deps import get_current_user, get_optional_user
-from api.models import ChatMessage, ChatSession, User, UserProfile
+from api.models import ChatMessage, ChatSession, SavedView, User, UserProfile
 from api.personalization import compute_personalization, get_smart_model_from_env
 
 router = APIRouter(tags=["users"])
@@ -150,10 +150,16 @@ def onboarding_complete(
         db.add(prof)
         db.flush()
 
-    from api.industry_service import build_industry_data, get_industry_state
+    from api.industry_service import build_industry_data, get_industry_cache_entry
 
-    scores, insights = get_industry_state(body.industry)
-    industry_json = build_industry_data(body.industry, scores, insights)
+    ent = get_industry_cache_entry(body.industry)
+    industry_json = build_industry_data(
+        body.industry,
+        ent["scores"],
+        ent["insights"],
+        review_counts=ent.get("review_counts"),
+        data_source=ent.get("data_source"),
+    )
 
     client, _fast, smart, provider = build_client()
     pers_dict = {}
@@ -238,10 +244,16 @@ def chat_stream(
     industry_json = None
     ind = body.industry or sess.industry_context
     if ind and ind in INDUSTRY_CONFIG:
-        from api.industry_service import build_industry_data, get_industry_state
+        from api.industry_service import build_industry_data, get_industry_cache_entry
 
-        scores, insights = get_industry_state(ind)
-        industry_json = build_industry_data(ind, scores, insights)
+        ent = get_industry_cache_entry(ind)
+        industry_json = build_industry_data(
+            ind,
+            ent["scores"],
+            ent["insights"],
+            review_counts=ent.get("review_counts"),
+            data_source=ent.get("data_source"),
+        )
         sess.industry_context = ind
 
     guided = []
@@ -314,10 +326,16 @@ def dashboard_personalize(
     msgs = db.query(ChatMessage).filter(ChatMessage.session_id == sess.id).order_by(ChatMessage.id).all()
     transcript = "\n".join(f"{m.role.upper()}: {m.content}" for m in msgs if m.role in ("user", "assistant"))
 
-    from api.industry_service import build_industry_data, get_industry_state
+    from api.industry_service import build_industry_data, get_industry_cache_entry
 
-    scores, insights = get_industry_state(body.industry)
-    industry_json = build_industry_data(body.industry, scores, insights)
+    ent = get_industry_cache_entry(body.industry)
+    industry_json = build_industry_data(
+        body.industry,
+        ent["scores"],
+        ent["insights"],
+        review_counts=ent.get("review_counts"),
+        data_source=ent.get("data_source"),
+    )
 
     client, _f, _s, provider = build_client()
     if not client or provider != "Groq":
@@ -333,3 +351,61 @@ def dashboard_personalize(
     prof.personalization_json = json.dumps(pers_dict, ensure_ascii=False)
     db.commit()
     return {"personalization": pers_dict}
+
+
+class SavedViewCreate(BaseModel):
+    name: str = Field(..., min_length=1, max_length=128)
+    industry: str
+    audience: str
+
+
+@router.get("/saved-views")
+def list_saved_views(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    rows = (
+        db.query(SavedView)
+        .filter(SavedView.user_id == user.id)
+        .order_by(SavedView.created_at.desc())
+        .all()
+    )
+    return {
+        "views": [
+            {
+                "id": v.id,
+                "name": v.name,
+                "industry": v.industry,
+                "audience": v.audience,
+                "created_at": v.created_at.isoformat() if v.created_at else "",
+            }
+            for v in rows
+        ]
+    }
+
+
+@router.post("/saved-views")
+def create_saved_view(body: SavedViewCreate, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from industry_config import INDUSTRY_CONFIG
+
+    if body.industry not in INDUSTRY_CONFIG:
+        raise HTTPException(400, "Invalid industry")
+    if body.audience not in ("investors", "companies", "customers"):
+        raise HTTPException(400, "Invalid audience")
+    v = SavedView(
+        user_id=user.id,
+        name=body.name.strip(),
+        industry=body.industry,
+        audience=body.audience,
+    )
+    db.add(v)
+    db.commit()
+    db.refresh(v)
+    return {"id": v.id, "name": v.name, "industry": v.industry, "audience": v.audience}
+
+
+@router.delete("/saved-views/{view_id}")
+def delete_saved_view(view_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    v = db.query(SavedView).filter(SavedView.id == view_id, SavedView.user_id == user.id).first()
+    if not v:
+        raise HTTPException(404, "Not found")
+    db.delete(v)
+    db.commit()
+    return {"ok": True}

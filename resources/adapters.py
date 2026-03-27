@@ -9,6 +9,7 @@ Primary sources (no Trustpilot key needed):
 """
 
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Optional
 
@@ -91,33 +92,72 @@ def capterra_fetch_reviews(product_slug: str, limit: int = 30) -> Optional[list[
 # ── Unified fetch: tries Kaggle → Apify → local file ────────────────────────
 
 
+def _env_int(name: str, default: int) -> int:
+    try:
+        return int(os.getenv(name, str(default)).strip())
+    except ValueError:
+        return default
+
+
 def fetch_reviews_for_industry(
     industry: str,
     companies: list,
     focal_company: str,
     limit: int = 200,
-) -> Optional[list[dict]]:
+) -> tuple[Optional[list[dict]], str]:
     """
-    Unified review fetcher. Tries in order:
-    1. Kaggle (ride-sharing, food-delivery, e-commerce, restaurants)
-    2. Apify for focal company (G2/Capterra) if APIFY_API_TOKEN set
-    3. Returns None → caller uses data_file (local JSON)
+    Unified review fetcher. Returns (reviews, source_tag).
+
+    Order:
+    1. Kaggle datasets (ride-sharing, food-delivery, e-commerce, restaurants) → \"kaggle\"
+    2. Apify G2 scrapes for multiple competitors if APIFY_API_TOKEN is set → \"apify\"
+       (all industries; caps concurrent runs to avoid timeouts)
+    3. No live data → (None, \"none\") — caller should load data_file (local JSON)
     """
-    # Try Kaggle first for supported industries
+    # 1) Kaggle (real public datasets)
     kaggle_industries = ("ride-sharing", "food-delivery", "e-commerce", "restaurants")
     if industry in kaggle_industries:
         reviews = kaggle_fetch_reviews(industry, companies, limit=limit)
         if reviews:
-            return reviews
+            return reviews, "kaggle"
 
-    # Try Apify for CRM, SaaS, hospitality, banking, healthcare, travel, telecom, insurance
-    apify_industries = ("crm", "saas", "hospitality", "banking", "healthcare", "travel", "telecom", "insurance")
-    if industry in apify_industries:
-        reviews = apify_fetch_reviews(focal_company, platform="g2", limit=min(limit, 100))
-        if reviews:
-            return reviews
+    # 2) Apify — fetch several competitors (not only focal) for real multi-brand coverage
+    token = os.environ.get("APIFY_API_TOKEN")
+    if token and companies:
+        max_cos = max(1, min(len(companies), _env_int("APIFY_MAX_COMPANIES", 6)))
+        targets = companies[:max_cos]
+        n = len(targets)
+        per_co = max(20, min(100, limit // n))
 
-    return None
+        def _fetch_one(company_name: str) -> list[dict]:
+            batch = apify_fetch_reviews(company_name, platform="g2", api_token=token, limit=per_co)
+            return batch or []
+
+        merged: list[dict] = []
+        workers = min(_env_int("APIFY_PARALLEL_ACTORS", 3), n)
+        if workers <= 1:
+            for co in targets:
+                merged.extend(_fetch_one(co))
+        else:
+            with ThreadPoolExecutor(max_workers=workers) as ex:
+                futs = [ex.submit(_fetch_one, co) for co in targets]
+                for fut in as_completed(futs):
+                    merged.extend(fut.result())
+
+        # Stable unique ids across companies
+        for i, r in enumerate(merged):
+            co = r.get("company", "x")
+            rid = r.get("id", i)
+            r["id"] = f"{to_slug(co)}_{rid}_{i}"[:120]
+
+        if merged:
+            return merged[:limit], "apify"
+
+    return None, "none"
+
+
+def to_slug(name: str) -> str:
+    return "".join(c if c.isalnum() else "_" for c in str(name).lower())[:40]
 
 
 # ── Legacy Trustpilot (kept for backwards compat; user cannot get key) ─────────

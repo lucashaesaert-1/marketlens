@@ -22,6 +22,22 @@ class User(Base):
     chat_sessions: Mapped[list["ChatSession"]] = relationship(
         "ChatSession", back_populates="user", cascade="all, delete-orphan"
     )
+    saved_views: Mapped[list["SavedView"]] = relationship(
+        "SavedView", back_populates="user", cascade="all, delete-orphan"
+    )
+
+
+class SavedView(Base):
+    __tablename__ = "saved_views"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    name: Mapped[str] = mapped_column(String(128), nullable=False)
+    industry: Mapped[str] = mapped_column(String(64), nullable=False)
+    audience: Mapped[str] = mapped_column(String(32), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    user: Mapped["User"] = relationship("User", back_populates="saved_views")
 
 
 class UserProfile(Base):

@@ -19,6 +19,11 @@
 | **Login + onboarding** | Split login (editable `content/login_panel.md`), then onboarding: audience + industry + Groq chat, then dashboard |
 | **Personalized dashboard** | After onboarding, extra KPIs/charts/insights from your chat (merged with pipeline insights; “From your questions” badge) |
 | **Dashboard chat** | Floating assistant on the main dashboard (same streaming API) |
+| **Run analysis (SSE)** | `POST /api/run-analysis/stream` — live stages: fetching reviews → scoring → insights (UI shows progress). |
+| **Saved views** | Logged-in users: save industry + audience bookmarks (`/api/saved-views`). |
+| **Export** | `GET /api/industry/{id}/export/scores.csv` + dashboard **Copy** insights / **Scores CSV** download. |
+| **Executive brief** | Toggle on dashboard to show the first 4 insights only (persisted in `sessionStorage`). |
+| **LLM provider** | Header selector **Groq** vs **OpenAI** for Run analysis (uses `OPENAI_API_KEY` when OpenAI is selected). |
 
 ### Environment variables
 
@@ -27,7 +32,19 @@ Create a `.env` in the project root:
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `GROQ_API_KEY` | **Yes** for chat & personalization | Groq API key |
+| `APIFY_API_TOKEN` | Optional | **Recommended for live G2 reviews** across all industries (see above) |
 | `JWT_SECRET` | Optional | Secret for signing login tokens (defaults to dev-only value) |
+
+### Real review data (all 12 industries)
+
+Scores and insights are computed by the **pipeline** from review text. To use **live** reviews instead of only the bundled JSON samples:
+
+| Setup | What you get |
+|--------|----------------|
+| **`APIFY_API_TOKEN`** in `.env` | G2 reviews scraped for **up to 6 competitors** per industry (parallel Apify runs). Works for **every** industry in `INDUSTRY_CONFIG`. Tune `APIFY_MAX_COMPANIES` (default `6`), `APIFY_PARALLEL_ACTORS` (default `3`), and `FETCH_REVIEW_LIMIT`. |
+| **Kaggle API** (`kaggle.json` + `pip install kaggle`) | Public datasets for **ride-sharing, food-delivery, e-commerce, restaurants** (tried before Apify). |
+
+If neither is configured, **Run analysis** still loads each industry’s `data/sample_reviews_*.json` (realistic structured samples) and labels the payload `_meta.dataSource` accordingly. After a successful LLM run, **`_meta.reviewCountsFromDataset`** reflects counts taken from the reviews that were actually scored.
 
 ### Faster “Run analysis” (pipeline tuning)
 

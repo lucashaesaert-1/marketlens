@@ -11,8 +11,17 @@ import {
   RotateCcw,
   ChevronDown,
   Key,
+  Bookmark,
 } from "lucide-react";
-import { runAnalysis, fetchIndustries, resetOnboarding } from "../api";
+import {
+  runAnalysisStream,
+  fetchIndustries,
+  resetOnboarding,
+  fetchSavedViews,
+  createSavedView,
+  deleteSavedView,
+  type SavedViewRow,
+} from "../api";
 import { clearToken } from "../auth";
 import { Button } from "./ui/button";
 import {
@@ -32,18 +41,39 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "./ui/collapsible";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+
 export function Layout() {
   const navigate = useNavigate();
   const params = useParams();
   const [analysisRunning, setAnalysisRunning] = useState(false);
   const [analysisMessage, setAnalysisMessage] = useState<string | null>(null);
+  const [analysisStage, setAnalysisStage] = useState<string | null>(null);
   const [trustpilotKey, setTrustpilotKey] = useState("");
   const [industries, setIndustries] = useState<{ id: string; name: string }[]>([]);
+  const [llmProvider, setLlmProvider] = useState<"groq" | "openai">("groq");
+  const [savedViews, setSavedViews] = useState<SavedViewRow[]>([]);
+
+  const loadBookmarks = () => {
+    void fetchSavedViews()
+      .then(setSavedViews)
+      .catch(() => setSavedViews([]));
+  };
 
   useEffect(() => {
     fetchIndustries()
       .then(setIndustries)
       .catch(() => setIndustries([]));
+  }, []);
+
+  useEffect(() => {
+    loadBookmarks();
   }, []);
 
   const currentIndustry = (params.industry as string) || "crm";
@@ -52,13 +82,15 @@ export function Layout() {
   const handleRunAnalysis = async () => {
     setAnalysisRunning(true);
     setAnalysisMessage(null);
+    setAnalysisStage(null);
     try {
-        await runAnalysis(
-          currentIndustry,
-          undefined,
-          "groq",
-          trustpilotKey ? { trustpilot: trustpilotKey } : undefined
-        );
+      await runAnalysisStream(currentIndustry, {
+        provider: llmProvider,
+        resourceKeys: trustpilotKey ? { trustpilot: trustpilotKey } : undefined,
+        onEvent: (e) => {
+          if (e.message) setAnalysisStage(e.message);
+        },
+      });
       setAnalysisMessage("Analysis complete! Refreshing...");
       window.dispatchEvent(new CustomEvent("crm-data-updated"));
       setTimeout(() => window.location.reload(), 1500);
@@ -66,6 +98,7 @@ export function Layout() {
       setAnalysisMessage(err instanceof Error ? err.message : "Analysis failed");
     } finally {
       setAnalysisRunning(false);
+      setAnalysisStage(null);
     }
   };
 
@@ -132,9 +165,22 @@ export function Layout() {
 
               {/* Run Analysis */}
               <div className="flex flex-col gap-1">
-                  <label className="text-xs text-slate-500">Live Analysis</label>
+                  <label className="text-xs text-slate-500">LLM provider</label>
+                  <Select
+                    value={llmProvider}
+                    onValueChange={(v) => setLlmProvider(v as "groq" | "openai")}
+                  >
+                    <SelectTrigger className="w-[140px] h-9 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="groq">Groq</SelectItem>
+                      <SelectItem value="openai">OpenAI</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <label className="text-xs text-slate-500 mt-1">Live Analysis</label>
                   <button
-                    onClick={handleRunAnalysis}
+                    onClick={() => void handleRunAnalysis()}
                     disabled={analysisRunning}
                     className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
@@ -145,6 +191,9 @@ export function Layout() {
                     )}
                     {analysisRunning ? "Running…" : "Run Analysis"}
                   </button>
+                  {analysisRunning && analysisStage && (
+                    <p className="text-xs text-slate-500 max-w-[200px] leading-snug">{analysisStage}</p>
+                  )}
                   {analysisMessage && (
                     <p className={`text-xs ${analysisMessage.startsWith("Analysis complete") ? "text-emerald-600" : "text-rose-600"}`}>
                       {analysisMessage}
@@ -189,6 +238,59 @@ export function Layout() {
                     })}
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-xs text-slate-500">Bookmarks</label>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="text-xs h-9 justify-start">
+                      <Bookmark className="w-3.5 h-3.5 mr-1 shrink-0" />
+                      Saved views
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuItem
+                      onClick={() => {
+                        const name = window.prompt("Name for this view (industry + audience)");
+                        if (!name?.trim()) return;
+                        void createSavedView(name.trim(), currentIndustry, currentAudience)
+                          .then(loadBookmarks)
+                          .catch((e: unknown) =>
+                            alert(e instanceof Error ? e.message : "Save failed")
+                          );
+                      }}
+                    >
+                      Save current view…
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    {savedViews.length === 0 ? (
+                      <DropdownMenuItem disabled>No saved views yet</DropdownMenuItem>
+                    ) : (
+                      savedViews.flatMap((v) => [
+                        <DropdownMenuItem
+                          key={`open-${v.id}`}
+                          onClick={() => navigate(`/${v.industry}/${v.audience}`)}
+                        >
+                          Open: {v.name}
+                        </DropdownMenuItem>,
+                        <DropdownMenuItem
+                          key={`del-${v.id}`}
+                          className="text-rose-600 focus:text-rose-700"
+                          onClick={() =>
+                            void deleteSavedView(v.id)
+                              .then(loadBookmarks)
+                              .catch((e: unknown) =>
+                                alert(e instanceof Error ? e.message : "Delete failed")
+                              )
+                          }
+                        >
+                          Delete “{v.name}”
+                        </DropdownMenuItem>,
+                      ])
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
 
               <div className="flex flex-col gap-1">

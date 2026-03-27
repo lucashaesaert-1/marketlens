@@ -1,7 +1,9 @@
 """Industry payload building and per-industry score/insight cache (shared by API routes)."""
 
+import json
 import sys
 from pathlib import Path
+from typing import Any, Optional
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -14,6 +16,32 @@ QUARTERS = ["Q1 24", "Q2 24", "Q3 24", "Q4 24", "Q1 25", "Q2 25", "Q3 25", "Q4 2
 
 def to_id(name: str) -> str:
     return name.lower().replace(" ", "").replace("-", "")
+
+
+def count_reviews_by_company(reviews: list, companies: list[str]) -> dict[str, int]:
+    counts = {c: 0 for c in companies}
+    for r in reviews:
+        co = r.get("company")
+        if co in counts:
+            counts[co] += 1
+    return counts
+
+
+def load_review_counts_from_industry_file(industry: str) -> Optional[dict[str, int]]:
+    """Real review counts from the on-disk sample JSON for this industry (if present)."""
+    cfg = INDUSTRY_CONFIG.get(industry)
+    if not cfg:
+        return None
+    path = Path(__file__).resolve().parent.parent / cfg["data_file"]
+    if not path.exists():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(data, list):
+        return None
+    return count_reviews_by_company(data, list(cfg["companies"]))
 
 
 def _synthetic_sentiment(scores: dict, companies: list) -> list:
@@ -30,7 +58,14 @@ def _synthetic_sentiment(scores: dict, companies: list) -> list:
     return trends
 
 
-def build_industry_data(industry: str, scores: dict, insights: list) -> dict:
+def build_industry_data(
+    industry: str,
+    scores: dict,
+    insights: list,
+    *,
+    review_counts: Optional[dict[str, int]] = None,
+    data_source: Optional[str] = None,
+) -> dict:
     cfg = INDUSTRY_CONFIG.get(industry)
     if not cfg:
         raise HTTPException(404, f"Industry '{industry}' not found")
@@ -50,7 +85,10 @@ def build_industry_data(industry: str, scores: dict, insights: list) -> dict:
         vals = [v for v in sc.values() if isinstance(v, (int, float))]
         avg = sum(vals) / len(vals) if vals else 70
         overall_sentiment = round(avg / 50 - 1, 2)
-        review_count = 50000 + hash(name) % 100000
+        if review_counts is not None and name in review_counts and review_counts[name] > 0:
+            review_count = review_counts[name]
+        else:
+            review_count = 50000 + hash(name) % 100000
         companies.append({
             "id": cid,
             "name": name,
@@ -102,7 +140,7 @@ def build_industry_data(industry: str, scores: dict, insights: list) -> dict:
             "complaint": max(5, int(complaint_sum / 6)) if sc else 30,
         })
 
-    total_reviews = sum(c["reviewCount"] for c in companies)
+    total_reviews = sum(c["reviewCount"] for c in companies) or 1
     share_of_voice = [
         {"name": c["name"], "size": c["reviewCount"], "value": round(100 * c["reviewCount"] / total_reviews, 1)}
         for c in companies
@@ -151,18 +189,57 @@ def build_industry_data(industry: str, scores: dict, insights: list) -> dict:
             "industry": industry,
             "totalReviews": total_reviews,
             "totalInsights": sum(len(v) for v in insights_by_audience.values()),
+            "dataSource": data_source or "unknown",
+            "reviewCountsFromDataset": bool(review_counts),
         },
     }
 
 
-_cache: dict[str, tuple[dict, list]] = {}
+_cache: dict[str, dict[str, Any]] = {}
+
+
+def get_industry_cache_entry(industry: str) -> dict[str, Any]:
+    """Scores/insights plus optional real review counts and provenance label."""
+    if industry not in _cache:
+        cfg = INDUSTRY_CONFIG[industry]
+        rc = load_review_counts_from_industry_file(industry)
+        _cache[industry] = {
+            "scores": dict(cfg["mock_scores"]),
+            "insights": list(MOCK_INSIGHTS_BY_INDUSTRY[industry]),
+            "review_counts": rc,
+            "data_source": "sample_reviews_file" if rc else "template_scores",
+        }
+    return _cache[industry]
+
+
+def set_industry_cache_entry(
+    industry: str,
+    *,
+    scores: dict,
+    insights: list,
+    reviews: Optional[list] = None,
+    review_counts: Optional[dict[str, int]] = None,
+    data_source: str = "pipeline",
+) -> None:
+    cfg = INDUSTRY_CONFIG.get(industry) or {}
+    comps = list(cfg.get("companies") or [])
+    if review_counts is not None:
+        rc = review_counts
+    elif reviews is not None and comps:
+        rc = count_reviews_by_company(reviews, comps)
+    else:
+        rc = load_review_counts_from_industry_file(industry)
+    _cache[industry] = {
+        "scores": scores,
+        "insights": insights,
+        "review_counts": rc,
+        "data_source": data_source,
+    }
 
 
 def get_industry_state(industry: str) -> tuple[dict, list]:
-    if industry not in _cache:
-        cfg = INDUSTRY_CONFIG[industry]
-        _cache[industry] = (dict(cfg["mock_scores"]), list(MOCK_INSIGHTS_BY_INDUSTRY[industry]))
-    return _cache[industry]
+    e = get_industry_cache_entry(industry)
+    return e["scores"], e["insights"]
 
 
 def merge_personalization(base: dict, personalization: dict | None, audience: str) -> dict:

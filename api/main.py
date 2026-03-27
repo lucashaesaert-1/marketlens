@@ -3,41 +3,44 @@ InsightEngine API — Backend for MarketLens UI
 Connects the Figma design to the pipeline.py analysis engine.
 """
 
+import csv
+import io
 import json
-import os
+import logging
 import sys
 from pathlib import Path
 
 try:
     from dotenv import load_dotenv
+
     load_dotenv(Path(__file__).parent.parent / ".env")
 except ImportError:
     pass
 
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from fastapi.responses import Response, StreamingResponse
 from sqlalchemy.orm import Session
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from api.audience_config import AUDIENCE_CONFIG
 from api.database import SessionLocal, get_db, init_db
-from api.deps import get_optional_user
+from api.deps import get_current_user, get_optional_user
 from api.industry_service import (
-    _cache,
     build_industry_data,
-    get_industry_state,
+    get_industry_cache_entry,
     merge_personalization,
 )
 from api.models import UserProfile
+from api.run_analysis_core import RunAnalysisRequest, iter_run_analysis_events, run_analysis_sync
 from api.user_routes import router as user_router
-from industry_config import INDUSTRY_CONFIG, MOCK_INSIGHTS_BY_INDUSTRY
-from pipeline import (
-    _env_int,
-    build_client,
-    compute_dimension_scores,
-    generate_insights,
+from industry_config import INDUSTRY_CONFIG
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s %(message)s",
 )
+logging.getLogger("insightengine").setLevel(logging.INFO)
 
 app = FastAPI(title="InsightEngine API", version="1.0.0")
 app.add_middleware(
@@ -105,8 +108,14 @@ def list_industries():
 def _industry_payload(industry: str, db: Session, user):
     if industry not in INDUSTRY_CONFIG:
         raise HTTPException(404, f"Industry '{industry}' not found")
-    scores, insights = get_industry_state(industry)
-    data = build_industry_data(industry, scores, insights)
+    entry = get_industry_cache_entry(industry)
+    data = build_industry_data(
+        industry,
+        entry["scores"],
+        entry["insights"],
+        review_counts=entry.get("review_counts"),
+        data_source=entry.get("data_source"),
+    )
     if user:
         prof = db.query(UserProfile).filter(UserProfile.user_id == user.id).first()
         if (
@@ -145,75 +154,72 @@ def get_industry_audience(
     return _industry_payload(industry, db, user)
 
 
-class RunAnalysisRequest(BaseModel):
-    api_key: str | None = None
-    provider: str = "groq"
-    industry: str = "crm"
-    resource_keys: dict[str, str] | None = None
-    use_live_sources: bool = True
+@app.get("/api/industry/{industry}/export/scores.csv")
+def export_industry_scores_csv(
+    industry: str,
+    db: Session = Depends(get_db),
+    user=Depends(get_current_user),
+):
+    """Dimension scores as CSV (authenticated)."""
+    if industry not in INDUSTRY_CONFIG:
+        raise HTTPException(404, f"Industry '{industry}' not found")
+    cfg = INDUSTRY_CONFIG[industry]
+    entry = get_industry_cache_entry(industry)
+    scores = entry["scores"]
+    dim_keys = list(cfg["dimensions"].keys())
+    dim_labels = list(cfg["dimensions"].values())
+
+    buf = io.StringIO()
+    w = csv.writer(buf)
+    w.writerow(["company"] + dim_labels)
+    for company in cfg["companies"]:
+        row = [company]
+        co_scores = scores.get(company) or {}
+        for dk in dim_keys:
+            v = co_scores.get(dk)
+            row.append("" if v is None else v)
+        w.writerow(row)
+
+    body = buf.getvalue()
+    return Response(
+        content=body,
+        media_type="text/csv; charset=utf-8",
+        headers={
+            "Content-Disposition": f'attachment; filename="{industry}_scores.csv"',
+        },
+    )
 
 
 @app.post("/api/run-analysis")
 def run_analysis(req: RunAnalysisRequest):
-    if req.api_key:
-        os.environ["GROQ_API_KEY" if req.provider == "groq" else "OPENAI_API_KEY"] = req.api_key
-    if req.resource_keys:
-        for k, v in req.resource_keys.items():
-            if k == "trustpilot" and v:
-                os.environ["TRUSTPILOT_API_KEY"] = v
-            if k == "apify" and v:
-                os.environ["APIFY_API_TOKEN"] = v
-
-    industry = req.industry
-    if industry not in INDUSTRY_CONFIG:
-        raise HTTPException(400, f"Industry '{industry}' not supported")
-
-    cfg = INDUSTRY_CONFIG[industry]
-    data_path = Path(__file__).parent.parent / cfg["data_file"]
-    companies = cfg["companies"]
-    focal = cfg["focal"]
-
-    reviews = None
-    fetch_limit = max(40, _env_int("FETCH_REVIEW_LIMIT", 150))
-    if req.use_live_sources:
-        try:
-            from resources.adapters import fetch_reviews_for_industry
-            reviews = fetch_reviews_for_industry(industry, companies, focal, limit=fetch_limit)
-        except Exception:
-            pass
-
-    if reviews is None and data_path.exists():
-        reviews = json.loads(data_path.read_text(encoding="utf-8"))
-
-    if reviews is None or not reviews:
-        scores, insights = cfg["mock_scores"], MOCK_INSIGHTS_BY_INDUSTRY[industry]
-        _cache[industry] = (dict(scores), list(insights))
-        return {"status": "complete", "message": f"Using mock data for {industry} (no review file or live source)."}
-
+    if req.industry not in INDUSTRY_CONFIG:
+        raise HTTPException(400, f"Industry '{req.industry}' not supported")
     try:
-        client, fast, smart, _ = build_client()
-        if client is None:
-            scores, insights = cfg["mock_scores"], MOCK_INSIGHTS_BY_INDUSTRY[industry]
-            _cache[industry] = (dict(scores), list(insights))
-            return {"status": "complete", "message": "Using mock data (no API key). Set GROQ_API_KEY for live analysis."}
+        return run_analysis_sync(req)
+    except RuntimeError as e:
+        raise HTTPException(500, str(e)) from e
 
-        scores = compute_dimension_scores(
-            reviews, client, fast, use_mock=False,
-            companies=cfg["companies"],
-            dimensions=cfg["dimensions"],
-            mock_scores=cfg["mock_scores"],
-        )
-        use_cases = []
-        for ac in AUDIENCE_CONFIG.values():
-            use_cases.extend(uc["question"] for uc in ac.get("use_cases", []))
-        insights = generate_insights(
-            scores, client, smart,
-            vertical=cfg["name"],
-            focal=cfg["focal"],
-            competitors=[c for c in cfg["companies"] if c != cfg["focal"]],
-            use_cases=use_cases if use_cases else None,
-        )
-        _cache[industry] = (scores, insights)
-        return {"status": "complete", "message": f"Analysis complete for {industry}. Refresh the dashboard."}
-    except Exception as e:
-        raise HTTPException(500, str(e))
+
+@app.post("/api/run-analysis/stream")
+def run_analysis_stream(req: RunAnalysisRequest):
+    """Server-Sent Events: progress stages then final result in last event."""
+
+    def gen():
+        try:
+            for evt in iter_run_analysis_events(req):
+                yield f"data: {json.dumps(evt, ensure_ascii=False)}\n\n"
+        except Exception as e:
+            err = json.dumps({"stage": "error", "message": str(e)})
+            yield f"data: {err}\n\n"
+            done = json.dumps({"stage": "complete", "result": {"status": "error", "message": str(e)}})
+            yield f"data: {done}\n\n"
+
+    return StreamingResponse(
+        gen(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )

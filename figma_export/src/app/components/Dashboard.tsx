@@ -2,7 +2,7 @@ import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { type Audience } from "../data/mockData";
 import type { IndustryData } from "../data/mockData";
-import { fetchIndustryData } from "../api";
+import { fetchIndustryData, downloadScoresCsv } from "../api";
 import { PositioningMap } from "./PositioningMap";
 import { SentimentAnalysis } from "./SentimentAnalysis";
 import { DimensionBenchmarking } from "./DimensionBenchmarking";
@@ -15,7 +15,10 @@ import {
   ChurnFlowChart,
   DimensionDeltasChart,
 } from "./charts";
-import { BarChart3, Target, TrendingUp, Lightbulb, Loader2 } from "lucide-react";
+import { BarChart3, Target, TrendingUp, Lightbulb, Loader2, Copy, Download } from "lucide-react";
+import { Switch } from "./ui/switch";
+import { Label } from "./ui/label";
+import { Button } from "./ui/button";
 import { PersonalizationSection } from "./PersonalizationSection";
 import { DashboardChat } from "./DashboardChat";
 
@@ -26,6 +29,8 @@ const CHARTS_BY_AUDIENCE: Record<Audience, Set<string>> = {
   customers: new Set(["positioning", "radar", "praiseComplaint", "dimensionBenchmarking"]),
 };
 
+const BRIEF_INSIGHTS_KEY = "marketlens_brief_insights";
+
 export function Dashboard() {
   const params = useParams();
   const industry = (params.industry as string) || "crm";
@@ -34,6 +39,9 @@ export function Dashboard() {
   const [data, setData] = useState<IndustryData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [briefInsights, setBriefInsights] = useState(
+    () => typeof sessionStorage !== "undefined" && sessionStorage.getItem(BRIEF_INSIGHTS_KEY) === "1"
+  );
 
   useEffect(() => {
     setLoading(true);
@@ -43,6 +51,10 @@ export function Dashboard() {
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, [industry]);
+
+  useEffect(() => {
+    sessionStorage.setItem(BRIEF_INSIGHTS_KEY, briefInsights ? "1" : "0");
+  }, [briefInsights]);
 
   if (loading) {
     return (
@@ -72,6 +84,19 @@ export function Dashboard() {
     return null;
   }
 
+  const allInsights = data.insights[audience];
+  const displayInsights = briefInsights ? allInsights.slice(0, 4) : allInsights;
+
+  const copyInsightsText = () => {
+    const text = displayInsights
+      .map((i) => `• ${i.title}\n${i.description}${i.metrics?.length ? `\n  ${i.metrics.join("; ")}` : ""}`)
+      .join("\n\n");
+    void navigator.clipboard.writeText(text).then(
+      () => {},
+      () => alert("Could not copy to clipboard")
+    );
+  };
+
   return (
     <div className="max-w-[1600px] mx-auto space-y-6">
       {/* Key Metrics Row */}
@@ -99,8 +124,8 @@ export function Dashboard() {
         <MetricCard
           icon={Lightbulb}
           label="AI Insights"
-          value={data.insights[audience].length.toString()}
-          sublabel="Actionable recommendations"
+          value={allInsights.length.toString()}
+          sublabel={briefInsights ? "Showing brief subset" : "Actionable recommendations"}
         />
       </div>
 
@@ -222,15 +247,54 @@ export function Dashboard() {
 
       {/* AI-Synthesized Insights */}
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-        <div className="mb-4">
-          <h2 className="font-semibold text-slate-900">
-            AI-Synthesized Insights
-          </h2>
-          <p className="text-sm text-slate-500 mt-1">
-            Strategic insights tailored for {audience}
-          </p>
+        <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h2 className="font-semibold text-slate-900">
+              AI-Synthesized Insights
+            </h2>
+            <p className="text-sm text-slate-500 mt-1">
+              Strategic insights tailored for {audience}
+              {briefInsights && allInsights.length > 4 ? ` — showing ${displayInsights.length} of ${allInsights.length}` : ""}
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-2">
+              <Switch
+                id="brief-insights"
+                checked={briefInsights}
+                onCheckedChange={setBriefInsights}
+              />
+              <Label htmlFor="brief-insights" className="text-xs text-slate-600 cursor-pointer">
+                Executive brief
+              </Label>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="text-xs h-8"
+              onClick={() => void copyInsightsText()}
+            >
+              <Copy className="w-3.5 h-3.5 mr-1" />
+              Copy
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="text-xs h-8"
+              onClick={() =>
+                void downloadScoresCsv(industry).catch((e: unknown) =>
+                  alert(e instanceof Error ? e.message : "Export failed")
+                )
+              }
+            >
+              <Download className="w-3.5 h-3.5 mr-1" />
+              Scores CSV
+            </Button>
+          </div>
         </div>
-        <InsightsPanel insights={data.insights[audience]} />
+        <InsightsPanel insights={displayInsights} />
       </div>
 
       <DashboardChat industry={industry} audience={audience} />

@@ -176,6 +176,7 @@ def build_industry_data(
                 "delta": round(delta, 1),
             })
 
+    is_mock = not bool(review_counts)
     return {
         "companies": companies,
         "dimensions": dimensions,
@@ -191,6 +192,7 @@ def build_industry_data(
             "totalInsights": sum(len(v) for v in insights_by_audience.values()),
             "dataSource": data_source or "unknown",
             "reviewCountsFromDataset": bool(review_counts),
+            "isMock": is_mock,
         },
     }
 

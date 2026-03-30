@@ -7,6 +7,7 @@ import csv
 import io
 import json
 import logging
+import os
 import sys
 from pathlib import Path
 
@@ -17,9 +18,12 @@ try:
 except ImportError:
     pass
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, StreamingResponse
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -41,18 +45,29 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(name)s %(message)s",
 )
 logging.getLogger("insightengine").setLevel(logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Rate limiter — key by IP address
+limiter = Limiter(key_func=get_remote_address)
+
+# CORS origins: set ALLOWED_ORIGINS env var as comma-separated list for production
+_default_origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
+    "http://localhost:5175",
+    "http://127.0.0.1:5175",
+]
+_env_origins = os.getenv("ALLOWED_ORIGINS", "")
+ALLOWED_ORIGINS = [o.strip() for o in _env_origins.split(",") if o.strip()] or _default_origins
 
 app = FastAPI(title="InsightEngine API", version="1.0.0")
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:5174",
-        "http://127.0.0.1:5174",
-        "http://localhost:5175",
-        "http://127.0.0.1:5175",
-    ],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -86,7 +101,13 @@ def _seed_demo_user():
 
 
 @app.get("/api/health")
-def health():
+def health(db: Session = Depends(get_db)):
+    """Health check — verifies DB connectivity."""
+    try:
+        db.execute(__import__("sqlalchemy").text("SELECT 1"))
+    except Exception as e:
+        logger.error("Health check DB error: %s", e)
+        raise HTTPException(503, "Database unavailable") from e
     return {"status": "ok"}
 
 
@@ -191,7 +212,8 @@ def export_industry_scores_csv(
 
 
 @app.post("/api/run-analysis")
-def run_analysis(req: RunAnalysisRequest):
+@limiter.limit("5/hour")
+def run_analysis(request: Request, req: RunAnalysisRequest):
     if req.industry not in INDUSTRY_CONFIG:
         raise HTTPException(400, f"Industry '{req.industry}' not supported")
     try:
@@ -201,7 +223,8 @@ def run_analysis(req: RunAnalysisRequest):
 
 
 @app.post("/api/run-analysis/stream")
-def run_analysis_stream(req: RunAnalysisRequest):
+@limiter.limit("5/hour")
+def run_analysis_stream(request: Request, req: RunAnalysisRequest):
     """Server-Sent Events: progress stages then final result in last event."""
 
     def gen():

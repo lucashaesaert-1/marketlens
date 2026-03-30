@@ -1,8 +1,11 @@
 """Compute personalized metrics/charts from chat + industry JSON via Groq."""
 
 import json
+import logging
 import os
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 from pydantic import BaseModel, Field
 
@@ -102,7 +105,8 @@ def compute_personalization(
     try:
         validated = PersonalizationPayload.model_validate(data)
         return validated.model_dump()
-    except Exception:
+    except Exception as exc:
+        logger.warning("Personalization validation failed, using defaults: %s", exc)
         return PersonalizationPayload().model_dump()
 
 

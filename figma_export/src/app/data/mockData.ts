@@ -78,6 +78,14 @@ export interface IndustryData {
   churnFlows?: ChurnFlow[];
   dimensionDeltas?: DimensionDelta[];
   personalization?: PersonalizationData;
+  _meta?: {
+    industry: string;
+    totalReviews: number;
+    totalInsights: number;
+    dataSource: string;
+    reviewCountsFromDataset: boolean;
+    isMock: boolean;
+  };
 }
 
 export const industryData: Record<Industry, IndustryData> = {

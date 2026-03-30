@@ -61,8 +61,7 @@ export function Dashboard() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
-          <p className="text-slate-600">Loading {industry} analysis from backend...</p>
-          <p className="text-xs text-slate-500">Ensure the API is running: python -m uvicorn api.main:app --reload --port 8001</p>
+          <p className="text-slate-600">Loading {industry} analysis…</p>
         </div>
       </div>
     );
@@ -74,7 +73,20 @@ export function Dashboard() {
         <div className="bg-rose-50 border border-rose-200 rounded-xl p-8 max-w-md text-center">
           <p className="font-semibold text-rose-900">Failed to load data</p>
           <p className="text-sm text-rose-700 mt-2">{error}</p>
-          <p className="text-xs text-slate-500 mt-4">Start the API: python -m uvicorn api.main:app --reload --port 8001</p>
+          <Button
+            variant="outline"
+            className="mt-4"
+            onClick={() => {
+              setError(null);
+              setLoading(true);
+              fetchIndustryData(industry)
+                .then(setData)
+                .catch((err) => setError((err as Error).message))
+                .finally(() => setLoading(false));
+            }}
+          >
+            Retry
+          </Button>
         </div>
       </div>
     );
@@ -99,6 +111,13 @@ export function Dashboard() {
 
   return (
     <div className="max-w-[1600px] mx-auto space-y-6">
+      {/* Mock data warning */}
+      {data._meta?.isMock && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2 text-sm text-amber-800 flex items-center gap-2">
+          <span className="font-semibold">Demo data</span>
+          — scores are template estimates. Run an analysis to load real review data.
+        </div>
+      )}
       {/* Key Metrics Row */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <MetricCard

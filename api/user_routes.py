@@ -1,13 +1,17 @@
 """Auth, profile, chat streaming, login panel content, onboarding."""
 
 import json
+import logging
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
 
+from api.audience_config import AUDIENCE_CONFIG
 from api.auth_utils import create_access_token, hash_password, verify_password
 from api.chat_service import build_system_prompt, stream_groq_reply
 from api.database import get_db
@@ -15,6 +19,8 @@ from api.deps import get_current_user, get_optional_user
 from api.models import ChatMessage, ChatSession, SavedView, User, UserProfile
 from api.personalization import compute_personalization, get_smart_model_from_env
 
+logger = logging.getLogger(__name__)
+limiter = Limiter(key_func=get_remote_address)
 router = APIRouter(tags=["users"])
 
 CONTENT_DIR = Path(__file__).parent.parent / "content"
@@ -32,7 +38,8 @@ class LoginBody(BaseModel):
 
 
 @router.post("/auth/register")
-def register(body: RegisterBody, db: Session = Depends(get_db)):
+@limiter.limit("10/hour")
+def register(request: Request, body: RegisterBody, db: Session = Depends(get_db)):
     if db.query(User).filter(User.email == body.email.lower().strip()).first():
         raise HTTPException(400, "Email already registered")
     user = User(email=body.email.lower().strip(), hashed_password=hash_password(body.password))
@@ -47,7 +54,8 @@ def register(body: RegisterBody, db: Session = Depends(get_db)):
 
 
 @router.post("/auth/login")
-def login(body: LoginBody, db: Session = Depends(get_db)):
+@limiter.limit("20/hour")
+def login(request: Request, body: LoginBody, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == body.email.lower().strip()).first()
     if not user or not verify_password(body.password, user.hashed_password):
         raise HTTPException(401, "Invalid email or password")
@@ -220,7 +228,9 @@ class ChatStreamBody(BaseModel):
 
 
 @router.post("/chat/stream")
+@limiter.limit("60/hour")
 def chat_stream(
+    request: Request,
     body: ChatStreamBody,
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -258,8 +268,8 @@ def chat_stream(
 
     guided = []
     aud = body.audience
-    if aud and aud in __import__("api.audience_config", fromlist=["AUDIENCE_CONFIG"]).AUDIENCE_CONFIG:
-        guided = [u["question"] for u in __import__("api.audience_config", fromlist=["AUDIENCE_CONFIG"]).AUDIENCE_CONFIG[aud]["use_cases"]]
+    if aud and aud in AUDIENCE_CONFIG:
+        guided = [u["question"] for u in AUDIENCE_CONFIG[aud]["use_cases"]]
 
     system = build_system_prompt(
         industry_json=industry_json,

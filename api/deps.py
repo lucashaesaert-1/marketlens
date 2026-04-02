@@ -3,6 +3,7 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
+from typing import Optional
 
 from api.auth_utils import decode_token
 from api.database import get_db
@@ -12,7 +13,7 @@ security = HTTPBearer(auto_error=False)
 
 
 def get_current_user(
-    creds: HTTPAuthorizationCredentials | None = Depends(security),
+    creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
     db: Session = Depends(get_db),
 ) -> User:
     if creds is None or not creds.credentials:
@@ -27,9 +28,9 @@ def get_current_user(
 
 
 def get_optional_user(
-    creds: HTTPAuthorizationCredentials | None = Depends(security),
+    creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
     db: Session = Depends(get_db),
-) -> User | None:
+) -> Optional[User]:
     if creds is None or not creds.credentials:
         return None
     payload = decode_token(creds.credentials)

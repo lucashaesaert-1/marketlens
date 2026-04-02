@@ -4,6 +4,7 @@ from datetime import datetime
 
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import Optional
 
 from api.database import Base
 
@@ -45,10 +46,10 @@ class UserProfile(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), unique=True, nullable=False)
-    audience: Mapped[str | None] = mapped_column(String(32), nullable=True)  # investors | companies | customers
-    industry: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    audience: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)  # investors | companies | customers
+    industry: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
     onboarding_completed: Mapped[bool] = mapped_column(Boolean, default=False)
-    personalization_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+    personalization_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     user: Mapped["User"] = relationship("User", back_populates="profile")
@@ -60,7 +61,7 @@ class ChatSession(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     purpose: Mapped[str] = mapped_column(String(32), default="onboarding")  # onboarding | dashboard
-    industry_context: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    industry_context: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     user: Mapped["User"] = relationship("User", back_populates="chat_sessions")

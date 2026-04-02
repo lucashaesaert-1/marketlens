@@ -1,6 +1,6 @@
 """Groq chat: system prompts, streaming, guided context."""
 
-from typing import Iterator
+from typing import Iterator, Optional
 
 from api.audience_config import AUDIENCE_CONFIG
 
@@ -50,8 +50,8 @@ def _summarize_industry(industry_json: dict) -> str:
 
 def build_system_prompt(
     *,
-    industry_json: dict | None,
-    audience: str | None,
+    industry_json: Optional[dict],
+    audience: Optional[str],
     guided_questions: list[str],
 ) -> str:
     parts = [

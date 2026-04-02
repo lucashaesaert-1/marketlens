@@ -385,7 +385,15 @@ def generate_insights(scores: dict, client, smart_model: str,
     raw = response.choices[0].message.content
     # Sanitize Unicode that can cause charmap errors on Windows (e.g. ->, –)
     raw = raw.replace("\u2192", "->").replace("\u2013", "-").replace("\u2014", "-")
-    insights = json.loads(raw)["insights"]
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError as e:
+        print(f"  Warning: failed to parse insights JSON: {e}")
+        return []
+    insights = parsed.get("insights")
+    if not isinstance(insights, list):
+        print("  Warning: LLM response missing 'insights' list — returning empty.")
+        return []
     for ins in insights:
         for key in ("body", "title", "action"):
             if key in ins and isinstance(ins[key], str):
@@ -397,37 +405,55 @@ def generate_insights(scores: dict, client, smart_model: str,
 
 def compute_kpis(scores: dict, reviews: list) -> dict:
     """Derive high-level KPIs from dimension scores and review metadata."""
+    # Use the actual companies/dimensions present in scores, not hardcoded globals
+    comps = list(scores.keys()) or ALL_COMPANIES
+    dims = set()
+    for sc in scores.values():
+        dims.update(sc.keys())
+    dims = dims or set(DIMENSIONS.keys())
+
     review_counts = defaultdict(int)
     for r in reviews:
-        if r.get("company") in ALL_COMPANIES:
-            review_counts[r["company"]] += 1
+        co = r.get("company")
+        if co in comps:
+            review_counts[co] += 1
 
     total_reviews = sum(review_counts.values()) or 1
 
     # Overall score: unweighted average of all dimensions
-    overall = {
-        company: round(sum(dims.values()) / len(dims), 1)
-        for company, dims in scores.items()
-        if dims
-    }
+    overall = {}
+    for company, dim_scores in scores.items():
+        vals = [v for v in dim_scores.values() if isinstance(v, (int, float))]
+        if vals:
+            overall[company] = round(sum(vals) / len(vals), 1)
 
     # Category average per dimension
-    cat_avg = {
-        dim: round(sum(scores[c].get(dim, 0) for c in ALL_COMPANIES) / len(ALL_COMPANIES), 1)
-        for dim in DIMENSIONS
-    }
+    cat_avg = {}
+    for dim in dims:
+        vals = [scores[c].get(dim, 0) for c in comps if isinstance(scores[c].get(dim), (int, float))]
+        cat_avg[dim] = round(sum(vals) / len(vals), 1) if vals else 0
 
     # Share of voice (review volume %)
     sov = {
         c: round(100 * review_counts[c] / total_reviews, 1)
-        for c in ALL_COMPANIES
+        for c in comps
     }
 
     # Whitespace: dimensions where max score < 75
     whitespace = [
-        dim for dim in DIMENSIONS
-        if max(scores[c].get(dim, 0) for c in ALL_COMPANIES) < 75
+        dim for dim in dims
+        if all(scores[c].get(dim, 0) < 75 for c in comps)
     ]
+
+    # Focal rank on value_for_money (gracefully handles missing key)
+    value_key = "value_for_money"
+    focal_rank = None
+    if FOCAL_COMPANY in comps and value_key in dims:
+        ranked = sorted(comps, key=lambda c: scores[c].get(value_key, 0), reverse=True)
+        try:
+            focal_rank = ranked.index(FOCAL_COMPANY) + 1
+        except ValueError:
+            focal_rank = None
 
     return {
         "overall": overall,
@@ -435,9 +461,7 @@ def compute_kpis(scores: dict, reviews: list) -> dict:
         "share_of_voice": sov,
         "review_counts": dict(review_counts),
         "whitespace_dimensions": whitespace,
-        "focal_rank_value": sorted(
-            ALL_COMPANIES, key=lambda c: scores[c].get("value_for_money", 0), reverse=True
-        ).index(FOCAL_COMPANY) + 1,
+        "focal_rank_value": focal_rank,
     }
 
 

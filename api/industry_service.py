@@ -203,11 +203,13 @@ _cache: dict[str, dict[str, Any]] = {}
 def get_industry_cache_entry(industry: str) -> dict[str, Any]:
     """Scores/insights plus optional real review counts and provenance label."""
     if industry not in _cache:
-        cfg = INDUSTRY_CONFIG[industry]
+        cfg = INDUSTRY_CONFIG.get(industry)
+        if not cfg:
+            raise HTTPException(404, f"Industry '{industry}' not found")
         rc = load_review_counts_from_industry_file(industry)
         _cache[industry] = {
             "scores": dict(cfg["mock_scores"]),
-            "insights": list(MOCK_INSIGHTS_BY_INDUSTRY[industry]),
+            "insights": list(MOCK_INSIGHTS_BY_INDUSTRY.get(industry, [])),
             "review_counts": rc,
             "data_source": "sample_reviews_file" if rc else "template_scores",
         }
@@ -244,7 +246,7 @@ def get_industry_state(industry: str) -> tuple[dict, list]:
     return e["scores"], e["insights"]
 
 
-def merge_personalization(base: dict, personalization: dict | None, audience: str) -> dict:
+def merge_personalization(base: dict, personalization: Optional[dict], audience: str) -> dict:
     """Attach personalization and merge chat insights into the selected audience list with labels."""
     if not personalization:
         return base

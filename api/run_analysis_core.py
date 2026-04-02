@@ -7,7 +7,7 @@ import logging
 import os
 import time
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Dict, Iterator, Optional
 
 from pydantic import BaseModel
 
@@ -15,10 +15,10 @@ log = logging.getLogger("insightengine.run_analysis")
 
 
 class RunAnalysisRequest(BaseModel):
-    api_key: str | None = None
+    api_key: Optional[str] = None
     provider: str = "groq"
     industry: str = "crm"
-    resource_keys: dict[str, str] | None = None
+    resource_keys: Optional[Dict[str, str]] = None
     use_live_sources: bool = True
 
 

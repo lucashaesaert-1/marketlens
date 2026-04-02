@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
+from typing import Optional
 
 from api.audience_config import AUDIENCE_CONFIG
 from api.auth_utils import create_access_token, hash_password, verify_password
@@ -200,7 +201,7 @@ def onboarding_complete(
 
 class ChatSessionCreate(BaseModel):
     purpose: str = Field("onboarding", pattern="^(onboarding|dashboard)$")
-    industry: str | None = None
+    industry: Optional[str] = None
 
 
 @router.post("/chat/session")
@@ -222,8 +223,8 @@ def create_chat_session(
 
 class ChatStreamBody(BaseModel):
     session_id: int
-    industry: str | None = None
-    audience: str | None = None  # investors | companies | customers
+    industry: Optional[str] = None
+    audience: Optional[str] = None  # investors | companies | customers
     content: str = Field(..., min_length=1, max_length=1000)
 
 
@@ -288,19 +289,29 @@ def chat_stream(
     db.add(user_msg)
     db.commit()
 
+    # Capture IDs needed inside the generator — the FastAPI-managed `db` session
+    # is closed when this handler returns, before the StreamingResponse body is
+    # consumed, so we open a fresh session inside the generator.
+    _session_id = sess.id
+
     def event_stream():
+        from api.database import SessionLocal  # local import to avoid circular deps
+
         pieces: list[str] = []
+        gen_db = SessionLocal()
         try:
             for chunk in stream_groq_reply(client, fast_model, messages):
                 pieces.append(chunk)
                 yield f"data: {json.dumps({'token': chunk})}\n\n"
             full = "".join(pieces)
-            am = ChatMessage(session_id=sess.id, role="assistant", content=full)
-            db.add(am)
-            db.commit()
+            am = ChatMessage(session_id=_session_id, role="assistant", content=full)
+            gen_db.add(am)
+            gen_db.commit()
             yield f"data: {json.dumps({'done': True})}\n\n"
         except Exception as e:
             yield f"data: {json.dumps({'error': str(e)})}\n\n"
+        finally:
+            gen_db.close()
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")
 

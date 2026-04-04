@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { type Audience } from "../data/mockData";
 import type { IndustryData } from "../data/mockData";
@@ -34,8 +34,15 @@ const CHARTS_BY_AUDIENCE: Record<Audience, Set<string>> = {
 
 const BRIEF_INSIGHTS_KEY = "marketlens_brief_insights";
 
+const AUDIENCE_TABS: { key: Audience; label: string }[] = [
+  { key: "investors", label: "Investors" },
+  { key: "companies", label: "Companies" },
+  { key: "customers", label: "Customers" },
+];
+
 export function Dashboard() {
   const params = useParams();
+  const navigate = useNavigate();
   const industry = (params.industry as string) || "crm";
   const audience = (params.audience as Audience) || "investors";
 
@@ -114,6 +121,23 @@ export function Dashboard() {
 
   return (
     <div className="max-w-[1600px] mx-auto space-y-6">
+      {/* Audience Tabs */}
+      <div className="flex gap-1 border-b border-slate-200">
+        {AUDIENCE_TABS.map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => navigate(`/${industry}/${key}`)}
+            className={`px-5 py-2.5 text-sm font-medium rounded-t-lg transition-colors ${
+              audience === key
+                ? "bg-white border border-b-white border-slate-200 text-indigo-600 -mb-px"
+                : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
       {/* Mock data warning */}
       {data._meta?.isMock && (
         <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2 text-sm text-amber-800 flex items-center gap-2">

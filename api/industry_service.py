@@ -86,7 +86,7 @@ def build_industry_data(
     for name in companies_list:
         cid = to_id(name)
         sc = scores.get(name, {})
-        value_score = sc.get(value_key, 50)
+        value_score = sc.get(value_key) or 50
         perceived_value = value_score / 10
         price = max(1, min(10, 10 - value_score / 12))
         vals = [v for v in sc.values() if isinstance(v, (int, float))]

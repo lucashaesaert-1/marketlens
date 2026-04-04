@@ -59,6 +59,7 @@ export async function runAnalysisStream(
   industry: string,
   opts: {
     provider?: "groq" | "openai";
+    apiKey?: string;
     resourceKeys?: Record<string, string>;
     onEvent?: (e: AnalysisStreamEvent) => void;
   } = {}
@@ -69,7 +70,7 @@ export async function runAnalysisStream(
     body: JSON.stringify({
       industry,
       provider: opts.provider ?? "groq",
-      api_key: null,
+      api_key: opts.apiKey ?? null,
       resource_keys: opts.resourceKeys ?? null,
       use_live_sources: true,
     }),

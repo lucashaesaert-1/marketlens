@@ -21,12 +21,15 @@ import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { PersonalizationSection } from "./PersonalizationSection";
 import { DashboardChat } from "./DashboardChat";
+import { NewsHeadlinesCard } from "./cards/NewsHeadlinesCard";
+import { FinanceDataCard } from "./cards/FinanceDataCard";
+import { GlassdoorCard } from "./cards/GlassdoorCard";
 
 /** Which charts each audience sees. Investors: market share, churn, growth. Companies: praise/complaint, gaps, support. Customers: value, ease of use. */
 const CHARTS_BY_AUDIENCE: Record<Audience, Set<string>> = {
-  investors: new Set(["positioning", "sentiment", "shareOfVoice", "churnFlows", "dimensionBenchmarking"]),
-  companies: new Set(["radar", "heatmap", "praiseComplaint", "dimensionDeltas", "dimensionBenchmarking"]),
-  customers: new Set(["positioning", "radar", "praiseComplaint", "dimensionBenchmarking"]),
+  investors: new Set(["positioning", "sentiment", "shareOfVoice", "churnFlows", "dimensionBenchmarking", "newsHeadlines", "financeData"]),
+  companies: new Set(["radar", "heatmap", "praiseComplaint", "dimensionDeltas", "dimensionBenchmarking", "glassdoorData"]),
+  customers: new Set(["positioning", "radar", "praiseComplaint", "dimensionBenchmarking", "glassdoorData"]),
 };
 
 const BRIEF_INSIGHTS_KEY = "marketlens_brief_insights";
@@ -239,6 +242,47 @@ export function Dashboard() {
               <DimensionDeltasChart data={data.dimensionDeltas} companies={data.companies} />
             </div>
           )}
+        </div>
+      )}
+
+      {/* Google Finance + News — investors only */}
+      {(CHARTS_BY_AUDIENCE[audience].has("financeData") || CHARTS_BY_AUDIENCE[audience].has("newsHeadlines")) && (
+        (data.financeData && Object.keys(data.financeData).length > 0) ||
+        (data.newsHeadlines && data.newsHeadlines.length > 0)
+      ) && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {CHARTS_BY_AUDIENCE[audience].has("financeData") && data.financeData && Object.keys(data.financeData).length > 0 && (
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+              <div className="mb-4">
+                <h2 className="font-semibold text-slate-900">Market Data</h2>
+                <p className="text-sm text-slate-500 mt-1">Live stock quotes for public companies</p>
+              </div>
+              <FinanceDataCard financeData={data.financeData} />
+            </div>
+          )}
+          {CHARTS_BY_AUDIENCE[audience].has("newsHeadlines") && data.newsHeadlines && data.newsHeadlines.length > 0 && (
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+              <div className="mb-4">
+                <h2 className="font-semibold text-slate-900">Recent News</h2>
+                <p className="text-sm text-slate-500 mt-1">Latest headlines for the focal company</p>
+              </div>
+              <NewsHeadlinesCard
+                headlines={data.newsHeadlines}
+                focalCompany={data.companies[0]?.name ?? ""}
+              />
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Glassdoor employee ratings — companies + customers */}
+      {CHARTS_BY_AUDIENCE[audience].has("glassdoorData") && data.glassdoorData && Object.keys(data.glassdoorData).length > 0 && (
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <div className="mb-4">
+            <h2 className="font-semibold text-slate-900">Employee Sentiment (Glassdoor)</h2>
+            <p className="text-sm text-slate-500 mt-1">Aggregate employee ratings by company</p>
+          </div>
+          <GlassdoorCard glassdoorData={data.glassdoorData} />
         </div>
       )}
 

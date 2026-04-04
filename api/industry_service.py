@@ -12,6 +12,7 @@ from fastapi import HTTPException
 from industry_config import INDUSTRY_CONFIG, MOCK_INSIGHTS_BY_INDUSTRY
 
 QUARTERS = ["Q1 24", "Q2 24", "Q3 24", "Q4 24", "Q1 25", "Q2 25", "Q3 25", "Q4 25", "Q1 26"]
+SENTIMENT_TREND_QUARTERS = QUARTERS[-6:]  # The 6 quarters shown in the chart
 
 
 def to_id(name: str) -> str:
@@ -65,6 +66,12 @@ def build_industry_data(
     *,
     review_counts: Optional[dict[str, int]] = None,
     data_source: Optional[str] = None,
+    sentiment_trends: Optional[list] = None,
+    praise_complaint_themes: Optional[list] = None,
+    sov_interest: Optional[dict[str, int]] = None,
+    news_headlines: Optional[list] = None,
+    finance_data: Optional[dict] = None,
+    glassdoor_data: Optional[dict] = None,
 ) -> dict:
     cfg = INDUSTRY_CONFIG.get(industry)
     if not cfg:
@@ -87,6 +94,10 @@ def build_industry_data(
         overall_sentiment = round(avg / 50 - 1, 2)
         if review_counts is not None and name in review_counts and review_counts[name] > 0:
             review_count = review_counts[name]
+        elif sov_interest is not None and name in sov_interest:
+            # SerpAPI Google Trends interest (0-100) scaled to a plausible review-count range.
+            # Not a real count but proportional to real search volume — far better than hash().
+            review_count = 10000 + sov_interest[name] * 1500
         else:
             review_count = 50000 + hash(name) % 100000
         companies.append({
@@ -109,7 +120,10 @@ def build_industry_data(
             "scores": scores_by_co,
         })
 
-    sentiment_trends = _synthetic_sentiment(scores, companies_list)
+    # Use real trends if provided (from SerpAPI Google Trends or dated-review aggregation);
+    # fall back to the synthetic formula only when no real data is available.
+    if sentiment_trends is None:
+        sentiment_trends = _synthetic_sentiment(scores, companies_list)
 
     audience_map = {"Companies": "companies", "Investors": "investors", "Customers": "customers"}
     insights_by_audience = {"investors": [], "companies": [], "customers": []}
@@ -127,18 +141,23 @@ def build_industry_data(
             "source": "pipeline",
         })
 
-    praise_complaint = []
-    for name in companies_list:
-        cid = to_id(name)
-        sc = scores.get(name, {})
-        praise_sum = sum(v for v in sc.values() if isinstance(v, (int, float)) and v >= 60)
-        complaint_sum = sum(100 - v for v in sc.values() if isinstance(v, (int, float)) and v < 60)
-        praise_complaint.append({
-            "company": name,
-            "companyId": cid,
-            "praise": max(10, int(praise_sum / 6)) if sc else 50,
-            "complaint": max(5, int(complaint_sum / 6)) if sc else 30,
-        })
+    # Use real LLM-extracted themes when available (passed from pipeline);
+    # fall back to the score-sum formula only when no real themes exist.
+    if praise_complaint_themes is not None:
+        praise_complaint = praise_complaint_themes
+    else:
+        praise_complaint = []
+        for name in companies_list:
+            cid = to_id(name)
+            sc = scores.get(name, {})
+            praise_sum = sum(v for v in sc.values() if isinstance(v, (int, float)) and v >= 60)
+            complaint_sum = sum(100 - v for v in sc.values() if isinstance(v, (int, float)) and v < 60)
+            praise_complaint.append({
+                "company": name,
+                "companyId": cid,
+                "praise": max(10, int(praise_sum / 6)) if sc else 50,
+                "complaint": max(5, int(complaint_sum / 6)) if sc else 30,
+            })
 
     total_reviews = sum(c["reviewCount"] for c in companies) or 1
     share_of_voice = [
@@ -177,7 +196,7 @@ def build_industry_data(
             })
 
     is_mock = not bool(review_counts)
-    return {
+    payload: dict = {
         "companies": companies,
         "dimensions": dimensions,
         "sentimentTrends": sentiment_trends,
@@ -195,23 +214,93 @@ def build_industry_data(
             "isMock": is_mock,
         },
     }
+    # Optional real-data enrichments — only included when data was fetched
+    if news_headlines is not None:
+        payload["newsHeadlines"] = news_headlines
+    if finance_data is not None:
+        payload["financeData"] = finance_data
+    if glassdoor_data is not None:
+        payload["glassdoorData"] = glassdoor_data
+    return payload
 
 
 _cache: dict[str, dict[str, Any]] = {}
 
 
+def _try_fetch_serpapi_enrichments(
+    industry: str,
+    companies: list,
+    focal: str = "",
+) -> dict[str, Any]:
+    """
+    Eagerly fetch SerpAPI enrichments on first cache miss.
+    Returns keys: sentiment_trends, sov_interest, news_headlines, finance_data, glassdoor_data.
+    All may be None if SerpAPI key not set or calls fail.
+    """
+    enrichments: dict[str, Any] = {
+        "sentiment_trends": None,
+        "sov_interest": None,
+        "news_headlines": None,
+        "finance_data": None,
+        "glassdoor_data": None,
+    }
+    try:
+        from resources.adapters import (
+            fetch_sentiment_trends_for_industry,
+            fetch_share_of_voice_for_industry,
+            fetch_news_for_industry,
+            fetch_finance_for_industry,
+            fetch_glassdoor_for_industry,
+        )
+    except ImportError:
+        return enrichments
+
+    trends, _ = fetch_sentiment_trends_for_industry(companies, SENTIMENT_TREND_QUARTERS)
+    enrichments["sentiment_trends"] = trends
+
+    sov = fetch_share_of_voice_for_industry(companies)
+    enrichments["sov_interest"] = sov
+
+    if focal:
+        try:
+            enrichments["news_headlines"] = fetch_news_for_industry(focal, limit=8)
+        except Exception:
+            pass
+
+    try:
+        enrichments["finance_data"] = fetch_finance_for_industry(companies)
+    except Exception:
+        pass
+
+    try:
+        enrichments["glassdoor_data"] = fetch_glassdoor_for_industry(companies)
+    except Exception:
+        pass
+
+    return enrichments
+
+
 def get_industry_cache_entry(industry: str) -> dict[str, Any]:
-    """Scores/insights plus optional real review counts and provenance label."""
+    """Scores/insights plus optional real review counts, trends, and provenance label."""
     if industry not in _cache:
         cfg = INDUSTRY_CONFIG.get(industry)
         if not cfg:
             raise HTTPException(404, f"Industry '{industry}' not found")
         rc = load_review_counts_from_industry_file(industry)
+        companies = list(cfg.get("companies", []))
+        focal = cfg.get("focal", "")
+        enrichments = _try_fetch_serpapi_enrichments(industry, companies, focal=focal)
         _cache[industry] = {
             "scores": dict(cfg["mock_scores"]),
             "insights": list(MOCK_INSIGHTS_BY_INDUSTRY.get(industry, [])),
             "review_counts": rc,
             "data_source": "sample_reviews_file" if rc else "template_scores",
+            "sentiment_trends": enrichments["sentiment_trends"],
+            "sov_interest": enrichments["sov_interest"],
+            "praise_complaint_themes": None,
+            "news_headlines": enrichments["news_headlines"],
+            "finance_data": enrichments["finance_data"],
+            "glassdoor_data": enrichments["glassdoor_data"],
         }
     return _cache[industry]
 
@@ -224,6 +313,12 @@ def set_industry_cache_entry(
     reviews: Optional[list] = None,
     review_counts: Optional[dict[str, int]] = None,
     data_source: str = "pipeline",
+    sentiment_trends: Optional[list] = None,
+    sov_interest: Optional[dict[str, int]] = None,
+    praise_complaint_themes: Optional[list] = None,
+    news_headlines: Optional[list] = None,
+    finance_data: Optional[dict] = None,
+    glassdoor_data: Optional[dict] = None,
 ) -> None:
     cfg = INDUSTRY_CONFIG.get(industry) or {}
     comps = list(cfg.get("companies") or [])
@@ -233,11 +328,27 @@ def set_industry_cache_entry(
         rc = count_reviews_by_company(reviews, comps)
     else:
         rc = load_review_counts_from_industry_file(industry)
+
+    # Keep whatever was already cached for fields not passed in
+    existing = _cache.get(industry, {})
+    final_trends = sentiment_trends if sentiment_trends is not None else existing.get("sentiment_trends")
+    final_sov = sov_interest if sov_interest is not None else existing.get("sov_interest")
+    final_pc = praise_complaint_themes if praise_complaint_themes is not None else existing.get("praise_complaint_themes")
+    final_news = news_headlines if news_headlines is not None else existing.get("news_headlines")
+    final_finance = finance_data if finance_data is not None else existing.get("finance_data")
+    final_glassdoor = glassdoor_data if glassdoor_data is not None else existing.get("glassdoor_data")
+
     _cache[industry] = {
         "scores": scores,
         "insights": insights,
         "review_counts": rc,
         "data_source": data_source,
+        "sentiment_trends": final_trends,
+        "sov_interest": final_sov,
+        "praise_complaint_themes": final_pc,
+        "news_headlines": final_news,
+        "finance_data": final_finance,
+        "glassdoor_data": final_glassdoor,
     }
 
 

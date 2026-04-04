@@ -136,6 +136,12 @@ def _industry_payload(industry: str, db: Session, user):
         entry["insights"],
         review_counts=entry.get("review_counts"),
         data_source=entry.get("data_source"),
+        sentiment_trends=entry.get("sentiment_trends"),
+        praise_complaint_themes=entry.get("praise_complaint_themes"),
+        sov_interest=entry.get("sov_interest"),
+        news_headlines=entry.get("news_headlines"),
+        finance_data=entry.get("finance_data"),
+        glassdoor_data=entry.get("glassdoor_data"),
     )
     if user:
         prof = db.query(UserProfile).filter(UserProfile.user_id == user.id).first()

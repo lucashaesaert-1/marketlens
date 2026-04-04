@@ -60,6 +60,27 @@ export interface DimensionDelta {
   delta: number;
 }
 
+export interface NewsHeadline {
+  title: string;
+  source: string;
+  date: string;
+  snippet: string;
+  sentiment_hint: "positive" | "negative" | "neutral";
+}
+
+export interface FinanceQuote {
+  ticker: string;
+  price: number | null;
+  currency: string;
+  change: number | null;
+  pct_change: number | null;
+}
+
+export interface GlassdoorSummary {
+  rating: number | null;
+  snippet: string;
+}
+
 export interface PersonalizationData {
   narrative_summary?: string;
   focus_dimensions?: { label: string; relevance: number; rationale?: string }[];
@@ -78,6 +99,12 @@ export interface IndustryData {
   churnFlows?: ChurnFlow[];
   dimensionDeltas?: DimensionDelta[];
   personalization?: PersonalizationData;
+  /** Google News headlines for the focal company — investors audience */
+  newsHeadlines?: NewsHeadline[];
+  /** Live stock quotes keyed by company name — investors audience */
+  financeData?: Record<string, FinanceQuote>;
+  /** Glassdoor employee ratings keyed by company name — companies + customers audience */
+  glassdoorData?: Record<string, GlassdoorSummary>;
   _meta?: {
     industry: string;
     totalReviews: number;

@@ -5,6 +5,8 @@ Otherwise return None (caller uses mock/fallback).
 Primary sources (no Trustpilot key needed):
   - Kaggle: Free datasets for ride-sharing, food-delivery, e-commerce, restaurants
   - Apify: G2, Capterra, Trustpilot via APIFY_API_TOKEN
+  - SerpAPI: Google Maps Reviews (restaurants/hospitality/travel) via SER_API
+             Google Trends (sentiment timeline + share-of-voice) via SER_API
   - Scrapers: G2, Capterra (fallback when Apify not configured)
 """
 
@@ -109,10 +111,10 @@ def fetch_reviews_for_industry(
     Unified review fetcher. Returns (reviews, source_tag).
 
     Order:
-    1. Kaggle datasets (ride-sharing, food-delivery, e-commerce, restaurants) → \"kaggle\"
-    2. Apify G2 scrapes for multiple competitors if APIFY_API_TOKEN is set → \"apify\"
-       (all industries; caps concurrent runs to avoid timeouts)
-    3. No live data → (None, \"none\") — caller should load data_file (local JSON)
+    1. Kaggle datasets (ride-sharing, food-delivery, e-commerce, restaurants) → "kaggle"
+    2. SerpAPI Google Maps (restaurants, hospitality, travel) → "serpapi_maps"
+    3. Apify G2 scrapes for multiple competitors if APIFY_API_TOKEN is set → "apify"
+    4. No live data → (None, "none") — caller should load data_file (local JSON)
     """
     # 1) Kaggle (real public datasets)
     kaggle_industries = ("ride-sharing", "food-delivery", "e-commerce", "restaurants")
@@ -121,7 +123,36 @@ def fetch_reviews_for_industry(
         if reviews:
             return reviews, "kaggle"
 
-    # 2) Apify — fetch several competitors (not only focal) for real multi-brand coverage
+    # 2) SerpAPI Google Maps — real customer reviews for location-based industries
+    ser_key = os.environ.get("SER_API") or os.environ.get("SERPAPI_API_KEY")
+    if ser_key:
+        try:
+            from resources.serpapi_adapter import (
+                GOOGLE_MAPS_INDUSTRIES,
+                fetch_google_maps_reviews_for_industry,
+            )
+        except ImportError:
+            try:
+                from .serpapi_adapter import (
+                    GOOGLE_MAPS_INDUSTRIES,
+                    fetch_google_maps_reviews_for_industry,
+                )
+            except ImportError:
+                GOOGLE_MAPS_INDUSTRIES = set()
+                fetch_google_maps_reviews_for_industry = None  # type: ignore[assignment]
+
+        if fetch_google_maps_reviews_for_industry and industry in GOOGLE_MAPS_INDUSTRIES:
+            per_co = max(20, limit // max(len(companies), 1))
+            maps_reviews = fetch_google_maps_reviews_for_industry(
+                companies, industry, limit_per_company=per_co
+            )
+            if maps_reviews:
+                for i, r in enumerate(maps_reviews):
+                    co = r.get("company", "x")
+                    r["id"] = f"{to_slug(co)}_gmaps_{i}"[:120]
+                return maps_reviews[:limit], "serpapi_maps"
+
+    # 3) Apify — fetch several competitors (not only focal) for real multi-brand coverage
     token = os.environ.get("APIFY_API_TOKEN")
     if token and companies:
         max_cos = max(1, min(len(companies), _env_int("APIFY_MAX_COMPANIES", 6)))
@@ -154,6 +185,142 @@ def fetch_reviews_for_industry(
             return merged[:limit], "apify"
 
     return None, "none"
+
+
+# ── Sentiment trends ──────────────────────────────────────────────────────────
+
+
+def fetch_sentiment_trends_for_industry(
+    companies: list,
+    quarters: list,
+) -> tuple[Optional[list[dict]], str]:
+    """
+    Fetch real sentiment/interest timeline for the companies.
+
+    Order:
+    1. SerpAPI Google Trends — returns real search-interest-over-time → "serpapi_trends"
+    2. Falls back to (None, "none") — caller uses _synthetic_sentiment()
+    """
+    ser_key = os.environ.get("SER_API") or os.environ.get("SERPAPI_API_KEY")
+    if not ser_key:
+        return None, "none"
+
+    try:
+        from resources.serpapi_adapter import fetch_google_trends_timeline
+    except ImportError:
+        try:
+            from .serpapi_adapter import fetch_google_trends_timeline
+        except ImportError:
+            return None, "none"
+
+    trends = fetch_google_trends_timeline(companies, quarters)
+    if trends:
+        return trends, "serpapi_trends"
+    return None, "none"
+
+
+def fetch_news_for_industry(
+    focal_company: str,
+    limit: int = 8,
+) -> Optional[list[dict]]:
+    """
+    Fetch recent Google News headlines for the focal company (investor audience).
+    Returns list of {title, source, date, snippet, sentiment_hint} or None.
+    """
+    ser_key = os.environ.get("SER_API") or os.environ.get("SERPAPI_API_KEY")
+    if not ser_key:
+        return None
+
+    try:
+        from resources.serpapi_adapter import fetch_google_news_headlines
+    except ImportError:
+        try:
+            from .serpapi_adapter import fetch_google_news_headlines
+        except ImportError:
+            return None
+
+    return fetch_google_news_headlines(focal_company, limit=limit)
+
+
+def fetch_finance_for_industry(
+    companies: list,
+) -> Optional[dict[str, dict]]:
+    """
+    Fetch live stock quotes for companies (investor audience).
+    Uses Alpha Vantage when Alpha_vantage key is set,
+    falls back to SerpAPI Google Finance if only SER_API is set.
+    Returns {company_name: {ticker, price, change, pct_change, currency}} or None.
+    """
+    # Prefer Alpha Vantage
+    if os.environ.get("Alpha_vantage") or os.environ.get("ALPHA_VANTAGE_API_KEY"):
+        try:
+            from resources.alphavantage_adapter import fetch_finance_data_for_companies as _av_fetch
+        except ImportError:
+            try:
+                from .alphavantage_adapter import fetch_finance_data_for_companies as _av_fetch
+            except ImportError:
+                _av_fetch = None  # type: ignore[assignment]
+        if _av_fetch:
+            return _av_fetch(companies)
+
+    # Fallback: SerpAPI Google Finance
+    ser_key = os.environ.get("SER_API") or os.environ.get("SERPAPI_API_KEY")
+    if not ser_key:
+        return None
+
+    try:
+        from resources.serpapi_adapter import fetch_finance_data_for_companies
+    except ImportError:
+        try:
+            from .serpapi_adapter import fetch_finance_data_for_companies
+        except ImportError:
+            return None
+
+    return fetch_finance_data_for_companies(companies)
+
+
+def fetch_glassdoor_for_industry(
+    companies: list,
+) -> Optional[dict[str, dict]]:
+    """
+    Fetch Glassdoor employee-rating snippets for companies (companies/customers audience).
+    Returns {company_name: {rating, snippet}} or None.
+    """
+    ser_key = os.environ.get("SER_API") or os.environ.get("SERPAPI_API_KEY")
+    if not ser_key:
+        return None
+
+    try:
+        from resources.serpapi_adapter import fetch_glassdoor_data_for_companies
+    except ImportError:
+        try:
+            from .serpapi_adapter import fetch_glassdoor_data_for_companies
+        except ImportError:
+            return None
+
+    return fetch_glassdoor_data_for_companies(companies)
+
+
+def fetch_share_of_voice_for_industry(
+    companies: list,
+) -> Optional[dict[str, int]]:
+    """
+    Fetch real share-of-voice data via SerpAPI Google Trends.
+    Returns {company_name: relative_interest_0_to_100} or None.
+    """
+    ser_key = os.environ.get("SER_API") or os.environ.get("SERPAPI_API_KEY")
+    if not ser_key:
+        return None
+
+    try:
+        from resources.serpapi_adapter import fetch_google_trends_share_of_voice
+    except ImportError:
+        try:
+            from .serpapi_adapter import fetch_google_trends_share_of_voice
+        except ImportError:
+            return None
+
+    return fetch_google_trends_share_of_voice(companies)
 
 
 def to_slug(name: str) -> str:

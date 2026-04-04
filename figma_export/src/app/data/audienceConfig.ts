@@ -41,6 +41,8 @@ export const audienceConfig: Record<Audience, AudienceConfig> = {
       { id: "market-share", question: "Market share trajectory?" },
     ],
     resources: [
+      { id: "serpapi-news", name: "Google News (SerpAPI)", type: "api", status: "integrated", notes: "Live headlines for focal company" },
+      { id: "serpapi-finance", name: "Google Finance (SerpAPI)", type: "api", status: "integrated", notes: "Live stock quotes for public companies" },
       { id: "factset", name: "FactSet", type: "api", status: "planned", notes: "Financial data, comparables" },
     ],
   },
@@ -61,6 +63,7 @@ export const audienceConfig: Record<Audience, AudienceConfig> = {
     resources: [
       { id: "g2", name: "G2 / Capterra", type: "api", status: "integrated", notes: "Product reviews" },
       { id: "apify", name: "Apify (G2, Capterra)", type: "api", status: "integrated", notes: "Set APIFY_API_TOKEN" },
+      { id: "serpapi-glassdoor-co", name: "Glassdoor (SerpAPI)", type: "api", status: "integrated", notes: "Employee ratings via Google Search" },
     ],
   },
   customers: {
@@ -76,7 +79,7 @@ export const audienceConfig: Record<Audience, AudienceConfig> = {
       { id: "best-segment", question: "Best for my segment (SMB/enterprise)?" },
     ],
     resources: [
-      { id: "glassdoor", name: "Glassdoor API", type: "api", status: "planned", notes: "Employee reviews, compensation" },
+      { id: "serpapi-glassdoor", name: "Glassdoor (SerpAPI)", type: "api", status: "integrated", notes: "Employee ratings scraped via Google Search" },
       { id: "kaggle_apify", name: "Kaggle / Apify", type: "api", status: "integrated", notes: "Reviews from Kaggle + Apify (G2, Capterra, Trustpilot)" },
     ],
   },

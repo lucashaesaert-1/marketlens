@@ -20,7 +20,7 @@ import { Button } from "./ui/button";
 import { PersonalizationSection } from "./PersonalizationSection";
 import { DashboardChat } from "./DashboardChat";
 import { NewsHeadlinesCard } from "./cards/NewsHeadlinesCard";
-import { FinanceDataCard } from "./cards/FinanceDataCard";
+import { StockChartCard } from "./cards/StockChartCard";
 import { GlassdoorCard } from "./cards/GlassdoorCard";
 
 const CHARTS_BY_AUDIENCE: Record<Audience, Set<string>> = {
@@ -256,10 +256,13 @@ export function Dashboard() {
         >
           {CHARTS_BY_AUDIENCE[audience].has("financeData") && data.financeData && Object.keys(data.financeData).length > 0 && (
             <div className="py-8">
-              <h2 className="text-base font-serif font-semibold text-[#1A1816]">Market Data</h2>
-              <p className="text-sm text-[#66605A] mt-0.5">Live stock quotes for public companies</p>
+              <h2 className="text-base font-serif font-semibold text-[#1A1816]">Stock Performance</h2>
+              <p className="text-sm text-[#66605A] mt-0.5">5-year price history · P/E and PEG ratios</p>
               <div className="mt-5">
-                <FinanceDataCard financeData={data.financeData} />
+                <StockChartCard
+                  financeData={data.financeData}
+                  colorMap={Object.fromEntries(data.companies.map(c => [c.name, c.color]))}
+                />
               </div>
               <Source>Source: Alpha Vantage · Prices may be delayed 15 min</Source>
             </div>

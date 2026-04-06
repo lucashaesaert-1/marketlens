@@ -68,12 +68,21 @@ export interface NewsHeadline {
   sentiment_hint: "positive" | "negative" | "neutral";
 }
 
+export interface StockDataPoint {
+  date: string;
+  close: number;
+  adjusted_close: number;
+}
+
 export interface FinanceQuote {
   ticker: string;
   price: number | null;
   currency: string;
   change: number | null;
   pct_change: number | null;
+  monthly_series?: StockDataPoint[];
+  pe_ratio?: number | null;
+  peg_ratio?: number | null;
 }
 
 export interface GlassdoorSummary {

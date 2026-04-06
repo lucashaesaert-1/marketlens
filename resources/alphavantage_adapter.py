@@ -115,6 +115,74 @@ def fetch_quote(symbol: str) -> Optional[dict]:
         return None
 
 
+def fetch_monthly_series(symbol: str, months: int = 60) -> Optional[list[dict]]:
+    """
+    Fetch monthly adjusted close prices for up to `months` months.
+    Returns [{date, close, adjusted_close}] sorted oldest→newest, or None.
+    """
+    key = _api_key()
+    if not key:
+        return None
+    try:
+        resp = requests.get(
+            AV_BASE,
+            params={"function": "TIME_SERIES_MONTHLY_ADJUSTED", "symbol": symbol, "apikey": key},
+            timeout=20,
+        )
+        if resp.status_code != 200:
+            return None
+        data = resp.json()
+        series = data.get("Monthly Adjusted Time Series", {})
+        if not series:
+            log.warning("alphavantage: no monthly series for %s", symbol)
+            return None
+        points = []
+        for date_str, vals in series.items():
+            try:
+                points.append({
+                    "date": date_str,
+                    "close": float(vals.get("4. close", 0)),
+                    "adjusted_close": float(vals.get("5. adjusted close", 0)),
+                })
+            except (ValueError, KeyError):
+                continue
+        points.sort(key=lambda x: x["date"])
+        return points[-months:] if len(points) > months else points
+    except Exception as exc:
+        log.warning("alphavantage monthly series error for %s: %s", symbol, exc)
+        return None
+
+
+def fetch_company_overview(symbol: str) -> Optional[dict]:
+    """
+    Fetch PE ratio and PEG ratio from Alpha Vantage OVERVIEW endpoint.
+    Returns {pe_ratio, peg_ratio} or None.
+    """
+    key = _api_key()
+    if not key:
+        return None
+    try:
+        resp = requests.get(
+            AV_BASE,
+            params={"function": "OVERVIEW", "symbol": symbol, "apikey": key},
+            timeout=15,
+        )
+        if resp.status_code != 200:
+            return None
+        data = resp.json()
+        if not data or "Symbol" not in data:
+            return None
+        pe = data.get("PERatio")
+        peg = data.get("PEGRatio")
+        return {
+            "pe_ratio": float(pe) if pe and pe != "None" else None,
+            "peg_ratio": float(peg) if peg and peg != "None" else None,
+        }
+    except Exception as exc:
+        log.warning("alphavantage overview error for %s: %s", symbol, exc)
+        return None
+
+
 def fetch_finance_data_for_companies(companies: list[str]) -> Optional[dict[str, dict]]:
     """
     Fetch stock quotes for all companies that have known tickers.
@@ -130,7 +198,14 @@ def fetch_finance_data_for_companies(companies: list[str]) -> Optional[dict[str,
             continue
         quote = fetch_quote(symbol)
         if quote:
-            result[company] = quote
-            log.info("alphavantage: %s → %s @ %s", company, symbol, quote.get("price"))
+            series = fetch_monthly_series(symbol, months=60)
+            overview = fetch_company_overview(symbol)
+            result[company] = {
+                **quote,
+                "monthly_series": series or [],
+                "pe_ratio": overview.get("pe_ratio") if overview else None,
+                "peg_ratio": overview.get("peg_ratio") if overview else None,
+            }
+            log.info("alphavantage: %s → %s @ %s series_points=%s", company, symbol, quote.get("price"), len(series or []))
 
     return result if result else None

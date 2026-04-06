@@ -17,10 +17,10 @@ function StarRating({ rating }: { rating: number }) {
             key={i}
             className={`text-sm ${
               fill === 1
-                ? "text-amber-400"
+                ? "text-[#F2720C]"
                 : fill === 0.5
-                ? "text-amber-300"
-                : "text-slate-200"
+                ? "text-[#F2A86C]"
+                : "text-[#D9D0C7]"
             }`}
           >
             ★
@@ -35,12 +35,11 @@ function StarRating({ rating }: { rating: number }) {
 function RatingBar({ rating }: { rating: number | null }) {
   if (rating == null) return <span className="text-xs text-slate-400">No data</span>;
   const pct = Math.round((rating / 5) * 100);
-  const color =
-    pct >= 70 ? "bg-emerald-500" : pct >= 50 ? "bg-amber-400" : "bg-rose-400";
+  const barColor = pct >= 70 ? "#0D7680" : pct >= 50 ? "#F2720C" : "#990F3D";
   return (
-    <div className="flex items-center gap-2">
-      <div className="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
-        <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
+    <div className="flex items-center gap-3">
+      <div className="flex-1 h-1.5 bg-[#F2EDE8] overflow-hidden">
+        <div className="h-full" style={{ width: `${pct}%`, backgroundColor: barColor }} />
       </div>
       <StarRating rating={rating} />
     </div>

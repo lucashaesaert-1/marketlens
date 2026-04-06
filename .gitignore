@@ -7,3 +7,4 @@ outputs/
 node_modules/
 figma_export/dist/
 data/insightengine.db
+

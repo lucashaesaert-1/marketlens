@@ -19,7 +19,7 @@ export function PersonalizationSection({ data }: { data: PersonalizationData }) 
   }
 
   return (
-    <div className="space-y-6 border-t border-indigo-100 pt-6 mt-6">
+    <div className="space-y-6 border-t border-[#D9D0C7] pt-6 mt-6">
       <div>
         <h2 className="font-semibold text-slate-900 text-lg">Personalized for you</h2>
         <p className="text-sm text-slate-500 mt-1">
@@ -28,7 +28,7 @@ export function PersonalizationSection({ data }: { data: PersonalizationData }) 
       </div>
 
       {data.narrative_summary && (
-        <div className="bg-indigo-50/80 border border-indigo-100 rounded-xl p-4 text-sm text-slate-700">
+        <div className="bg-[#FFF9F5] border border-[#D9D0C7] p-4 text-sm text-[#1A1816]">
           {data.narrative_summary}
         </div>
       )}
@@ -39,7 +39,7 @@ export function PersonalizationSection({ data }: { data: PersonalizationData }) 
           <div className="h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={scores} layout="vertical" margin={{ left: 24, right: 16 }}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200" />
+                <CartesianGrid strokeDasharray="none" stroke="#ebe8e3" strokeWidth={0.8} />
                 <XAxis type="number" domain={[0, 100]} />
                 <YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 12 }} />
                 <Tooltip />
@@ -57,7 +57,7 @@ export function PersonalizationSection({ data }: { data: PersonalizationData }) 
               <p className="text-xs text-slate-500 uppercase tracking-wide">Focus</p>
               <p className="font-semibold text-slate-900 mt-1">{f.label}</p>
               <div className="mt-2 h-2 bg-slate-100 rounded-full overflow-hidden">
-                <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${f.relevance}%` }} />
+                <div className="h-full bg-[#0D7680]" style={{ width: `${f.relevance}%` }} />
               </div>
               {f.rationale && <p className="text-xs text-slate-600 mt-2">{f.rationale}</p>}
             </div>

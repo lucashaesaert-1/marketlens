@@ -36,17 +36,17 @@ export function DimensionDeltasChart({ data, companies }: DimensionDeltasChartPr
           data={chartData}
           margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+          <CartesianGrid strokeDasharray="none" stroke="#ebe8e3" strokeWidth={0.8} />
           <XAxis
             dataKey="dimension"
             angle={-35}
             textAnchor="end"
             height={80}
-            tick={{ fill: "#64748b", fontSize: 11 }}
+            tick={{ fill: "#66605A", fontSize: 11 }}
           />
           <YAxis
             label={{ value: "Delta vs Benchmark", angle: -90, position: "insideLeft" }}
-            tick={{ fill: "#64748b", fontSize: 12 }}
+            tick={{ fill: "#66605A", fontSize: 12 }}
           />
           <Tooltip />
           <Legend />

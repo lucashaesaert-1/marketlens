@@ -7,63 +7,36 @@ interface NewsHeadlinesCardProps {
 }
 
 const sentimentConfig = {
-  positive: {
-    icon: TrendingUp,
-    color: "text-emerald-600",
-    bg: "bg-emerald-50",
-    border: "border-emerald-100",
-  },
-  negative: {
-    icon: TrendingDown,
-    color: "text-rose-600",
-    bg: "bg-rose-50",
-    border: "border-rose-100",
-  },
-  neutral: {
-    icon: Minus,
-    color: "text-slate-400",
-    bg: "bg-slate-50",
-    border: "border-slate-100",
-  },
+  positive: { icon: TrendingUp, color: "text-[#00994D]" },
+  negative: { icon: TrendingDown, color: "text-[#990F3D]" },
+  neutral:  { icon: Minus,       color: "text-[#A89E94]" },
 };
 
 export function NewsHeadlinesCard({ headlines, focalCompany }: NewsHeadlinesCardProps) {
   if (!headlines || headlines.length === 0) return null;
 
   return (
-    <div className="space-y-2">
+    <div className="divide-y divide-[#D9D0C7]">
       {headlines.map((h, i) => {
         const cfg = sentimentConfig[h.sentiment_hint] ?? sentimentConfig.neutral;
         const Icon = cfg.icon;
         return (
-          <div
-            key={i}
-            className={`flex items-start gap-3 p-3 rounded-lg border ${cfg.bg} ${cfg.border}`}
-          >
-            <div className={`mt-0.5 shrink-0 ${cfg.color}`}>
-              <Icon className="w-4 h-4" />
-            </div>
+          <div key={i} className="py-3 flex items-start gap-3">
+            <Icon className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${cfg.color}`} />
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-slate-900 leading-snug">{h.title}</p>
+              <p className="text-sm text-[#1A1816] leading-snug">{h.title}</p>
               {h.snippet && (
-                <p className="text-xs text-slate-500 mt-0.5 line-clamp-2">{h.snippet}</p>
+                <p className="text-xs text-[#66605A] mt-0.5 line-clamp-2">{h.snippet}</p>
               )}
               <div className="flex items-center gap-2 mt-1">
-                {h.source && (
-                  <span className="text-xs text-slate-400">{h.source}</span>
-                )}
-                {h.date && (
-                  <span className="text-xs text-slate-300">· {h.date}</span>
-                )}
+                {h.source && <span className="text-[11px] text-[#A89E94] uppercase tracking-wide">{h.source}</span>}
+                {h.date && <span className="text-[11px] text-[#A89E94]">· {h.date}</span>}
               </div>
             </div>
-            <ExternalLink className="w-3.5 h-3.5 text-slate-300 shrink-0 mt-0.5" />
+            <ExternalLink className="w-3 h-3 text-[#A89E94] shrink-0 mt-0.5" />
           </div>
         );
       })}
-      <p className="text-xs text-slate-400 pt-1">
-        Live headlines via Google News · {focalCompany}
-      </p>
     </div>
   );
 }

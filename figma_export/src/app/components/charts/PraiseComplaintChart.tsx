@@ -28,12 +28,12 @@ export function PraiseComplaintChart({ data, companies }: PraiseComplaintChartPr
           layout="vertical"
           margin={{ top: 10, right: 30, left: 80, bottom: 10 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-          <XAxis type="number" tick={{ fill: "#64748b", fontSize: 12 }} />
+          <CartesianGrid strokeDasharray="none" stroke="#ebe8e3" strokeWidth={0.8} />
+          <XAxis type="number" tick={{ fill: "#66605A", fontSize: 12 }} />
           <YAxis
             type="category"
             dataKey="company"
-            tick={{ fill: "#64748b", fontSize: 12 }}
+            tick={{ fill: "#66605A", fontSize: 12 }}
             width={70}
           />
           <Tooltip
@@ -41,8 +41,8 @@ export function PraiseComplaintChart({ data, companies }: PraiseComplaintChartPr
               if (active && payload && payload.length) {
                 const d = payload[0].payload;
                 return (
-                  <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-200">
-                    <p className="font-semibold text-slate-900">{d.company}</p>
+                  <div className="bg-white p-3 rounded-lg shadow-lg border border-[#D9D0C7]">
+                    <p className="font-semibold text-[#1A1816]">{d.company}</p>
                     <p className="text-sm text-emerald-600">Praise: {d.praise}</p>
                     <p className="text-sm text-rose-600">Complaint: {d.complaint}</p>
                   </div>

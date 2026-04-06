@@ -31,7 +31,7 @@ export function ProtectedLayout() {
   if (authState === "loading" || !profile) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-slate-50">
-        <Loader2 className="w-10 h-10 animate-spin text-indigo-600" />
+        <Loader2 className="w-10 h-10 animate-spin text-[#990F3D]" />
       </div>
     );
   }

@@ -37,7 +37,7 @@ export function DashboardChat(props: { industry: string; audience: Audience }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-full bg-indigo-600 text-white shadow-lg hover:bg-indigo-700"
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 bg-[#990F3D] text-white shadow-lg hover:bg-[#7B0B31]"
         aria-label="Open assistant"
       >
         <MessageCircle className="w-5 h-5" />
@@ -45,9 +45,9 @@ export function DashboardChat(props: { industry: string; audience: Audience }) {
       </button>
 
       {open && (
-        <div className="fixed bottom-24 right-6 z-50 w-[min(100vw-2rem,420px)] shadow-2xl rounded-xl overflow-hidden bg-white border border-slate-200">
-          <div className="flex items-center justify-between px-3 py-2 bg-slate-50 border-b border-slate-200">
-            <span className="text-sm font-medium text-slate-800">Dashboard assistant</span>
+        <div className="fixed bottom-24 right-6 z-50 w-[min(100vw-2rem,420px)] shadow-2xl overflow-hidden bg-white border border-[#D9D0C7]">
+          <div className="flex items-center justify-between px-3 py-2 bg-[#F2EDE8] border-b border-[#D9D0C7]">
+            <span className="text-sm font-medium text-[#1A1816]">Dashboard assistant</span>
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setOpen(false)}>
               <X className="w-4 h-4" />
             </Button>

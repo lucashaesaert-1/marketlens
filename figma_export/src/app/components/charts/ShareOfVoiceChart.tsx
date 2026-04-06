@@ -35,12 +35,12 @@ export function ShareOfVoiceChart({ data, companies }: ShareOfVoiceChartProps) {
               if (active && payload && payload.length) {
                 const p = payload[0].payload;
                 return (
-                  <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-200">
-                    <p className="font-semibold text-slate-900">{p.name}</p>
-                    <p className="text-sm text-slate-600 mt-1">
+                  <div className="bg-white p-3 rounded-lg shadow-lg border border-[#D9D0C7]">
+                    <p className="font-semibold text-[#1A1816]">{p.name}</p>
+                    <p className="text-sm text-[#66605A] mt-1">
                       Reviews: {p.size?.toLocaleString()}
                     </p>
-                    <p className="text-sm text-slate-600">
+                    <p className="text-sm text-[#66605A]">
                       Share: {p.value}%
                     </p>
                   </div>

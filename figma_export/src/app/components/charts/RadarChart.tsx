@@ -30,14 +30,14 @@ export function RadarChart({ dimensions, companies }: RadarChartProps) {
     <div className="w-full h-[400px]">
       <ResponsiveContainer width="100%" height="100%">
         <RechartsRadar data={data} cx="50%" cy="50%" outerRadius="70%">
-          <PolarGrid stroke="#e2e8f0" />
+          <PolarGrid stroke="#ebe8e3" strokeWidth={0.8} />
           <PolarAngleAxis
             dataKey="dimension"
-            tick={{ fill: "#64748b", fontSize: 11 }}
+            tick={{ fill: "#66605A", fontSize: 11 }}
           />
           <PolarRadiusAxis
             domain={[0, 100]}
-            tick={{ fill: "#64748b", fontSize: 10 }}
+            tick={{ fill: "#66605A", fontSize: 10 }}
           />
           {companies.map((c, i) => (
             <Radar

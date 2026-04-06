@@ -25,7 +25,6 @@ import { NewsHeadlinesCard } from "./cards/NewsHeadlinesCard";
 import { FinanceDataCard } from "./cards/FinanceDataCard";
 import { GlassdoorCard } from "./cards/GlassdoorCard";
 
-/** Which charts each audience sees. Investors: market share, churn, growth. Companies: praise/complaint, gaps, support. Customers: value, ease of use. */
 const CHARTS_BY_AUDIENCE: Record<Audience, Set<string>> = {
   investors: new Set(["positioning", "sentiment", "shareOfVoice", "churnFlows", "dimensionBenchmarking", "newsHeadlines", "financeData"]),
   companies: new Set(["radar", "heatmap", "praiseComplaint", "dimensionDeltas", "dimensionBenchmarking", "glassdoorData"]),
@@ -39,6 +38,17 @@ const AUDIENCE_TABS: { key: Audience; label: string }[] = [
   { key: "companies", label: "Companies" },
   { key: "customers", label: "Customers" },
 ];
+
+/** Thin rule separating chart sections — FT editorial style */
+const RULE = "border-t border-[#D9D0C7]";
+/** Source attribution line under every chart */
+function Source({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="mt-3 text-[11px] text-[#66605A] uppercase tracking-wide">
+      {children}
+    </p>
+  );
+}
 
 export function Dashboard() {
   const params = useParams();
@@ -70,8 +80,8 @@ export function Dashboard() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
-          <p className="text-slate-600">Loading {industry} analysis…</p>
+          <Loader2 className="w-8 h-8 text-[#990F3D] animate-spin" />
+          <p className="text-[#66605A] text-sm">Loading {industry} analysis…</p>
         </div>
       </div>
     );
@@ -80,9 +90,9 @@ export function Dashboard() {
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="bg-rose-50 border border-rose-200 rounded-xl p-8 max-w-md text-center">
-          <p className="font-semibold text-rose-900">Failed to load data</p>
-          <p className="text-sm text-rose-700 mt-2">{error}</p>
+        <div className="border border-[#D9D0C7] border-l-4 border-l-[#990F3D] p-8 max-w-md">
+          <p className="font-semibold text-[#1A1816]">Failed to load data</p>
+          <p className="text-sm text-[#66605A] mt-2">{error}</p>
           <Button
             variant="outline"
             className="mt-4"
@@ -102,9 +112,7 @@ export function Dashboard() {
     );
   }
 
-  if (!data) {
-    return null;
-  }
+  if (!data) return null;
 
   const allInsights = data.insights[audience];
   const displayInsights = briefInsights ? allInsights.slice(0, 4) : allInsights;
@@ -113,24 +121,22 @@ export function Dashboard() {
     const text = displayInsights
       .map((i) => `• ${i.title}\n${i.description}${i.metrics?.length ? `\n  ${i.metrics.join("; ")}` : ""}`)
       .join("\n\n");
-    void navigator.clipboard.writeText(text).then(
-      () => {},
-      () => alert("Could not copy to clipboard")
-    );
+    void navigator.clipboard.writeText(text).then(() => {}, () => alert("Could not copy to clipboard"));
   };
 
   return (
-    <div className="max-w-[1600px] mx-auto space-y-6">
-      {/* Audience Tabs */}
-      <div className="flex gap-1 border-b border-slate-200">
+    <div className="max-w-[1600px] mx-auto">
+
+      {/* ── Audience tabs ── */}
+      <div className="flex border-b border-[#D9D0C7]">
         {AUDIENCE_TABS.map(({ key, label }) => (
           <button
             key={key}
             onClick={() => navigate(`/${industry}/${key}`)}
-            className={`px-5 py-2.5 text-sm font-medium rounded-t-lg transition-colors ${
+            className={`px-5 py-3 text-sm font-medium transition-colors ${
               audience === key
-                ? "bg-white border border-b-white border-slate-200 text-indigo-600 -mb-px"
-                : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
+                ? "border-b-2 border-[#990F3D] text-[#990F3D] -mb-px"
+                : "text-[#66605A] hover:text-[#1A1816]"
             }`}
           >
             {label}
@@ -138,168 +144,149 @@ export function Dashboard() {
         ))}
       </div>
 
-      {/* Mock data warning */}
+      {/* ── Demo data notice ── */}
       {data._meta?.isMock && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2 text-sm text-amber-800 flex items-center gap-2">
-          <span className="font-semibold">Demo data</span>
-          — scores are template estimates. Run an analysis to load real review data.
+        <div className="border-l-4 border-[#F2720C] bg-[#FFF9F5] px-4 py-2.5 mt-0 border-t border-[#D9D0C7]">
+          <span className="text-sm text-[#1A1816]">
+            <span className="font-semibold">Demo data</span> — scores are template estimates. Run an analysis to load real review data.
+          </span>
         </div>
       )}
-      {/* Key Metrics Row */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <MetricCard
-          icon={Target}
-          label="Companies Analyzed"
-          value={data.companies.length.toString()}
-          sublabel="Market leaders"
-        />
-        <MetricCard
-          icon={BarChart3}
-          label="Total Reviews"
-          value={formatNumber(
-            data.companies.reduce((sum, c) => sum + c.reviewCount, 0)
-          )}
-          sublabel="Customer data points"
-        />
-        <MetricCard
-          icon={TrendingUp}
-          label="Dimensions Tracked"
-          value={data.dimensions.length.toString()}
-          sublabel="Competitive factors"
-        />
-        <MetricCard
-          icon={Lightbulb}
-          label="AI Insights"
-          value={allInsights.length.toString()}
-          sublabel={briefInsights ? "Showing brief subset" : "Actionable recommendations"}
-        />
+
+      {/* ── Key metrics ── */}
+      <div className={`grid grid-cols-2 md:grid-cols-4 ${RULE} border-b border-[#D9D0C7] divide-x divide-[#D9D0C7]`}>
+        <MetricCard icon={Target} label="Companies Analyzed" value={data.companies.length.toString()} sublabel="Market leaders" />
+        <MetricCard icon={BarChart3} label="Total Reviews" value={formatNumber(data.companies.reduce((s, c) => s + c.reviewCount, 0))} sublabel="Customer data points" />
+        <MetricCard icon={TrendingUp} label="Dimensions Tracked" value={data.dimensions.length.toString()} sublabel="Competitive factors" />
+        <MetricCard icon={Lightbulb} label="AI Insights" value={allInsights.length.toString()} sublabel={briefInsights ? "Showing brief subset" : "Actionable recommendations"} />
       </div>
 
-      {/* Main Dashboard Grid - unified layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* ── Main chart grid ── */}
+      <div className={`grid grid-cols-1 lg:grid-cols-2 ${RULE}
+        [&>*]:border-b [&>*]:border-[#D9D0C7]
+        [&>*:nth-child(odd)]:lg:border-r [&>*:nth-child(odd)]:lg:border-[#D9D0C7]
+        [&>*:nth-child(odd)]:lg:pr-8
+        [&>*:nth-child(even)]:lg:pl-8`}
+      >
         {CHARTS_BY_AUDIENCE[audience].has("positioning") && (
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
-            <div className="mb-4">
-              <h2 className="font-semibold text-slate-900">Competitive Positioning</h2>
-              <p className="text-sm text-slate-500 mt-1">Price vs. Perceived Customer Value Matrix</p>
-            </div>
-            <div className="flex-1 min-h-[300px]">
+          <div className="py-8 flex flex-col">
+            <h2 className="text-base font-serif font-semibold text-[#1A1816]">Competitive Positioning</h2>
+            <p className="text-sm text-[#66605A] mt-0.5">Price vs. perceived customer value</p>
+            <div className="flex-1 min-h-[300px] mt-5">
               <PositioningMap companies={data.companies} />
             </div>
+            <Source>Source: Review scores · MarketLens AI analysis</Source>
           </div>
         )}
 
         {CHARTS_BY_AUDIENCE[audience].has("sentiment") && (
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
-            <div className="mb-4">
-              <h2 className="font-semibold text-slate-900">Sentiment Trends</h2>
-              <p className="text-sm text-slate-500 mt-1">6-month customer sentiment analysis</p>
-            </div>
-            <div className="flex-1 min-h-[300px]">
+          <div className="py-8 flex flex-col">
+            <h2 className="text-base font-serif font-semibold text-[#1A1816]">Sentiment Trends</h2>
+            <p className="text-sm text-[#66605A] mt-0.5">6-month customer sentiment index</p>
+            <div className="flex-1 min-h-[300px] mt-5">
               <SentimentAnalysis trends={data.sentimentTrends} companies={data.companies} />
             </div>
+            <Source>Source: Google Trends · SerpAPI</Source>
           </div>
         )}
 
         {CHARTS_BY_AUDIENCE[audience].has("radar") && (
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
-            <div className="mb-4">
-              <h2 className="font-semibold text-slate-900">Radar: Dimension Comparison</h2>
-              <p className="text-sm text-slate-500 mt-1">Per-company scores across dimensions</p>
-            </div>
-            <div className="flex-1 min-h-[300px]">
+          <div className="py-8 flex flex-col">
+            <h2 className="text-base font-serif font-semibold text-[#1A1816]">Dimension Comparison</h2>
+            <p className="text-sm text-[#66605A] mt-0.5">Per-company scores across dimensions</p>
+            <div className="flex-1 min-h-[300px] mt-5">
               <RadarChart dimensions={data.dimensions} companies={data.companies} />
             </div>
+            <Source>Source: Customer reviews · MarketLens AI scoring</Source>
           </div>
         )}
 
         {CHARTS_BY_AUDIENCE[audience].has("heatmap") && (
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
-            <div className="mb-4">
-              <h2 className="font-semibold text-slate-900">Heatmap: Dimension x Company</h2>
-              <p className="text-sm text-slate-500 mt-1">Score matrix (0-100)</p>
-            </div>
-            <div className="flex-1 min-h-[300px]">
+          <div className="py-8 flex flex-col">
+            <h2 className="text-base font-serif font-semibold text-[#1A1816]">Score Matrix</h2>
+            <p className="text-sm text-[#66605A] mt-0.5">Dimension × company heatmap (0–100)</p>
+            <div className="flex-1 min-h-[300px] mt-5">
               <HeatmapChart dimensions={data.dimensions} companies={data.companies} />
             </div>
+            <Source>Source: Customer reviews · MarketLens AI scoring</Source>
           </div>
         )}
 
         {CHARTS_BY_AUDIENCE[audience].has("praiseComplaint") && data.praiseComplaintThemes && (
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
-            <div className="mb-4">
-              <h2 className="font-semibold text-slate-900">Praise vs Complaint Themes</h2>
-              <p className="text-sm text-slate-500 mt-1">Sentiment themes by company</p>
-            </div>
-            <div className="flex-1 min-h-[300px]">
+          <div className="py-8 flex flex-col">
+            <h2 className="text-base font-serif font-semibold text-[#1A1816]">Praise vs Complaint Themes</h2>
+            <p className="text-sm text-[#66605A] mt-0.5">Sentiment themes by company</p>
+            <div className="flex-1 min-h-[300px] mt-5">
               <PraiseComplaintChart data={data.praiseComplaintThemes} companies={data.companies} />
             </div>
+            <Source>Source: Customer reviews · MarketLens AI NLP</Source>
           </div>
         )}
 
         {CHARTS_BY_AUDIENCE[audience].has("shareOfVoice") && data.shareOfVoice && (
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
-            <div className="mb-4">
-              <h2 className="font-semibold text-slate-900">Share of Voice</h2>
-              <p className="text-sm text-slate-500 mt-1">Review volume by company</p>
-            </div>
-            <div className="flex-1 min-h-[300px]">
+          <div className="py-8 flex flex-col">
+            <h2 className="text-base font-serif font-semibold text-[#1A1816]">Share of Voice</h2>
+            <p className="text-sm text-[#66605A] mt-0.5">Review volume by company</p>
+            <div className="flex-1 min-h-[300px] mt-5">
               <ShareOfVoiceChart data={data.shareOfVoice} companies={data.companies} />
             </div>
+            <Source>Source: Review volume · Google Trends · SerpAPI</Source>
           </div>
         )}
 
         {CHARTS_BY_AUDIENCE[audience].has("dimensionDeltas") && data.dimensionDeltas && (
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
-            <div className="mb-4">
-              <h2 className="font-semibold text-slate-900">Score Deltas vs Benchmark</h2>
-              <p className="text-sm text-slate-500 mt-1">Dimension performance vs category average</p>
-            </div>
-            <div className="flex-1 min-h-[300px]">
+          <div className="py-8 flex flex-col">
+            <h2 className="text-base font-serif font-semibold text-[#1A1816]">Score Deltas vs Benchmark</h2>
+            <p className="text-sm text-[#66605A] mt-0.5">Performance vs category average</p>
+            <div className="flex-1 min-h-[300px] mt-5">
               <DimensionDeltasChart data={data.dimensionDeltas} companies={data.companies} />
             </div>
+            <Source>Source: Customer reviews · MarketLens AI scoring</Source>
           </div>
         )}
       </div>
 
-      {/* Google Finance + News — investors only */}
-      {(CHARTS_BY_AUDIENCE[audience].has("financeData") || CHARTS_BY_AUDIENCE[audience].has("newsHeadlines")) && (
-        (data.financeData && Object.keys(data.financeData).length > 0) ||
-        (data.newsHeadlines && data.newsHeadlines.length > 0)
-      ) && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* ── Finance + News (investors) ── */}
+      {(CHARTS_BY_AUDIENCE[audience].has("financeData") || CHARTS_BY_AUDIENCE[audience].has("newsHeadlines")) &&
+        ((data.financeData && Object.keys(data.financeData).length > 0) ||
+          (data.newsHeadlines && data.newsHeadlines.length > 0)) && (
+        <div className={`grid grid-cols-1 lg:grid-cols-2
+          [&>*]:border-b [&>*]:border-[#D9D0C7]
+          [&>*:nth-child(odd)]:lg:border-r [&>*:nth-child(odd)]:lg:border-[#D9D0C7]
+          [&>*:nth-child(odd)]:lg:pr-8
+          [&>*:nth-child(even)]:lg:pl-8`}
+        >
           {CHARTS_BY_AUDIENCE[audience].has("financeData") && data.financeData && Object.keys(data.financeData).length > 0 && (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <div className="mb-4">
-                <h2 className="font-semibold text-slate-900">Market Data</h2>
-                <p className="text-sm text-slate-500 mt-1">Live stock quotes for public companies</p>
+            <div className="py-8">
+              <h2 className="text-base font-serif font-semibold text-[#1A1816]">Market Data</h2>
+              <p className="text-sm text-[#66605A] mt-0.5">Live stock quotes for public companies</p>
+              <div className="mt-5">
+                <FinanceDataCard financeData={data.financeData} />
               </div>
-              <FinanceDataCard financeData={data.financeData} />
+              <Source>Source: Alpha Vantage · Prices may be delayed 15 min</Source>
             </div>
           )}
           {CHARTS_BY_AUDIENCE[audience].has("newsHeadlines") && data.newsHeadlines && data.newsHeadlines.length > 0 && (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <div className="mb-4">
-                <h2 className="font-semibold text-slate-900">Recent News</h2>
-                <p className="text-sm text-slate-500 mt-1">Latest headlines for the focal company</p>
+            <div className="py-8">
+              <h2 className="text-base font-serif font-semibold text-[#1A1816]">Recent News</h2>
+              <p className="text-sm text-[#66605A] mt-0.5">Latest headlines for the focal company</p>
+              <div className="mt-5">
+                <NewsHeadlinesCard headlines={data.newsHeadlines} focalCompany={data.companies[0]?.name ?? ""} />
               </div>
-              <NewsHeadlinesCard
-                headlines={data.newsHeadlines}
-                focalCompany={data.companies[0]?.name ?? ""}
-              />
             </div>
           )}
         </div>
       )}
 
-      {/* Glassdoor employee ratings — companies + customers */}
+      {/* ── Glassdoor ── */}
       {CHARTS_BY_AUDIENCE[audience].has("glassdoorData") && data.glassdoorData && Object.keys(data.glassdoorData).length > 0 && (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-          <div className="mb-4">
-            <h2 className="font-semibold text-slate-900">Employee Sentiment (Glassdoor)</h2>
-            <p className="text-sm text-slate-500 mt-1">Aggregate employee ratings by company</p>
+        <div className={`${RULE} border-b border-[#D9D0C7] py-8`}>
+          <h2 className="text-base font-serif font-semibold text-[#1A1816]">Employee Sentiment</h2>
+          <p className="text-sm text-[#66605A] mt-0.5">Aggregate employee ratings by company</p>
+          <div className="mt-5">
+            <GlassdoorCard glassdoorData={data.glassdoorData} />
           </div>
-          <GlassdoorCard glassdoorData={data.glassdoorData} />
+          <Source>Source: Glassdoor · via Google Search · SerpAPI</Source>
         </div>
       )}
 
@@ -307,74 +294,46 @@ export function Dashboard() {
         <PersonalizationSection data={data.personalization} />
       )}
 
-      {/* Dimension Benchmarking - all audiences */}
+      {/* ── Dimension Benchmarking ── */}
       {CHARTS_BY_AUDIENCE[audience].has("dimensionBenchmarking") && (
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-        <div className="mb-4">
-          <h2 className="font-semibold text-slate-900">
-            Dimension-by-Dimension Benchmarking
-          </h2>
-          <p className="text-sm text-slate-500 mt-1">
-            Performance scores across key customer dimensions (0-100 scale)
-          </p>
+        <div className={`${RULE} border-b border-[#D9D0C7] py-8`}>
+          <h2 className="text-base font-serif font-semibold text-[#1A1816]">Dimension Benchmarking</h2>
+          <p className="text-sm text-[#66605A] mt-0.5">Performance scores across key dimensions (0–100 scale)</p>
+          <div className="mt-5">
+            <DimensionBenchmarking dimensions={data.dimensions} companies={data.companies} />
+          </div>
+          <Source>Source: Customer reviews · MarketLens AI scoring</Source>
         </div>
-        <DimensionBenchmarking
-          dimensions={data.dimensions}
-          companies={data.companies}
-        />
-      </div>
       )}
 
-      {/* AI-Synthesized Insights */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-        <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      {/* ── AI Insights ── */}
+      <div className={`${RULE} py-8`}>
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
           <div>
-            <h2 className="font-semibold text-slate-900">
-              AI-Synthesized Insights
-            </h2>
-            <p className="text-sm text-slate-500 mt-1">
-              Strategic insights tailored for {audience}
+            <h2 className="text-base font-serif font-semibold text-[#1A1816]">AI-Synthesised Insights</h2>
+            <p className="text-sm text-[#66605A] mt-0.5">
+              Strategic intelligence tailored for {audience}
               {briefInsights && allInsights.length > 4 ? ` — showing ${displayInsights.length} of ${allInsights.length}` : ""}
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
             <div className="flex items-center gap-2">
-              <Switch
-                id="brief-insights"
-                checked={briefInsights}
-                onCheckedChange={setBriefInsights}
-              />
-              <Label htmlFor="brief-insights" className="text-xs text-slate-600 cursor-pointer">
+              <Switch id="brief-insights" checked={briefInsights} onCheckedChange={setBriefInsights} />
+              <Label htmlFor="brief-insights" className="text-xs text-[#66605A] cursor-pointer font-normal">
                 Executive brief
               </Label>
             </div>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="text-xs h-8"
-              onClick={() => void copyInsightsText()}
-            >
-              <Copy className="w-3.5 h-3.5 mr-1" />
-              Copy
+            <Button type="button" variant="outline" size="sm" className="text-xs h-7 border-[#D9D0C7] text-[#66605A] hover:text-[#1A1816]" onClick={() => void copyInsightsText()}>
+              <Copy className="w-3 h-3 mr-1" />Copy
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="text-xs h-8"
-              onClick={() =>
-                void downloadScoresCsv(industry).catch((e: unknown) =>
-                  alert(e instanceof Error ? e.message : "Export failed")
-                )
-              }
-            >
-              <Download className="w-3.5 h-3.5 mr-1" />
-              Scores CSV
+            <Button type="button" variant="outline" size="sm" className="text-xs h-7 border-[#D9D0C7] text-[#66605A] hover:text-[#1A1816]"
+              onClick={() => void downloadScoresCsv(industry).catch((e: unknown) => alert(e instanceof Error ? e.message : "Export failed"))}>
+              <Download className="w-3 h-3 mr-1" />Scores CSV
             </Button>
           </div>
         </div>
         <InsightsPanel insights={displayInsights} />
+        <Source>Source: MarketLens AI · Groq LLaMA 3 · based on aggregated review data</Source>
       </div>
 
       <DashboardChat industry={industry} audience={audience} />
@@ -394,27 +353,19 @@ function MetricCard({
   sublabel: string;
 }) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <p className="text-sm text-slate-500">{label}</p>
-          <p className="text-2xl font-semibold text-slate-900 mt-2">{value}</p>
-          <p className="text-xs text-slate-400 mt-1">{sublabel}</p>
-        </div>
-        <div className="flex items-center justify-center w-10 h-10 bg-indigo-50 rounded-lg">
-          <Icon className="w-5 h-5 text-indigo-600" />
-        </div>
+    <div className="px-6 py-5">
+      <div className="flex items-center gap-2 mb-1">
+        <Icon className="w-3.5 h-3.5 text-[#990F3D] shrink-0" />
+        <p className="text-[11px] text-[#66605A] uppercase tracking-wide">{label}</p>
       </div>
+      <p className="font-serif text-3xl font-semibold text-[#1A1816]">{value}</p>
+      <p className="text-xs text-[#66605A] mt-0.5">{sublabel}</p>
     </div>
   );
 }
 
 function formatNumber(num: number): string {
-  if (num >= 1000000) {
-    return (num / 1000000).toFixed(1) + "M";
-  }
-  if (num >= 1000) {
-    return (num / 1000).toFixed(0) + "K";
-  }
+  if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + "M";
+  if (num >= 1_000) return (num / 1_000).toFixed(0) + "K";
   return num.toString();
 }

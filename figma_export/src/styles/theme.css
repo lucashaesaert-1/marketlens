@@ -2,83 +2,93 @@
 
 :root {
   --font-size: 16px;
-  --background: #ffffff;
-  --foreground: oklch(0.145 0 0);
-  --card: #ffffff;
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #030213;
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.0058 264.53);
-  --secondary-foreground: #030213;
-  --muted: #ececf0;
-  --muted-foreground: #717182;
-  --accent: #e9ebef;
-  --accent-foreground: #030213;
-  --destructive: #d4183d;
-  --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.1);
+
+  /* ── FT / Economist-inspired palette ── */
+  --background: #FFF9F5;              /* warm paper */
+  --foreground: #1A1816;              /* warm near-black */
+  --card: #FFFFFF;
+  --card-foreground: #1A1816;
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1816;
+  --primary: #990F3D;                 /* FT crimson */
+  --primary-foreground: #FFFFFF;
+  --secondary: #F2EDE8;              /* warm off-white */
+  --secondary-foreground: #1A1816;
+  --muted: #F2EDE8;
+  --muted-foreground: #66605A;
+  --accent: #F2EDE8;
+  --accent-foreground: #1A1816;
+  --destructive: #C0392B;
+  --destructive-foreground: #FFFFFF;
+  --border: #D9D0C7;
   --input: transparent;
-  --input-background: #f3f3f5;
-  --switch-background: #cbced4;
+  --input-background: #F2EDE8;
+  --switch-background: #D9D0C7;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --ring: #990F3D;
+
+  /* ── FT chart palette ── */
+  --chart-1: #0D7680;                 /* FT teal */
+  --chart-2: #990F3D;                 /* FT crimson */
+  --chart-3: #F2720C;                 /* FT orange */
+  --chart-4: #593380;                 /* FT purple */
+  --chart-5: #00994D;                 /* FT green */
+
+  /* ── No rounding ── */
+  --radius: 0rem;
+
+  /* ── Sidebar ── */
+  --sidebar: #F2EDE8;
+  --sidebar-foreground: #1A1816;
+  --sidebar-primary: #990F3D;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #E8E1D9;
+  --sidebar-accent-foreground: #1A1816;
+  --sidebar-border: #D9D0C7;
+  --sidebar-ring: #990F3D;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
+  --background: #1A1816;
+  --foreground: #F2EDE8;
+  --card: #231F1C;
+  --card-foreground: #F2EDE8;
+  --popover: #231F1C;
+  --popover-foreground: #F2EDE8;
+  --primary: #F2EDE8;
+  --primary-foreground: #1A1816;
+  --secondary: #2E2A27;
+  --secondary-foreground: #F2EDE8;
+  --muted: #2E2A27;
+  --muted-foreground: #A89E94;
+  --accent: #2E2A27;
+  --accent-foreground: #F2EDE8;
+  --destructive: #990F3D;
+  --destructive-foreground: #F2EDE8;
+  --border: #3D3733;
+  --input: #2E2A27;
+  --ring: #A89E94;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --chart-1: #0D7680;
+  --chart-2: #C4153F;
+  --chart-3: #F2720C;
+  --chart-4: #7B4DB0;
+  --chart-5: #00994D;
+  --sidebar: #231F1C;
+  --sidebar-foreground: #F2EDE8;
+  --sidebar-primary: #C4153F;
+  --sidebar-primary-foreground: #F2EDE8;
+  --sidebar-accent: #2E2A27;
+  --sidebar-accent-foreground: #F2EDE8;
+  --sidebar-border: #3D3733;
+  --sidebar-ring: #A89E94;
 }
 
 @theme inline {
+  --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -105,10 +115,10 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-sm: 0rem;
+  --radius-md: 0rem;
+  --radius-lg: 0rem;
+  --radius-xl: 0rem;
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -128,31 +138,29 @@
     @apply bg-background text-foreground;
   }
 
-  /**
-  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
-  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
-  */
-
   html {
     font-size: var(--font-size);
   }
 
   h1 {
+    font-family: var(--font-serif);
     font-size: var(--text-2xl);
     font-weight: var(--font-weight-medium);
-    line-height: 1.5;
+    line-height: 1.3;
   }
 
   h2 {
+    font-family: var(--font-serif);
     font-size: var(--text-xl);
     font-weight: var(--font-weight-medium);
-    line-height: 1.5;
+    line-height: 1.3;
   }
 
   h3 {
+    font-family: var(--font-serif);
     font-size: var(--text-lg);
     font-weight: var(--font-weight-medium);
-    line-height: 1.5;
+    line-height: 1.3;
   }
 
   h4 {

@@ -25,33 +25,33 @@ export function SentimentAnalysis({ trends, companies }: SentimentAnalysisProps)
           data={data}
           margin={{ top: 5, right: 20, bottom: 40, left: 20 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+          <CartesianGrid strokeDasharray="none" stroke="#ebe8e3" strokeWidth={0.8} />
           <XAxis
             dataKey="month"
-            tick={{ fill: "#64748b", fontSize: 12 }}
+            tick={{ fill: "#66605A", fontSize: 12 }}
             label={{
               value: "Month",
               position: "bottom",
               offset: 20,
-              style: { fill: "#64748b", fontSize: 12 },
+              style: { fill: "#66605A", fontSize: 12 },
             }}
           />
           <YAxis
             domain={[0, 100]}
-            tick={{ fill: "#64748b", fontSize: 12 }}
+            tick={{ fill: "#66605A", fontSize: 12 }}
             label={{
               value: "Sentiment Score (0-100)",
               angle: -90,
               position: "left",
-              style: { fill: "#64748b", fontSize: 12 },
+              style: { fill: "#66605A", fontSize: 12 },
             }}
           />
           <Tooltip
             content={({ active, payload, label }) => {
               if (active && payload && payload.length) {
                 return (
-                  <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-200">
-                    <p className="font-semibold text-slate-900 mb-2">{label}</p>
+                  <div className="bg-white p-3 rounded-lg shadow-lg border border-[#D9D0C7]">
+                    <p className="font-semibold text-[#1A1816] mb-2">{label}</p>
                     {payload.map((entry, index) => {
                       const company = companies.find((c) => c.id === entry.dataKey);
                       return (
@@ -61,11 +61,11 @@ export function SentimentAnalysis({ trends, companies }: SentimentAnalysisProps)
                               className="w-2 h-2 rounded-full"
                               style={{ backgroundColor: entry.color }}
                             />
-                            <span className="text-sm text-slate-600">
+                            <span className="text-sm text-[#66605A]">
                               {company?.name}
                             </span>
                           </div>
-                          <span className="text-sm font-medium text-slate-900">
+                          <span className="text-sm font-medium text-[#1A1816]">
                             {entry.value?.toFixed(1)}
                           </span>
                         </div>

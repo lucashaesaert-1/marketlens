@@ -95,19 +95,21 @@ export function Layout() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#FFF9F5]">
+      {/* FT-style thin crimson top bar */}
+      <div className="h-[3px] bg-[#990F3D]" />
       {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+      <header className="bg-white border-b border-[#D9D0C7] sticky top-0 z-50">
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-indigo-600 rounded-lg">
-                <Brain className="w-6 h-6 text-white" />
+              <div className="flex items-center justify-center w-9 h-9 bg-[#990F3D]">
+                <Brain className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="font-semibold text-slate-900">MarketLens AI</h1>
-                <p className="text-xs text-slate-500">
-                  AI-Powered Market Research Assistant
+                <h1 className="font-serif font-semibold text-[#1A1816] tracking-tight">MarketLens AI</h1>
+                <p className="text-xs text-[#66605A]">
+                  AI-Powered Market Intelligence
                 </p>
               </div>
             </div>
@@ -175,7 +177,7 @@ export function Layout() {
               <button
                 onClick={() => void handleRunAnalysis()}
                 disabled={analysisRunning}
-                className="flex items-center gap-2 px-4 h-9 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-4 h-9 bg-[#990F3D] text-white text-sm font-medium hover:bg-[#7B0B31] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {analysisRunning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
                 {analysisRunning ? (analysisStage ?? "Running…") : "Run Analysis"}

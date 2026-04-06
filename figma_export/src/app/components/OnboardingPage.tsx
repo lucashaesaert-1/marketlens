@@ -121,7 +121,7 @@ export function OnboardingPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <Loader2 className="w-10 h-10 animate-spin text-indigo-600" />
+        <Loader2 className="w-10 h-10 animate-spin text-[#990F3D]" />
       </div>
     );
   }
@@ -136,7 +136,7 @@ export function OnboardingPage() {
           </p>
           <Button
             type="button"
-            className="mt-5 w-full bg-indigo-600 hover:bg-indigo-700"
+            className="mt-5 w-full bg-[#990F3D] hover:bg-[#7B0B31]"
             onClick={() => {
               setErr(null);
               setLoading(true);
@@ -171,7 +171,7 @@ export function OnboardingPage() {
     <div className="min-h-[calc(100dvh-0px)] bg-slate-100/90">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 lg:py-8">
         <header className="mb-5 lg:mb-6">
-          <h1 className="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">Set up your analysis</h1>
+          <h1 className="font-serif text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">Set up your analysis</h1>
           <p className="text-slate-600 text-sm mt-1 max-w-2xl leading-snug">
             Pick your role and industry, chat with the assistant, then continue to the dashboard.
           </p>
@@ -194,7 +194,7 @@ export function OnboardingPage() {
                       <TabsTrigger
                         key={a}
                         value={a}
-                        className="flex flex-col items-center gap-1 py-2.5 px-1 sm:px-2 text-[11px] sm:text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-indigo-700 rounded-md"
+                        className="flex flex-col items-center gap-1 py-2.5 px-1 sm:px-2 text-[11px] sm:text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-[#990F3D] rounded-md"
                       >
                         <Icon className="w-4 h-4 shrink-0" />
                         <span className="capitalize leading-tight text-center">{a}</span>
@@ -234,7 +234,7 @@ export function OnboardingPage() {
                 <Button
                   type="button"
                   size="lg"
-                  className="w-full h-12 text-base font-medium bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm"
+                  className="w-full h-12 text-base font-medium bg-[#990F3D] hover:bg-[#7B0B31] text-white shadow-sm"
                   disabled={submitting}
                   onClick={() => void complete()}
                 >

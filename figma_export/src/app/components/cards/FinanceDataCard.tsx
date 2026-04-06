@@ -18,28 +18,28 @@ export function FinanceDataCard({ financeData }: FinanceDataCardProps) {
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-slate-100">
-            <th className="text-left pb-2 text-xs font-semibold text-slate-500 uppercase tracking-wide">Company</th>
-            <th className="text-right pb-2 text-xs font-semibold text-slate-500 uppercase tracking-wide">Ticker</th>
-            <th className="text-right pb-2 text-xs font-semibold text-slate-500 uppercase tracking-wide">Price</th>
-            <th className="text-right pb-2 text-xs font-semibold text-slate-500 uppercase tracking-wide">Change</th>
+          <tr className="border-b border-[#D9D0C7]">
+            <th className="text-left pb-2 text-[11px] font-semibold text-[#66605A] uppercase tracking-wide">Company</th>
+            <th className="text-right pb-2 text-[11px] font-semibold text-[#66605A] uppercase tracking-wide">Ticker</th>
+            <th className="text-right pb-2 text-[11px] font-semibold text-[#66605A] uppercase tracking-wide">Price</th>
+            <th className="text-right pb-2 text-[11px] font-semibold text-[#66605A] uppercase tracking-wide">Change</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-50">
+        <tbody className="divide-y divide-[#D9D0C7]">
           {entries.map(([company, q]) => {
             const isUp = (q.change ?? 0) >= 0;
-            const changeColor = isUp ? "text-emerald-600" : "text-rose-600";
+            const changeColor = isUp ? "text-[#00994D]" : "text-[#990F3D]";
             const sign = isUp ? "+" : "";
             return (
-              <tr key={company} className="hover:bg-slate-50 transition-colors">
-                <td className="py-2.5 font-medium text-slate-800">{company}</td>
-                <td className="py-2.5 text-right font-mono text-xs text-slate-400">
+              <tr key={company} className="hover:bg-[#FFF9F5] transition-colors">
+                <td className="py-2.5 font-medium text-[#1A1816]">{company}</td>
+                <td className="py-2.5 text-right font-mono text-xs text-[#A89E94]">
                   {q.ticker.split(":")[0]}
                 </td>
-                <td className="py-2.5 text-right font-semibold text-slate-900">
+                <td className="py-2.5 text-right font-semibold text-[#1A1816]">
                   {q.price != null ? (
                     <>
-                      <span className="text-xs text-slate-400 mr-1">{q.currency}</span>
+                      <span className="text-xs text-[#A89E94] mr-1">{q.currency}</span>
                       {fmt(q.price)}
                     </>
                   ) : "—"}

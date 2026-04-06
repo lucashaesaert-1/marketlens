@@ -128,8 +128,8 @@ export function ChatPanel(props: {
               className={cn(
                 "text-sm rounded-lg px-3 py-2.5",
                 m.role === "user"
-                  ? "self-end max-w-[88%] bg-indigo-50 text-slate-800 border border-indigo-100/80"
-                  : "self-stretch w-full bg-slate-50 text-slate-800 border border-slate-100 text-left"
+                  ? "self-end max-w-[88%] bg-[#F2EDE8] text-[#1A1816] border border-[#D9D0C7]"
+                  : "self-stretch w-full bg-[#FFF9F5] text-[#1A1816] border border-[#D9D0C7] text-left"
               )}
             >
               <span className="text-[10px] uppercase tracking-wide font-medium text-slate-400 block mb-1.5">

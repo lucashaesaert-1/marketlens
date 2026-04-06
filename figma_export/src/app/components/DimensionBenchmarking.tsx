@@ -20,16 +20,16 @@ export function DimensionBenchmarking({
       <table className="w-full">
         <thead>
           <tr className="border-b border-slate-200">
-            <th className="text-left py-3 px-4 text-sm font-semibold text-slate-900 bg-slate-50">
+            <th className="text-left py-3 px-4 text-xs font-semibold text-[#66605A] uppercase tracking-wide bg-[#F2EDE8]">
               Dimension
             </th>
-            <th className="text-center py-3 px-3 text-sm font-semibold text-slate-900 bg-slate-50 min-w-[100px]">
+            <th className="text-center py-3 px-3 text-xs font-semibold text-[#66605A] uppercase tracking-wide bg-[#F2EDE8] min-w-[100px]">
               Importance
             </th>
             {companies.map((company) => (
               <th
                 key={company.id}
-                className="text-center py-3 px-3 text-sm font-semibold text-slate-900 bg-slate-50 min-w-[120px]"
+                className="text-center py-3 px-3 text-xs font-semibold text-[#66605A] uppercase tracking-wide bg-[#F2EDE8] min-w-[120px]"
               >
                 {company.name}
               </th>
@@ -81,22 +81,22 @@ export function DimensionBenchmarking({
       </table>
 
       {/* Legend */}
-      <div className="mt-6 flex flex-wrap gap-6 justify-center text-xs text-slate-600">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded bg-emerald-100 border border-emerald-300" />
-          <span>Category Leader</span>
+      <div className="mt-4 flex flex-wrap gap-5 text-xs text-[#66605A]">
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 border border-[#0D7680] bg-[#E6F5F6]" />
+          <span>Category leader</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded bg-blue-100 border border-blue-300" />
-          <span>Above Average</span>
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 border border-[#0F5499] bg-[#EAF0F8]" />
+          <span>Above average</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded bg-slate-100 border border-slate-300" />
-          <span>Below Average</span>
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 border border-[#D9D0C7] bg-[#F2EDE8]" />
+          <span>Below average</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded bg-rose-100 border border-rose-300" />
-          <span>Needs Improvement</span>
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 border border-[#990F3D] bg-[#FAE8ED]" />
+          <span>Needs improvement</span>
         </div>
       </div>
     </div>
@@ -104,13 +104,13 @@ export function DimensionBenchmarking({
 }
 
 function ImportanceBadge({ importance }: { importance: number }) {
-  let colorClass = "bg-slate-100 text-slate-700";
+  let colorClass = "bg-[#F2EDE8] text-[#66605A]";
   if (importance >= 90) {
-    colorClass = "bg-rose-100 text-rose-700 font-semibold";
+    colorClass = "bg-[#FAE8ED] text-[#990F3D] font-semibold";
   } else if (importance >= 85) {
-    colorClass = "bg-orange-100 text-orange-700";
+    colorClass = "bg-[#FEF0E6] text-[#C05A0B]";
   } else if (importance >= 80) {
-    colorClass = "bg-amber-100 text-amber-700";
+    colorClass = "bg-[#FEF7E6] text-[#8A6300]";
   }
 
   return (
@@ -136,17 +136,17 @@ function ScoreCell({
   isAboveAvg: boolean;
   companyColor: string;
 }) {
-  let bgClass = "bg-slate-100 border-slate-300 text-slate-700";
+  let bgClass = "bg-[#F2EDE8] border-[#D9D0C7] text-[#66605A]";
   let icon = <Minus className="w-3 h-3" />;
 
   if (isLeader) {
-    bgClass = "bg-emerald-100 border-emerald-300 text-emerald-800 font-semibold";
+    bgClass = "bg-[#E6F5F6] border-[#0D7680] text-[#0D7680] font-semibold";
     icon = <ArrowUp className="w-3 h-3" />;
   } else if (isLaggard) {
-    bgClass = "bg-rose-100 border-rose-300 text-rose-800";
+    bgClass = "bg-[#FAE8ED] border-[#990F3D] text-[#990F3D]";
     icon = <ArrowDown className="w-3 h-3" />;
   } else if (isAboveAvg) {
-    bgClass = "bg-blue-100 border-blue-300 text-blue-800";
+    bgClass = "bg-[#EAF0F8] border-[#0F5499] text-[#0F5499]";
     icon = <ArrowUp className="w-3 h-3" />;
   }
 

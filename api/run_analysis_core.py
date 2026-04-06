@@ -189,7 +189,7 @@ def iter_run_analysis_events(req: RunAnalysisRequest) -> Iterator[dict[str, Any]
     Final event is always stage=complete or stage=error.
     """
     from industry_config import INDUSTRY_CONFIG, MOCK_INSIGHTS_BY_INDUSTRY
-    from pipeline import _env_int, build_client, compute_dimension_scores, generate_insights
+    from pipeline import _env_int, build_client, compute_dimension_scores, generate_insights, generate_executive_brief
 
     from api.audience_config import AUDIENCE_CONFIG
     from api.industry_service import set_industry_cache_entry
@@ -321,6 +321,16 @@ def iter_run_analysis_events(req: RunAnalysisRequest) -> Iterator[dict[str, Any]
             int((time.perf_counter() - t_ins) * 1000),
         )
 
+        executive_brief = generate_executive_brief(
+            scores,
+            client,
+            smart,
+            vertical=cfg["name"],
+            focal=cfg["focal"],
+            competitors=[c for c in cfg["companies"] if c != cfg["focal"]],
+        )
+        log.info("run_analysis executive_brief generated industry=%s", industry)
+
         # ── Real enrichments ──────────────────────────────────────────────────
         yield {"stage": "enriching", "message": "Computing real sentiment & themes…", "elapsed_ms": _elapsed_ms()}
 
@@ -399,6 +409,7 @@ def iter_run_analysis_events(req: RunAnalysisRequest) -> Iterator[dict[str, Any]
             news_headlines=news_headlines,
             finance_data=finance_data,
             glassdoor_data=glassdoor_data,
+            executive_brief=executive_brief or None,
         )
         msg = f"Analysis complete for {industry} (reviews: {fetch_source}). Refresh the dashboard."
         yield {

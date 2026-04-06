@@ -15,9 +15,7 @@ import {
   ChurnFlowChart,
   DimensionDeltasChart,
 } from "./charts";
-import { BarChart3, Target, TrendingUp, Lightbulb, Loader2, Copy, Download } from "lucide-react";
-import { Switch } from "./ui/switch";
-import { Label } from "./ui/label";
+import { BarChart3, Target, TrendingUp, Lightbulb, Loader2, Copy, Download, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "./ui/button";
 import { PersonalizationSection } from "./PersonalizationSection";
 import { DashboardChat } from "./DashboardChat";
@@ -31,7 +29,7 @@ const CHARTS_BY_AUDIENCE: Record<Audience, Set<string>> = {
   customers: new Set(["positioning", "radar", "praiseComplaint", "dimensionBenchmarking", "glassdoorData"]),
 };
 
-const BRIEF_INSIGHTS_KEY = "marketlens_brief_insights";
+const SHOW_INSIGHT_CARDS_KEY = "marketlens_show_insight_cards";
 
 const AUDIENCE_TABS: { key: Audience; label: string }[] = [
   { key: "investors", label: "Investors" },
@@ -59,8 +57,8 @@ export function Dashboard() {
   const [data, setData] = useState<IndustryData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [briefInsights, setBriefInsights] = useState(
-    () => typeof sessionStorage !== "undefined" && sessionStorage.getItem(BRIEF_INSIGHTS_KEY) === "1"
+  const [showInsightCards, setShowInsightCards] = useState(
+    () => typeof sessionStorage !== "undefined" ? sessionStorage.getItem(SHOW_INSIGHT_CARDS_KEY) !== "0" : true
   );
 
   useEffect(() => {
@@ -73,8 +71,8 @@ export function Dashboard() {
   }, [industry]);
 
   useEffect(() => {
-    sessionStorage.setItem(BRIEF_INSIGHTS_KEY, briefInsights ? "1" : "0");
-  }, [briefInsights]);
+    sessionStorage.setItem(SHOW_INSIGHT_CARDS_KEY, showInsightCards ? "1" : "0");
+  }, [showInsightCards]);
 
   if (loading) {
     return (
@@ -115,13 +113,13 @@ export function Dashboard() {
   if (!data) return null;
 
   const allInsights = data.insights[audience];
-  const displayInsights = briefInsights ? allInsights.slice(0, 4) : allInsights;
 
   const copyInsightsText = () => {
-    const text = displayInsights
+    const briefText = data?.executiveBrief ? `EXECUTIVE BRIEF\n${data.executiveBrief}\n\n` : "";
+    const cardsText = allInsights
       .map((i) => `• ${i.title}\n${i.description}${i.metrics?.length ? `\n  ${i.metrics.join("; ")}` : ""}`)
       .join("\n\n");
-    void navigator.clipboard.writeText(text).then(() => {}, () => alert("Could not copy to clipboard"));
+    void navigator.clipboard.writeText(briefText + cardsText).then(() => {}, () => alert("Could not copy to clipboard"));
   };
 
   return (
@@ -158,7 +156,7 @@ export function Dashboard() {
         <MetricCard icon={Target} label="Companies Analyzed" value={data.companies.length.toString()} sublabel="Market leaders" />
         <MetricCard icon={BarChart3} label="Total Reviews" value={formatNumber(data.companies.reduce((s, c) => s + c.reviewCount, 0))} sublabel="Customer data points" />
         <MetricCard icon={TrendingUp} label="Dimensions Tracked" value={data.dimensions.length.toString()} sublabel="Competitive factors" />
-        <MetricCard icon={Lightbulb} label="AI Insights" value={allInsights.length.toString()} sublabel={briefInsights ? "Showing brief subset" : "Actionable recommendations"} />
+        <MetricCard icon={Lightbulb} label="AI Insights" value={allInsights.length.toString()} sublabel="Actionable recommendations" />
       </div>
 
       {/* ── Main chart grid ── */}
@@ -311,18 +309,9 @@ export function Dashboard() {
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
           <div>
             <h2 className="text-base font-serif font-semibold text-[#1A1816]">AI-Synthesised Insights</h2>
-            <p className="text-sm text-[#66605A] mt-0.5">
-              Strategic intelligence tailored for {audience}
-              {briefInsights && allInsights.length > 4 ? ` — showing ${displayInsights.length} of ${allInsights.length}` : ""}
-            </p>
+            <p className="text-sm text-[#66605A] mt-0.5">Strategic intelligence tailored for {audience}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2 shrink-0">
-            <div className="flex items-center gap-2">
-              <Switch id="brief-insights" checked={briefInsights} onCheckedChange={setBriefInsights} />
-              <Label htmlFor="brief-insights" className="text-xs text-[#66605A] cursor-pointer font-normal">
-                Executive brief
-              </Label>
-            </div>
             <Button type="button" variant="outline" size="sm" className="text-xs h-7 border-[#D9D0C7] text-[#66605A] hover:text-[#1A1816]" onClick={() => void copyInsightsText()}>
               <Copy className="w-3 h-3 mr-1" />Copy
             </Button>
@@ -332,7 +321,28 @@ export function Dashboard() {
             </Button>
           </div>
         </div>
-        <InsightsPanel insights={displayInsights} />
+
+        {/* Executive Brief */}
+        {data.executiveBrief && (
+          <div className="mb-6 bg-[#F2EDE8] border border-[#D9D0C7] rounded-sm p-5">
+            <p className="text-xs font-semibold text-[#66605A] uppercase tracking-wide mb-2">Executive Brief</p>
+            <p className="text-sm text-[#1A1816] leading-relaxed">{data.executiveBrief}</p>
+          </div>
+        )}
+
+        {/* Toggle insight cards */}
+        <button
+          type="button"
+          onClick={() => setShowInsightCards(v => !v)}
+          className="flex items-center gap-1.5 text-xs text-[#66605A] hover:text-[#1A1816] mb-5 transition-colors"
+        >
+          {showInsightCards
+            ? <><ChevronUp className="w-3.5 h-3.5" />Hide detail cards</>
+            : <><ChevronDown className="w-3.5 h-3.5" />Show {allInsights.length} detail insight cards</>
+          }
+        </button>
+
+        {showInsightCards && <InsightsPanel insights={allInsights} />}
         <Source>Source: MarketLens AI · Groq LLaMA 3 · based on aggregated review data</Source>
       </div>
 

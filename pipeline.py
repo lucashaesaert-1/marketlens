@@ -401,6 +401,59 @@ def generate_insights(scores: dict, client, smart_model: str,
     return insights
 
 
+EXECUTIVE_BRIEF_PROMPT = """You are a senior market intelligence analyst writing a concise executive brief.
+
+Vertical: {vertical}
+Focal company: {focal}
+Competitors: {competitors}
+Dimension scores (0-100): {scores_json}
+
+Write a single flowing paragraph of 120-160 words that:
+1. Opens with the single most important competitive dynamic in this market
+2. Names specific companies and scores to support every claim
+3. Identifies the clearest winner and loser, and why
+4. Closes with the key strategic implication for decision-makers
+
+Tone: direct, confident, no hedging. No bullet points. No headers. Plain paragraph only.
+Return JSON: {{"brief": "<paragraph text>"}}"""
+
+
+def generate_executive_brief(
+    scores: dict,
+    client: Any,
+    smart_model: str,
+    vertical: Optional[str] = None,
+    focal: Optional[str] = None,
+    competitors: Optional[list] = None,
+) -> str:
+    """Generate a single executive brief paragraph from dimension scores."""
+    v = vertical or VERTICAL
+    f = focal or FOCAL_COMPANY
+    c = competitors or COMPETITORS
+    prompt = EXECUTIVE_BRIEF_PROMPT.format(
+        vertical=v,
+        focal=f,
+        competitors=", ".join(c),
+        scores_json=json.dumps(scores, separators=(",", ":")),
+    )
+    try:
+        response = client.chat.completions.create(
+            model=smart_model,
+            messages=[{"role": "user", "content": prompt}],
+            response_format={"type": "json_object"},
+            temperature=0.6,
+            max_tokens=512,
+        )
+        raw = response.choices[0].message.content
+        raw = raw.replace("\u2192", "->").replace("\u2013", "-").replace("\u2014", "-")
+        parsed = json.loads(raw)
+        brief = parsed.get("brief", "")
+        return brief if isinstance(brief, str) else ""
+    except Exception as e:
+        print(f"  Warning: executive brief generation failed: {e}")
+        return ""
+
+
 # ── KPI Computation ──────────────────────────────────────────────────────────
 
 def compute_kpis(scores: dict, reviews: list) -> dict:

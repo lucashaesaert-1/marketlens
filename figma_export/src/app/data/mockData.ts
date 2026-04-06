@@ -105,6 +105,8 @@ export interface IndustryData {
   financeData?: Record<string, FinanceQuote>;
   /** Glassdoor employee ratings keyed by company name — companies + customers audience */
   glassdoorData?: Record<string, GlassdoorSummary>;
+  /** AI-generated executive brief paragraph — present after Run Analysis */
+  executiveBrief?: string;
   _meta?: {
     industry: string;
     totalReviews: number;

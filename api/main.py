@@ -142,6 +142,7 @@ def _industry_payload(industry: str, db: Session, user):
         news_headlines=entry.get("news_headlines"),
         finance_data=entry.get("finance_data"),
         glassdoor_data=entry.get("glassdoor_data"),
+        executive_brief=entry.get("executive_brief"),
     )
     if user:
         prof = db.query(UserProfile).filter(UserProfile.user_id == user.id).first()

@@ -72,6 +72,7 @@ def build_industry_data(
     news_headlines: Optional[list] = None,
     finance_data: Optional[dict] = None,
     glassdoor_data: Optional[dict] = None,
+    executive_brief: Optional[str] = None,
 ) -> dict:
     cfg = INDUSTRY_CONFIG.get(industry)
     if not cfg:
@@ -221,6 +222,8 @@ def build_industry_data(
         payload["financeData"] = finance_data
     if glassdoor_data is not None:
         payload["glassdoorData"] = glassdoor_data
+    if executive_brief:
+        payload["executiveBrief"] = executive_brief
     return payload
 
 
@@ -301,6 +304,7 @@ def get_industry_cache_entry(industry: str) -> dict[str, Any]:
             "news_headlines": enrichments["news_headlines"],
             "finance_data": enrichments["finance_data"],
             "glassdoor_data": enrichments["glassdoor_data"],
+            "executive_brief": None,
         }
     return _cache[industry]
 
@@ -319,6 +323,7 @@ def set_industry_cache_entry(
     news_headlines: Optional[list] = None,
     finance_data: Optional[dict] = None,
     glassdoor_data: Optional[dict] = None,
+    executive_brief: Optional[str] = None,
 ) -> None:
     cfg = INDUSTRY_CONFIG.get(industry) or {}
     comps = list(cfg.get("companies") or [])
@@ -337,6 +342,7 @@ def set_industry_cache_entry(
     final_news = news_headlines if news_headlines is not None else existing.get("news_headlines")
     final_finance = finance_data if finance_data is not None else existing.get("finance_data")
     final_glassdoor = glassdoor_data if glassdoor_data is not None else existing.get("glassdoor_data")
+    final_brief = executive_brief if executive_brief is not None else existing.get("executive_brief")
 
     _cache[industry] = {
         "scores": scores,
@@ -349,6 +355,7 @@ def set_industry_cache_entry(
         "news_headlines": final_news,
         "finance_data": final_finance,
         "glassdoor_data": final_glassdoor,
+        "executive_brief": final_brief,
     }
 
 

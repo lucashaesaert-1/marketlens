@@ -22,11 +22,13 @@ import { DashboardChat } from "./DashboardChat";
 import { NewsHeadlinesCard } from "./cards/NewsHeadlinesCard";
 import { StockChartCard } from "./cards/StockChartCard";
 import { GlassdoorCard } from "./cards/GlassdoorCard";
+import { ComparisonTableCard } from "./cards/ComparisonTableCard";
+import { RecommendationCard } from "./cards/RecommendationCard";
 
 const CHARTS_BY_AUDIENCE: Record<Audience, Set<string>> = {
   investors: new Set(["positioning", "sentiment", "shareOfVoice", "churnFlows", "dimensionBenchmarking", "newsHeadlines", "financeData"]),
   companies: new Set(["radar", "heatmap", "praiseComplaint", "dimensionDeltas", "dimensionBenchmarking", "glassdoorData"]),
-  customers: new Set(["positioning", "radar", "praiseComplaint", "dimensionBenchmarking", "glassdoorData"]),
+  customers: new Set(["positioning", "radar", "praiseComplaint", "dimensionBenchmarking", "glassdoorData", "comparisonTable", "recommendations"]),
 };
 
 const SHOW_INSIGHT_CARDS_KEY = "marketlens_show_insight_cards";
@@ -288,6 +290,33 @@ export function Dashboard() {
             <GlassdoorCard glassdoorData={data.glassdoorData} />
           </div>
           <Source>Source: Glassdoor · via Google Search · SerpAPI</Source>
+        </div>
+      )}
+
+      {/* ── Customer comparison table ── */}
+      {CHARTS_BY_AUDIENCE[audience].has("comparisonTable") && (
+        <div className={`${RULE} border-b border-[#D9D0C7] py-8`}>
+          <h2 className="text-base font-serif font-semibold text-[#1A1816]">Head-to-Head Comparison</h2>
+          <p className="text-sm text-[#66605A] mt-0.5">All companies scored across every dimension — winner highlighted per row</p>
+          <div className="mt-5">
+            <ComparisonTableCard companies={data.companies} dimensions={data.dimensions} />
+          </div>
+          <Source>Source: Customer reviews · MarketLens AI scoring</Source>
+        </div>
+      )}
+
+      {/* ── Customer recommendations ── */}
+      {CHARTS_BY_AUDIENCE[audience].has("recommendations") && data.customerRecommendations && data.customerRecommendations.length > 0 && (
+        <div className={`${RULE} border-b border-[#D9D0C7] py-8`}>
+          <h2 className="text-base font-serif font-semibold text-[#1A1816]">Which Should You Choose?</h2>
+          <p className="text-sm text-[#66605A] mt-0.5">AI-matched recommendations by buyer profile</p>
+          <div className="mt-5">
+            <RecommendationCard
+              recommendations={data.customerRecommendations}
+              colorMap={Object.fromEntries(data.companies.map(c => [c.name, c.color]))}
+            />
+          </div>
+          <Source>Source: MarketLens AI · based on aggregated review scores</Source>
         </div>
       )}
 

@@ -116,6 +116,8 @@ export interface IndustryData {
   glassdoorData?: Record<string, GlassdoorSummary>;
   /** AI-generated executive brief paragraph — present after Run Analysis */
   executiveBrief?: string;
+  /** Customer-facing recommendations — present after Run Analysis */
+  customerRecommendations?: { company: string; label: string; reason: string }[];
   _meta?: {
     industry: string;
     totalReviews: number;

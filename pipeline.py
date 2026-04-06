@@ -454,6 +454,65 @@ def generate_executive_brief(
         return ""
 
 
+RECOMMENDATION_PROMPT = """You are a market analyst helping a customer choose between competing products.
+
+Vertical: {vertical}
+Companies: {companies}
+Dimension scores (0-100, higher = better customer experience):
+{scores_json}
+
+Write 3-4 short recommendation entries. Each entry recommends ONE company for a specific use case or buyer profile.
+Return JSON:
+{{
+  "recommendations": [
+    {{
+      "company": "<company name exactly as given>",
+      "label": "<5-8 word use case, e.g. 'Best for small teams on a budget'>",
+      "reason": "<1-2 sentences citing specific scores>"
+    }}
+  ]
+}}
+
+Rules:
+- Cover different buyer profiles (e.g. SMB, enterprise, price-sensitive, quality-focused)
+- Each company appears at most once
+- Only use company names from the list above
+- No generic advice — cite actual dimension scores"""
+
+
+def generate_recommendation(
+    scores: dict,
+    client: Any,
+    smart_model: str,
+    vertical: Optional[str] = None,
+    companies: Optional[list] = None,
+) -> list:
+    """Generate 3-4 customer recommendation entries from dimension scores."""
+    v = vertical or VERTICAL
+    c = companies or COMPETITORS
+    prompt = RECOMMENDATION_PROMPT.format(
+        vertical=v,
+        companies=", ".join(c),
+        scores_json=json.dumps(scores, separators=(",", ":")),
+    )
+    try:
+        response = client.chat.completions.create(
+            model=smart_model,
+            messages=[{"role": "user", "content": prompt}],
+            response_format={"type": "json_object"},
+            temperature=0.6,
+            max_tokens=512,
+        )
+        raw = response.choices[0].message.content
+        raw = raw.replace("\u2192", "->").replace("\u2013", "-").replace("\u2014", "-")
+        parsed = json.loads(raw)
+        recs = parsed.get("recommendations", [])
+        return recs if isinstance(recs, list) else []
+    except Exception as e:
+        print(f"  Warning: recommendation generation failed: {e}")
+        return []
+
+
 # ── KPI Computation ──────────────────────────────────────────────────────────
 
 def compute_kpis(scores: dict, reviews: list) -> dict:

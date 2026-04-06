@@ -113,8 +113,8 @@ export function StockChartCard({ financeData, colorMap = {} }: StockChartCardPro
             ))}
           </div>
 
-          <ResponsiveContainer width="100%" height={260}>
-            <LineChart data={chartData} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
+          <ResponsiveContainer width="100%" height={280}>
+            <LineChart data={chartData} margin={{ top: 4, right: 8, bottom: 16, left: 0 }}>
               <CartesianGrid strokeDasharray="none" stroke="#ebe8e3" strokeWidth={0.8} />
               <XAxis
                 dataKey="date"

@@ -1,4 +1,4 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, ReferenceLine } from "recharts";
 import { Company, SentimentTrend } from "../data/mockData";
 
 interface SentimentAnalysisProps {
@@ -19,54 +19,44 @@ export function SentimentAnalysis({ trends, companies }: SentimentAnalysisProps)
   });
 
   return (
-    <div className="w-full h-[400px]">
+    <div className="w-full h-[340px]">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}
-          margin={{ top: 5, right: 20, bottom: 40, left: 20 }}
+          margin={{ top: 5, right: 16, bottom: 8, left: 0 }}
         >
           <CartesianGrid strokeDasharray="none" stroke="#ebe8e3" strokeWidth={0.8} />
           <XAxis
             dataKey="month"
-            tick={{ fill: "#66605A", fontSize: 12 }}
-            label={{
-              value: "Month",
-              position: "bottom",
-              offset: 20,
-              style: { fill: "#66605A", fontSize: 12 },
-            }}
+            tick={{ fill: "#66605A", fontSize: 11 }}
+            tickLine={false}
           />
           <YAxis
             domain={[0, 100]}
-            tick={{ fill: "#66605A", fontSize: 12 }}
-            label={{
-              value: "Sentiment Score (0-100)",
-              angle: -90,
-              position: "left",
-              style: { fill: "#66605A", fontSize: 12 },
-            }}
+            tick={{ fill: "#66605A", fontSize: 11 }}
+            tickLine={false}
+            axisLine={false}
+            width={32}
+            tickFormatter={(v: number) => `${v}`}
           />
+          <ReferenceLine y={50} stroke="#D9D0C7" strokeDasharray="4 2" label={{ value: "neutral", position: "insideTopRight", fontSize: 10, fill: "#A89E94" }} />
           <Tooltip
+            contentStyle={{ border: "1px solid #D9D0C7", borderRadius: 4, fontSize: 12 }}
             content={({ active, payload, label }) => {
               if (active && payload && payload.length) {
                 return (
-                  <div className="bg-white p-3 rounded-lg shadow-lg border border-[#D9D0C7]">
-                    <p className="font-semibold text-[#1A1816] mb-2">{label}</p>
+                  <div className="bg-white p-3 shadow-lg border border-[#D9D0C7]" style={{ borderRadius: 4 }}>
+                    <p className="font-semibold text-[#1A1816] mb-2 text-xs">{label}</p>
                     {payload.map((entry, index) => {
                       const company = companies.find((c) => c.id === entry.dataKey);
                       return (
                         <div key={index} className="flex items-center justify-between gap-3">
                           <div className="flex items-center gap-2">
-                            <div
-                              className="w-2 h-2 rounded-full"
-                              style={{ backgroundColor: entry.color }}
-                            />
-                            <span className="text-sm text-[#66605A]">
-                              {company?.name}
-                            </span>
+                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color as string }} />
+                            <span className="text-xs text-[#66605A]">{company?.name}</span>
                           </div>
-                          <span className="text-sm font-medium text-[#1A1816]">
-                            {entry.value?.toFixed(1)}
+                          <span className="text-xs font-medium text-[#1A1816]">
+                            {typeof entry.value === "number" ? entry.value.toFixed(1) : entry.value}
                           </span>
                         </div>
                       );
@@ -77,6 +67,12 @@ export function SentimentAnalysis({ trends, companies }: SentimentAnalysisProps)
               return null;
             }}
           />
+          <Legend
+            iconType="circle"
+            iconSize={8}
+            wrapperStyle={{ fontSize: 11, paddingTop: 10 }}
+            formatter={(value: string) => companies.find((c) => c.id === value)?.name ?? value}
+          />
           {companies.map((company) => (
             <Line
               key={company.id}
@@ -84,20 +80,12 @@ export function SentimentAnalysis({ trends, companies }: SentimentAnalysisProps)
               dataKey={company.id}
               stroke={company.color}
               strokeWidth={2}
-              dot={{ fill: company.color, r: 3 }}
-              activeDot={{ r: 5 }}
+              dot={false}
+              activeDot={{ r: 4 }}
             />
           ))}
         </LineChart>
       </ResponsiveContainer>
-
-      {/* Reference Line */}
-      <div className="mt-2 flex items-center justify-center gap-2 text-xs text-slate-500">
-        <div className="flex items-center gap-1">
-          <div className="w-8 h-px bg-slate-300" />
-          <span>50 = Neutral sentiment</span>
-        </div>
-      </div>
     </div>
   );
 }

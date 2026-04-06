@@ -170,6 +170,8 @@ class RunAnalysisRequest(BaseModel):
     industry: str = "crm"
     resource_keys: Optional[Dict[str, str]] = None
     use_live_sources: bool = True
+    audience: Optional[str] = None
+    user_context: Optional[str] = None
 
 
 def _apply_env_from_request(req: RunAnalysisRequest) -> None:
@@ -189,7 +191,7 @@ def iter_run_analysis_events(req: RunAnalysisRequest) -> Iterator[dict[str, Any]
     Final event is always stage=complete or stage=error.
     """
     from industry_config import INDUSTRY_CONFIG, MOCK_INSIGHTS_BY_INDUSTRY
-    from pipeline import _env_int, build_client, compute_dimension_scores, generate_insights, generate_executive_brief, generate_recommendation, generate_competitor_gap
+    from pipeline import _env_int, build_client, compute_dimension_scores, generate_insights, generate_executive_brief, generate_recommendation, generate_competitor_gap, select_representative_reviews
 
     from api.audience_config import AUDIENCE_CONFIG
     from api.industry_service import set_industry_cache_entry
@@ -306,6 +308,16 @@ def iter_run_analysis_events(req: RunAnalysisRequest) -> Iterator[dict[str, Any]
         use_cases = []
         for ac in AUDIENCE_CONFIG.values():
             use_cases.extend(uc["question"] for uc in ac.get("use_cases", []))
+        # Build user context string from request audience + any explicit context
+        user_context: Optional[str] = req.user_context
+        if req.audience and not user_context:
+            audience_hints = {
+                "investors": "The user is an investor. Emphasise growth signals, valuation, and risk.",
+                "companies": "The user is a company/product team. Emphasise competitive gaps, complaints, and actionable product moves.",
+                "customers": "The user is a buyer evaluating options. Emphasise value for money, ease of use, and support quality.",
+            }
+            user_context = audience_hints.get(req.audience)
+
         insights = generate_insights(
             scores,
             client,
@@ -314,6 +326,7 @@ def iter_run_analysis_events(req: RunAnalysisRequest) -> Iterator[dict[str, Any]
             focal=cfg["focal"],
             competitors=[c for c in cfg["companies"] if c != cfg["focal"]],
             use_cases=use_cases if use_cases else None,
+            user_context=user_context,
         )
         log.info(
             "run_analysis insights_done industry=%s ms=%s",
@@ -339,6 +352,10 @@ def iter_run_analysis_events(req: RunAnalysisRequest) -> Iterator[dict[str, Any]
             companies=cfg["companies"],
         )
         log.info("run_analysis recommendations generated industry=%s count=%s", industry, len(customer_recommendations))
+
+        # ── Representative reviews for display ───────────────────────────────
+        representative_reviews = select_representative_reviews(reviews, companies, per_company=2)
+        log.info("run_analysis representative_reviews selected industry=%s count=%s", industry, len(representative_reviews))
 
         # ── Real enrichments ──────────────────────────────────────────────────
         yield {"stage": "enriching", "message": "Computing real sentiment & themes…", "elapsed_ms": _elapsed_ms()}
@@ -433,6 +450,7 @@ def iter_run_analysis_events(req: RunAnalysisRequest) -> Iterator[dict[str, Any]
             executive_brief=executive_brief or None,
             customer_recommendations=customer_recommendations or None,
             competitor_gap=competitor_gap or None,
+            representative_reviews=representative_reviews or None,
         )
         msg = f"Analysis complete for {industry} (reviews: {fetch_source}). Refresh the dashboard."
         yield {

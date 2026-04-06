@@ -62,6 +62,8 @@ export async function runAnalysisStream(
     apiKey?: string;
     resourceKeys?: Record<string, string>;
     onEvent?: (e: AnalysisStreamEvent) => void;
+    audience?: string;
+    userContext?: string;
   } = {}
 ): Promise<{ status: string; message?: string }> {
   const res = await fetch(`${API_BASE}/run-analysis/stream`, {
@@ -73,6 +75,8 @@ export async function runAnalysisStream(
       api_key: opts.apiKey ?? null,
       resource_keys: opts.resourceKeys ?? null,
       use_live_sources: true,
+      audience: opts.audience ?? null,
+      user_context: opts.userContext ?? null,
     }),
   });
   if (!res.ok) {

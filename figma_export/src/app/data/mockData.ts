@@ -120,6 +120,8 @@ export interface IndustryData {
   customerRecommendations?: { company: string; label: string; reason: string }[];
   /** Competitor gap analysis for companies audience — present after Run Analysis */
   competitorGap?: { theme: string; competitor_mentions: string[]; focal_status: string; impact: string; suggestion: string }[];
+  /** Curated representative reviews selected after scoring — companies + customers */
+  representativeReviews?: { company: string; rating: number; sentiment: "positive" | "negative"; text: string; date: string | null }[];
   _meta?: {
     industry: string;
     totalReviews: number;

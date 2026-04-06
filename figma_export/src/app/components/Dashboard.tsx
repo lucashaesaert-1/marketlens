@@ -25,11 +25,12 @@ import { GlassdoorCard } from "./cards/GlassdoorCard";
 import { ComparisonTableCard } from "./cards/ComparisonTableCard";
 import { RecommendationCard } from "./cards/RecommendationCard";
 import { CompetitorGapCard } from "./cards/CompetitorGapCard";
+import { RepresentativeReviewsCard } from "./cards/RepresentativeReviewsCard";
 
 const CHARTS_BY_AUDIENCE: Record<Audience, Set<string>> = {
   investors: new Set(["positioning", "sentiment", "shareOfVoice", "churnFlows", "dimensionBenchmarking", "newsHeadlines", "financeData"]),
-  companies: new Set(["radar", "heatmap", "praiseComplaint", "dimensionDeltas", "dimensionBenchmarking", "glassdoorData", "competitorGap"]),
-  customers: new Set(["positioning", "radar", "praiseComplaint", "dimensionBenchmarking", "glassdoorData", "comparisonTable", "recommendations"]),
+  companies: new Set(["radar", "heatmap", "praiseComplaint", "dimensionDeltas", "dimensionBenchmarking", "glassdoorData", "competitorGap", "representativeReviews"]),
+  customers: new Set(["positioning", "radar", "praiseComplaint", "dimensionBenchmarking", "glassdoorData", "comparisonTable", "recommendations", "representativeReviews"]),
 };
 
 const SHOW_INSIGHT_CARDS_KEY = "marketlens_show_insight_cards";
@@ -335,6 +336,21 @@ export function Dashboard() {
             />
           </div>
           <Source>Source: MarketLens AI · based on aggregated review scores</Source>
+        </div>
+      )}
+
+      {/* ── Representative reviews (companies + customers) ── */}
+      {CHARTS_BY_AUDIENCE[audience].has("representativeReviews") && data.representativeReviews && data.representativeReviews.length > 0 && (
+        <div className={`${RULE} border-b border-[#D9D0C7] py-8`}>
+          <h2 className="text-base font-serif font-semibold text-[#1A1816]">What Customers Are Saying</h2>
+          <p className="text-sm text-[#66605A] mt-0.5">Most representative reviews from the scored dataset</p>
+          <div className="mt-5">
+            <RepresentativeReviewsCard
+              reviews={data.representativeReviews}
+              colorMap={Object.fromEntries(data.companies.map(c => [c.name, c.color]))}
+            />
+          </div>
+          <Source>Source: Customer reviews · selected by MarketLens AI scoring</Source>
         </div>
       )}
 

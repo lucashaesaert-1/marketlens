@@ -359,14 +359,17 @@ Return JSON:
 def generate_insights(scores: dict, client, smart_model: str,
                      vertical: Optional[str] = None, focal: Optional[str] = None,
                      competitors: Optional[list] = None,
-                     use_cases: Optional[list[str]] = None) -> list:
-    """Synthesise 5 strategic insights using a frontier/smart model."""
+                     use_cases: Optional[list[str]] = None,
+                     user_context: Optional[str] = None) -> list:
+    """Synthesise strategic insights using a frontier/smart model."""
     v = vertical or VERTICAL
     f = focal or FOCAL_COMPANY
     c = competitors or COMPETITORS
     uc_section = ""
     if use_cases:
         uc_section = "\nPrioritise insights that address these audience questions:\n" + "\n".join(f"  - {q}" for q in use_cases)
+    if user_context:
+        uc_section += f"\n\nUser context (tailor insight framing to this):\n{user_context}"
     prompt = SYNTHESIS_PROMPT.format(
         vertical=v,
         focal=f,
@@ -548,6 +551,66 @@ Rules:
 - Each company appears at most once
 - Only use company names from the list above
 - No generic advice — cite actual dimension scores"""
+
+
+def select_representative_reviews(
+    reviews: list,
+    companies: list,
+    per_company: int = 2,
+) -> list:
+    """
+    Pick representative reviews for display: 1 high-rated + 1 low-rated per company.
+    Returns list of {company, rating, text, date} dicts, max 280 chars of text each.
+    """
+    buckets: dict = {c: {"high": [], "low": []} for c in companies}
+    for r in reviews:
+        co = r.get("company")
+        if co not in buckets:
+            continue
+        text = str(r.get("text", "")).strip()
+        if len(text) < 30:
+            continue
+        try:
+            rating = float(r.get("rating", 3))
+        except (TypeError, ValueError):
+            rating = 3.0
+        if rating >= 4.0:
+            buckets[co]["high"].append((rating, len(text), r))
+        elif rating <= 2.5:
+            buckets[co]["low"].append((rating, len(text), r))
+
+    result = []
+    for company in companies:
+        # Sort: highest rating + longest text first for positive; lowest rating first for negative
+        highs = sorted(buckets[company]["high"], key=lambda x: (-x[0], -x[1]))
+        lows = sorted(buckets[company]["low"], key=lambda x: (x[0], -x[1]))
+
+        picks = []
+        if highs:
+            picks.append(("positive", highs[0][2]))
+        if lows:
+            picks.append(("negative", lows[0][2]))
+        if not picks and buckets[company]["high"]:
+            picks = [("positive", buckets[company]["high"][0][2])]
+        elif not picks and buckets[company]["low"]:
+            picks = [("negative", buckets[company]["low"][0][2])]
+
+        for sentiment, r in picks[:per_company]:
+            try:
+                rating_val = round(float(r.get("rating", 3)), 1)
+            except (TypeError, ValueError):
+                rating_val = 3.0
+            text = str(r.get("text", "")).strip()
+            date_raw = str(r.get("date", ""))
+            result.append({
+                "company": company,
+                "rating": rating_val,
+                "sentiment": sentiment,
+                "text": text[:280],
+                "date": date_raw[:10] if date_raw else None,
+            })
+
+    return result
 
 
 def generate_recommendation(

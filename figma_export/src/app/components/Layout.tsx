@@ -75,6 +75,7 @@ export function Layout() {
       await runAnalysisStream(currentIndustry, {
         provider: llmProvider,
         resourceKeys: trustpilotKey ? { trustpilot: trustpilotKey } : undefined,
+        audience: currentAudience,
         onEvent: (e) => {
           if (e.message) setAnalysisStage(e.message);
         },

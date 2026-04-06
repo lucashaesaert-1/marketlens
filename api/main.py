@@ -145,6 +145,7 @@ def _industry_payload(industry: str, db: Session, user):
         executive_brief=entry.get("executive_brief"),
         customer_recommendations=entry.get("customer_recommendations"),
         competitor_gap=entry.get("competitor_gap"),
+        representative_reviews=entry.get("representative_reviews"),
     )
     if user:
         prof = db.query(UserProfile).filter(UserProfile.user_id == user.id).first()

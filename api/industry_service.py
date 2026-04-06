@@ -75,6 +75,7 @@ def build_industry_data(
     executive_brief: Optional[str] = None,
     customer_recommendations: Optional[list] = None,
     competitor_gap: Optional[list] = None,
+    representative_reviews: Optional[list] = None,
 ) -> dict:
     cfg = INDUSTRY_CONFIG.get(industry)
     if not cfg:
@@ -230,6 +231,8 @@ def build_industry_data(
         payload["customerRecommendations"] = customer_recommendations
     if competitor_gap:
         payload["competitorGap"] = competitor_gap
+    if representative_reviews:
+        payload["representativeReviews"] = representative_reviews
     return payload
 
 
@@ -313,6 +316,7 @@ def get_industry_cache_entry(industry: str) -> dict[str, Any]:
             "executive_brief": None,
             "customer_recommendations": None,
             "competitor_gap": None,
+            "representative_reviews": None,
         }
     return _cache[industry]
 
@@ -334,6 +338,7 @@ def set_industry_cache_entry(
     executive_brief: Optional[str] = None,
     customer_recommendations: Optional[list] = None,
     competitor_gap: Optional[list] = None,
+    representative_reviews: Optional[list] = None,
 ) -> None:
     cfg = INDUSTRY_CONFIG.get(industry) or {}
     comps = list(cfg.get("companies") or [])
@@ -355,6 +360,7 @@ def set_industry_cache_entry(
     final_brief = executive_brief if executive_brief is not None else existing.get("executive_brief")
     final_recs = customer_recommendations if customer_recommendations is not None else existing.get("customer_recommendations")
     final_gap = competitor_gap if competitor_gap is not None else existing.get("competitor_gap")
+    final_rr = representative_reviews if representative_reviews is not None else existing.get("representative_reviews")
 
     _cache[industry] = {
         "scores": scores,
@@ -370,6 +376,7 @@ def set_industry_cache_entry(
         "executive_brief": final_brief,
         "customer_recommendations": final_recs,
         "competitor_gap": final_gap,
+        "representative_reviews": final_rr,
     }
 
 

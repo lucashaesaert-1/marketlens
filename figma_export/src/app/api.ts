@@ -1,7 +1,7 @@
 import type { IndustryData } from "./data/mockData";
 import { authHeaders } from "./auth";
 
-const API_BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : "/api";
+export const API_BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : "/api";
 
 export async function fetchIndustries(): Promise<{ id: string; name: string }[]> {
   const res = await fetch(`${API_BASE}/industries`, { headers: authHeaders() });

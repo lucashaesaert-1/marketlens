@@ -1,3 +1,5 @@
+import { API_BASE } from "./api";
+
 const TOKEN_KEY = "insightengine_token";
 
 export function getToken(): string | null {
@@ -43,7 +45,7 @@ async function fetchWithTimeout(
 }
 
 export async function fetchProfile(): Promise<UserProfile> {
-  const res = await fetchWithTimeout("/api/profile", { headers: authHeaders() });
+  const res = await fetchWithTimeout(`${API_BASE}/profile`, { headers: authHeaders() });
   if (!res.ok) throw new Error("Failed to load profile");
   const raw = (await res.json()) as Record<string, unknown>;
   return {

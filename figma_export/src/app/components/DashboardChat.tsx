@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { MessageCircle, X } from "lucide-react";
 import { authHeaders } from "../auth";
+import { API_BASE } from "../api";
 import type { Audience } from "../data/mockData";
 import { ChatPanel } from "./ChatPanel";
 import { Button } from "./ui/button";
@@ -13,7 +14,7 @@ export function DashboardChat(props: { industry: string; audience: Audience }) {
   useEffect(() => {
     if (!open || sessionId !== null) return;
     (async () => {
-      const res = await fetch("/api/chat/session", {
+      const res = await fetch(`${API_BASE}/chat/session`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify({ purpose: "dashboard", industry }),

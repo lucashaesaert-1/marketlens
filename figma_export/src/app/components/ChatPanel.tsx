@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Send, Loader2 } from "lucide-react";
 import { authHeaders } from "../auth";
+import { API_BASE } from "../api";
 import { cn } from "./ui/utils";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
@@ -17,7 +18,7 @@ async function streamChat(
   audience: string | null,
   onToken: (t: string) => void
 ): Promise<void> {
-  const res = await fetch("/api/chat/stream", {
+  const res = await fetch(`${API_BASE}/chat/stream`, {
     method: "POST",
     headers: authHeaders(),
     body: JSON.stringify({ session_id: sessionId, industry, audience, content }),

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Building2, Loader2, TrendingUp, Users } from "lucide-react";
 import { authHeaders } from "../auth";
-import { fetchIndustries } from "../api";
+import { fetchIndustries, API_BASE } from "../api";
 import type { Audience } from "../data/mockData";
 import { audienceDescriptions } from "../data/mockData";
 import { ChatPanel } from "./ChatPanel";
@@ -65,7 +65,7 @@ export function OnboardingPage() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch("/api/chat/session", {
+        const res = await fetch(`${API_BASE}/chat/session`, {
           method: "POST",
           headers: authHeaders(),
           body: JSON.stringify({ purpose: "onboarding", industry: null }),
@@ -96,7 +96,7 @@ export function OnboardingPage() {
     setSubmitting(true);
     setErr(null);
     try {
-      const res = await fetch("/api/onboarding/complete", {
+      const res = await fetch(`${API_BASE}/onboarding/complete`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify({
@@ -140,7 +140,7 @@ export function OnboardingPage() {
             onClick={() => {
               setErr(null);
               setLoading(true);
-              void fetch("/api/chat/session", {
+              void fetch(`${API_BASE}/chat/session`, {
                 method: "POST",
                 headers: authHeaders(),
                 body: JSON.stringify({ purpose: "onboarding", industry: null }),

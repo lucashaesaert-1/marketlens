@@ -175,99 +175,92 @@ export function Dashboard() {
         />
       </div>
 
-      {/* Main Dashboard Grid - audience-specific */}
+      {/* Main Dashboard Grid - unified layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {CHARTS_BY_AUDIENCE[audience].has("positioning") && (
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
             <div className="mb-4">
               <h2 className="font-semibold text-slate-900">Competitive Positioning</h2>
               <p className="text-sm text-slate-500 mt-1">Price vs. Perceived Customer Value Matrix</p>
             </div>
-            <PositioningMap companies={data.companies} />
+            <div className="flex-1 min-h-[300px]">
+              <PositioningMap companies={data.companies} />
+            </div>
           </div>
         )}
+
         {CHARTS_BY_AUDIENCE[audience].has("sentiment") && (
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
             <div className="mb-4">
               <h2 className="font-semibold text-slate-900">Sentiment Trends</h2>
               <p className="text-sm text-slate-500 mt-1">6-month customer sentiment analysis</p>
             </div>
-            <SentimentAnalysis trends={data.sentimentTrends} companies={data.companies} />
+            <div className="flex-1 min-h-[300px]">
+              <SentimentAnalysis trends={data.sentimentTrends} companies={data.companies} />
+            </div>
+          </div>
+        )}
+
+        {CHARTS_BY_AUDIENCE[audience].has("radar") && (
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
+            <div className="mb-4">
+              <h2 className="font-semibold text-slate-900">Radar: Dimension Comparison</h2>
+              <p className="text-sm text-slate-500 mt-1">Per-company scores across dimensions</p>
+            </div>
+            <div className="flex-1 min-h-[300px]">
+              <RadarChart dimensions={data.dimensions} companies={data.companies} />
+            </div>
+          </div>
+        )}
+
+        {CHARTS_BY_AUDIENCE[audience].has("heatmap") && (
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
+            <div className="mb-4">
+              <h2 className="font-semibold text-slate-900">Heatmap: Dimension x Company</h2>
+              <p className="text-sm text-slate-500 mt-1">Score matrix (0-100)</p>
+            </div>
+            <div className="flex-1 min-h-[300px]">
+              <HeatmapChart dimensions={data.dimensions} companies={data.companies} />
+            </div>
+          </div>
+        )}
+
+        {CHARTS_BY_AUDIENCE[audience].has("praiseComplaint") && data.praiseComplaintThemes && (
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
+            <div className="mb-4">
+              <h2 className="font-semibold text-slate-900">Praise vs Complaint Themes</h2>
+              <p className="text-sm text-slate-500 mt-1">Sentiment themes by company</p>
+            </div>
+            <div className="flex-1 min-h-[300px]">
+              <PraiseComplaintChart data={data.praiseComplaintThemes} companies={data.companies} />
+            </div>
+          </div>
+        )}
+
+        {CHARTS_BY_AUDIENCE[audience].has("shareOfVoice") && data.shareOfVoice && (
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
+            <div className="mb-4">
+              <h2 className="font-semibold text-slate-900">Share of Voice</h2>
+              <p className="text-sm text-slate-500 mt-1">Review volume by company</p>
+            </div>
+            <div className="flex-1 min-h-[300px]">
+              <ShareOfVoiceChart data={data.shareOfVoice} companies={data.companies} />
+            </div>
+          </div>
+        )}
+
+        {CHARTS_BY_AUDIENCE[audience].has("dimensionDeltas") && data.dimensionDeltas && (
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
+            <div className="mb-4">
+              <h2 className="font-semibold text-slate-900">Score Deltas vs Benchmark</h2>
+              <p className="text-sm text-slate-500 mt-1">Dimension performance vs category average</p>
+            </div>
+            <div className="flex-1 min-h-[300px]">
+              <DimensionDeltasChart data={data.dimensionDeltas} companies={data.companies} />
+            </div>
           </div>
         )}
       </div>
-
-      {/* Radar & Heatmap - companies only */}
-      {(CHARTS_BY_AUDIENCE[audience].has("radar") || CHARTS_BY_AUDIENCE[audience].has("heatmap")) && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {CHARTS_BY_AUDIENCE[audience].has("radar") && (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <div className="mb-4">
-                <h2 className="font-semibold text-slate-900">Radar: Dimension Comparison</h2>
-                <p className="text-sm text-slate-500 mt-1">Per-company scores across dimensions</p>
-              </div>
-              <RadarChart dimensions={data.dimensions} companies={data.companies} />
-            </div>
-          )}
-          {CHARTS_BY_AUDIENCE[audience].has("heatmap") && (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <div className="mb-4">
-                <h2 className="font-semibold text-slate-900">Heatmap: Dimension x Company</h2>
-                <p className="text-sm text-slate-500 mt-1">Score matrix (0-100)</p>
-              </div>
-              <HeatmapChart dimensions={data.dimensions} companies={data.companies} />
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Praise vs Complaint & Share of Voice */}
-      {(CHARTS_BY_AUDIENCE[audience].has("praiseComplaint") || CHARTS_BY_AUDIENCE[audience].has("shareOfVoice")) && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {CHARTS_BY_AUDIENCE[audience].has("praiseComplaint") && data.praiseComplaintThemes && (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <div className="mb-4">
-                <h2 className="font-semibold text-slate-900">Praise vs Complaint Themes</h2>
-                <p className="text-sm text-slate-500 mt-1">Sentiment themes by company</p>
-              </div>
-              <PraiseComplaintChart data={data.praiseComplaintThemes} companies={data.companies} />
-            </div>
-          )}
-          {CHARTS_BY_AUDIENCE[audience].has("shareOfVoice") && data.shareOfVoice && (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <div className="mb-4">
-                <h2 className="font-semibold text-slate-900">Share of Voice</h2>
-                <p className="text-sm text-slate-500 mt-1">Review volume by company</p>
-              </div>
-              <ShareOfVoiceChart data={data.shareOfVoice} companies={data.companies} />
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Churn Flows & Dimension Deltas - investors & companies */}
-      {(CHARTS_BY_AUDIENCE[audience].has("churnFlows") || CHARTS_BY_AUDIENCE[audience].has("dimensionDeltas")) && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {CHARTS_BY_AUDIENCE[audience].has("churnFlows") && data.churnFlows && (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <div className="mb-4">
-                <h2 className="font-semibold text-slate-900">Churn / Migration Flows</h2>
-                <p className="text-sm text-slate-500 mt-1">Customer migration between competitors</p>
-              </div>
-              <ChurnFlowChart data={data.churnFlows} companies={data.companies} />
-            </div>
-          )}
-          {CHARTS_BY_AUDIENCE[audience].has("dimensionDeltas") && data.dimensionDeltas && (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <div className="mb-4">
-                <h2 className="font-semibold text-slate-900">Score Deltas vs Benchmark</h2>
-                <p className="text-sm text-slate-500 mt-1">Dimension performance vs category average</p>
-              </div>
-              <DimensionDeltasChart data={data.dimensionDeltas} companies={data.companies} />
-            </div>
-          )}
-        </div>
-      )}
 
       {/* Google Finance + News — investors only */}
       {(CHARTS_BY_AUDIENCE[audience].has("financeData") || CHARTS_BY_AUDIENCE[audience].has("newsHeadlines")) && (

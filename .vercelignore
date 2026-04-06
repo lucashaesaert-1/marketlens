@@ -1,0 +1,8 @@
+api/
+resources/
+venv/
+data/
+pipeline.py
+industry_config.py
+requirements.txt
+railway.toml

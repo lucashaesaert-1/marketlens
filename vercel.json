@@ -1,6 +1,5 @@
 {
   "buildCommand": "cd figma_export && npm install && npm run build",
   "outputDirectory": "figma_export/dist",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
-  "functions": {}
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }

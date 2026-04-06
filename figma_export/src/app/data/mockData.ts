@@ -118,6 +118,8 @@ export interface IndustryData {
   executiveBrief?: string;
   /** Customer-facing recommendations — present after Run Analysis */
   customerRecommendations?: { company: string; label: string; reason: string }[];
+  /** Competitor gap analysis for companies audience — present after Run Analysis */
+  competitorGap?: { theme: string; competitor_mentions: string[]; focal_status: string; impact: string; suggestion: string }[];
   _meta?: {
     industry: string;
     totalReviews: number;

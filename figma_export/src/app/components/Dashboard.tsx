@@ -24,10 +24,11 @@ import { StockChartCard } from "./cards/StockChartCard";
 import { GlassdoorCard } from "./cards/GlassdoorCard";
 import { ComparisonTableCard } from "./cards/ComparisonTableCard";
 import { RecommendationCard } from "./cards/RecommendationCard";
+import { CompetitorGapCard } from "./cards/CompetitorGapCard";
 
 const CHARTS_BY_AUDIENCE: Record<Audience, Set<string>> = {
   investors: new Set(["positioning", "sentiment", "shareOfVoice", "churnFlows", "dimensionBenchmarking", "newsHeadlines", "financeData"]),
-  companies: new Set(["radar", "heatmap", "praiseComplaint", "dimensionDeltas", "dimensionBenchmarking", "glassdoorData"]),
+  companies: new Set(["radar", "heatmap", "praiseComplaint", "dimensionDeltas", "dimensionBenchmarking", "glassdoorData", "competitorGap"]),
   customers: new Set(["positioning", "radar", "praiseComplaint", "dimensionBenchmarking", "glassdoorData", "comparisonTable", "recommendations"]),
 };
 
@@ -290,6 +291,23 @@ export function Dashboard() {
             <GlassdoorCard glassdoorData={data.glassdoorData} />
           </div>
           <Source>Source: Glassdoor · via Google Search · SerpAPI</Source>
+        </div>
+      )}
+
+      {/* ── Competitor gap (companies) ── */}
+      {CHARTS_BY_AUDIENCE[audience].has("competitorGap") && data.competitorGap && data.competitorGap.length > 0 && (
+        <div className={`${RULE} border-b border-[#D9D0C7] py-8`}>
+          <h2 className="text-base font-serif font-semibold text-[#1A1816]">Competitor Gap Analysis</h2>
+          <p className="text-sm text-[#66605A] mt-0.5">
+            Themes competitors are praised for that {data.companies[0]?.name ?? "your company"} is missing
+          </p>
+          <div className="mt-5">
+            <CompetitorGapCard
+              gaps={data.competitorGap}
+              focalCompany={data.companies[0]?.name ?? ""}
+            />
+          </div>
+          <Source>Source: Customer reviews · MarketLens AI NLP</Source>
         </div>
       )}
 

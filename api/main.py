@@ -144,6 +144,7 @@ def _industry_payload(industry: str, db: Session, user):
         glassdoor_data=entry.get("glassdoor_data"),
         executive_brief=entry.get("executive_brief"),
         customer_recommendations=entry.get("customer_recommendations"),
+        competitor_gap=entry.get("competitor_gap"),
     )
     if user:
         prof = db.query(UserProfile).filter(UserProfile.user_id == user.id).first()

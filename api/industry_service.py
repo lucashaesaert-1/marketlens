@@ -74,6 +74,7 @@ def build_industry_data(
     glassdoor_data: Optional[dict] = None,
     executive_brief: Optional[str] = None,
     customer_recommendations: Optional[list] = None,
+    competitor_gap: Optional[list] = None,
 ) -> dict:
     cfg = INDUSTRY_CONFIG.get(industry)
     if not cfg:
@@ -227,6 +228,8 @@ def build_industry_data(
         payload["executiveBrief"] = executive_brief
     if customer_recommendations:
         payload["customerRecommendations"] = customer_recommendations
+    if competitor_gap:
+        payload["competitorGap"] = competitor_gap
     return payload
 
 
@@ -309,6 +312,7 @@ def get_industry_cache_entry(industry: str) -> dict[str, Any]:
             "glassdoor_data": enrichments["glassdoor_data"],
             "executive_brief": None,
             "customer_recommendations": None,
+            "competitor_gap": None,
         }
     return _cache[industry]
 
@@ -329,6 +333,7 @@ def set_industry_cache_entry(
     glassdoor_data: Optional[dict] = None,
     executive_brief: Optional[str] = None,
     customer_recommendations: Optional[list] = None,
+    competitor_gap: Optional[list] = None,
 ) -> None:
     cfg = INDUSTRY_CONFIG.get(industry) or {}
     comps = list(cfg.get("companies") or [])
@@ -349,6 +354,7 @@ def set_industry_cache_entry(
     final_glassdoor = glassdoor_data if glassdoor_data is not None else existing.get("glassdoor_data")
     final_brief = executive_brief if executive_brief is not None else existing.get("executive_brief")
     final_recs = customer_recommendations if customer_recommendations is not None else existing.get("customer_recommendations")
+    final_gap = competitor_gap if competitor_gap is not None else existing.get("competitor_gap")
 
     _cache[industry] = {
         "scores": scores,
@@ -363,6 +369,7 @@ def set_industry_cache_entry(
         "glassdoor_data": final_glassdoor,
         "executive_brief": final_brief,
         "customer_recommendations": final_recs,
+        "competitor_gap": final_gap,
     }
 
 

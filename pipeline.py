@@ -454,6 +454,76 @@ def generate_executive_brief(
         return ""
 
 
+COMPETITOR_GAP_PROMPT = """You are a competitive intelligence analyst.
+
+Focal company: {focal}
+Competitors: {competitors}
+
+Below are the top praise and complaint themes extracted from customer reviews, grouped by company.
+{themes_json}
+
+Identify themes that appear positively (as praise) for 2+ competitors but are ABSENT or appear as a complaint for {focal}.
+These are the gaps {focal} needs to close.
+
+Return JSON:
+{{
+  "gaps": [
+    {{
+      "theme": "<short theme name, e.g. 'Mobile App Quality'>",
+      "competitor_mentions": ["<Company A>", "<Company B>"],
+      "focal_status": "absent" | "complained",
+      "impact": "high" | "medium" | "low",
+      "suggestion": "<1 sentence actionable recommendation for {focal}>"
+    }}
+  ]
+}}
+
+Return 3-6 gaps, ranked by impact. Only include real gaps supported by the data."""
+
+
+def generate_competitor_gap(
+    focal: str,
+    competitors: list,
+    praise_complaint_themes: list,
+    client: Any,
+    smart_model: str,
+) -> list:
+    """Identify themes competitors are praised for that the focal company lacks."""
+    if not praise_complaint_themes or not client:
+        return []
+
+    # Build a compact themes summary
+    themes_summary = {}
+    for item in praise_complaint_themes:
+        company = item.get("company", "")
+        themes_summary[company] = {
+            "praised_for": item.get("praiseThemes", []),
+            "complained_about": item.get("complaintThemes", []),
+        }
+
+    prompt = COMPETITOR_GAP_PROMPT.format(
+        focal=focal,
+        competitors=", ".join(competitors),
+        themes_json=json.dumps(themes_summary, separators=(",", ":")),
+    )
+    try:
+        response = client.chat.completions.create(
+            model=smart_model,
+            messages=[{"role": "user", "content": prompt}],
+            response_format={"type": "json_object"},
+            temperature=0.5,
+            max_tokens=800,
+        )
+        raw = response.choices[0].message.content
+        raw = raw.replace("\u2192", "->").replace("\u2013", "-").replace("\u2014", "-")
+        parsed = json.loads(raw)
+        gaps = parsed.get("gaps", [])
+        return gaps if isinstance(gaps, list) else []
+    except Exception as e:
+        print(f"  Warning: competitor gap generation failed: {e}")
+        return []
+
+
 RECOMMENDATION_PROMPT = """You are a market analyst helping a customer choose between competing products.
 
 Vertical: {vertical}

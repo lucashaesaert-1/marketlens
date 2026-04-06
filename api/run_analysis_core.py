@@ -189,7 +189,7 @@ def iter_run_analysis_events(req: RunAnalysisRequest) -> Iterator[dict[str, Any]
     Final event is always stage=complete or stage=error.
     """
     from industry_config import INDUSTRY_CONFIG, MOCK_INSIGHTS_BY_INDUSTRY
-    from pipeline import _env_int, build_client, compute_dimension_scores, generate_insights, generate_executive_brief, generate_recommendation
+    from pipeline import _env_int, build_client, compute_dimension_scores, generate_insights, generate_executive_brief, generate_recommendation, generate_competitor_gap
 
     from api.audience_config import AUDIENCE_CONFIG
     from api.industry_service import set_industry_cache_entry
@@ -376,6 +376,18 @@ def iter_run_analysis_events(req: RunAnalysisRequest) -> Iterator[dict[str, Any]
         if praise_complaint_themes:
             log.info("run_analysis praise/complaint themes extracted industry=%s", industry)
 
+        # 4b) Competitor gap analysis — requires praise/complaint themes
+        competitor_gap = []
+        if praise_complaint_themes:
+            competitor_gap = generate_competitor_gap(
+                focal=focal,
+                competitors=[c for c in companies if c != focal],
+                praise_complaint_themes=praise_complaint_themes,
+                client=client,
+                smart_model=smart,
+            )
+            log.info("run_analysis competitor_gap generated industry=%s gaps=%s", industry, len(competitor_gap))
+
         # 5) Google News headlines for focal company (investor audience)
         news_headlines = None
         try:
@@ -420,6 +432,7 @@ def iter_run_analysis_events(req: RunAnalysisRequest) -> Iterator[dict[str, Any]
             glassdoor_data=glassdoor_data,
             executive_brief=executive_brief or None,
             customer_recommendations=customer_recommendations or None,
+            competitor_gap=competitor_gap or None,
         )
         msg = f"Analysis complete for {industry} (reviews: {fetch_source}). Refresh the dashboard."
         yield {

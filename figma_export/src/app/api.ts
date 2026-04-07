@@ -3,6 +3,43 @@ import { authHeaders } from "./auth";
 
 export const API_BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : "/api";
 
+/** True when the browser could not complete the request (offline, CORS, wrong port, timeout). */
+export function isBrowserNetworkError(err: unknown): boolean {
+  if (err instanceof DOMException && err.name === "AbortError") return true;
+  const msg = err instanceof Error ? err.message : String(err);
+  return (
+    msg === "Failed to fetch" ||
+    msg.includes("NetworkError") ||
+    msg === "Load failed" ||
+    msg.includes("fetch failed")
+  );
+}
+
+/** Maps browser network failures to a short actionable hint (CORS, wrong port, API down). */
+export function describeApiNetworkError(err: unknown): string {
+  if (err instanceof DOMException && err.name === "AbortError") {
+    return (
+      "Request timed out. Check that the API is running and reachable (default backend port 8001). " +
+      "If you use VITE_API_URL, it must match that port."
+    );
+  }
+  const msg = err instanceof Error ? err.message : String(err);
+  if (
+    msg === "Failed to fetch" ||
+    msg.includes("NetworkError") ||
+    msg === "Load failed" ||
+    msg.includes("fetch failed")
+  ) {
+    return (
+      "Cannot reach the API. Start the backend (uvicorn, default port 8001). " +
+      "If the API uses another port, set INSIGHTENGINE_API_PROXY or VITE_DEV_API_PROXY for the Vite proxy, " +
+      "or VITE_API_URL (e.g. http://127.0.0.1:8001) with no trailing slash. " +
+      "Use the same hostname in the address bar as in that URL (localhost vs 127.0.0.1)."
+    );
+  }
+  return msg;
+}
+
 export async function fetchIndustries(): Promise<{ id: string; name: string }[]> {
   const res = await fetch(`${API_BASE}/industries`, { headers: authHeaders() });
   if (!res.ok) throw new Error("Failed to fetch industries");

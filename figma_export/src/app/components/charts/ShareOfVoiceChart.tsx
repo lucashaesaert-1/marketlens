@@ -21,7 +21,11 @@ export function ShareOfVoiceChart({ data, companies }: ShareOfVoiceChartProps) {
   };
 
   return (
-    <div className="w-full h-[400px]">
+    <div className="w-full">
+      <p className="text-xs text-[#66605A] mb-3 leading-relaxed">
+        Tile size = relative Google search interest (last 12 months). A larger tile means more online search volume — a proxy for brand awareness, not a direct review or customer count.
+      </p>
+      <div className="h-[360px]">
       <ResponsiveContainer width="100%" height="100%">
         <Treemap
           data={[treeData]}
@@ -51,6 +55,7 @@ export function ShareOfVoiceChart({ data, companies }: ShareOfVoiceChartProps) {
           />
         </Treemap>
       </ResponsiveContainer>
+      </div>
     </div>
   );
 }

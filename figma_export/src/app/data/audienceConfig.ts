@@ -43,7 +43,6 @@ export const audienceConfig: Record<Audience, AudienceConfig> = {
     resources: [
       { id: "serpapi-news", name: "Google News (SerpAPI)", type: "api", status: "integrated", notes: "Live headlines for focal company" },
       { id: "serpapi-finance", name: "Google Finance (SerpAPI)", type: "api", status: "integrated", notes: "Live stock quotes for public companies" },
-      { id: "factset", name: "FactSet", type: "api", status: "planned", notes: "Financial data, comparables" },
     ],
   },
   companies: {

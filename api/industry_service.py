@@ -12,7 +12,25 @@ from fastapi import HTTPException
 from industry_config import INDUSTRY_CONFIG, MOCK_INSIGHTS_BY_INDUSTRY
 
 QUARTERS = ["Q1 24", "Q2 24", "Q3 24", "Q4 24", "Q1 25", "Q2 25", "Q3 25", "Q4 25", "Q1 26"]
-SENTIMENT_TREND_QUARTERS = QUARTERS[-6:]  # The 6 quarters shown in the chart
+
+_MONTH_ABBR = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+
+def _generate_monthly_labels(n: int = 24) -> list:
+    """Return last N calendar-month labels like \"Apr '24\", oldest first."""
+    from datetime import date
+    today = date.today()
+    result = []
+    for i in range(n - 1, -1, -1):
+        m = today.month - 1 - i          # 0-indexed offset (may be negative)
+        year = today.year + m // 12
+        m_idx = m % 12
+        result.append(f"{_MONTH_ABBR[m_idx]} '{str(year)[2:]}")
+    return result
+
+
+SENTIMENT_TREND_QUARTERS = _generate_monthly_labels(24)  # 2-year monthly window
 
 
 def to_id(name: str) -> str:
@@ -46,14 +64,17 @@ def load_review_counts_from_industry_file(industry: str) -> Optional[dict[str, i
 
 
 def _synthetic_sentiment(scores: dict, companies: list) -> list:
+    labels = SENTIMENT_TREND_QUARTERS
     trends = []
-    for i, q in enumerate(QUARTERS[-6:]):
+    n = len(labels)
+    for i, q in enumerate(labels):
         row = {"month": q}
         for c in companies:
             sc = scores.get(c, {})
             vals = [v for v in sc.values() if isinstance(v, (int, float))]
             avg = sum(vals) / len(vals) if vals else 70
-            jitter = (i - 2) * 1.5
+            # Gentle synthetic drift across the time window
+            jitter = (i - n / 2) * 1.2 / max(n, 1)
             row[to_id(c)] = round((avg / 50 - 1) + jitter / 100, 2)
         trends.append(row)
     return trends
@@ -136,14 +157,18 @@ def build_industry_data(
         key = audience_map.get(aud, "companies")
         conf = ins.get("confidence", "Medium")
         impact = "high" if conf == "High" else "medium" if conf == "Medium" else "low"
-        insights_by_audience[key].append({
+        insight_dict: dict = {
             "type": "trend",
             "title": ins.get("title", ""),
             "description": ins.get("body", ""),
             "impact": impact,
             "metrics": [ins.get("action", "")] if ins.get("action") else [],
             "source": "pipeline",
-        })
+        }
+        if ins.get("low_confidence"):
+            insight_dict["low_confidence"] = True
+            insight_dict["confidence_reason"] = ins.get("confidence_reason", "")
+        insights_by_audience[key].append(insight_dict)
 
     # Use real LLM-extracted themes when available (passed from pipeline);
     # fall back to the score-sum formula only when no real themes exist.

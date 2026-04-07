@@ -31,7 +31,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from collections import defaultdict
 from datetime import datetime
-from typing import Optional, Tuple
+from typing import Any, Optional, Tuple
 
 try:
     from groq import Groq
@@ -611,6 +611,86 @@ def select_representative_reviews(
             })
 
     return result
+
+
+VALIDATION_PROMPT = """You are a strict fact-checker reviewing market intelligence insights.
+
+Dimension scores (0-100 per company, higher = better):
+{scores_json}
+
+Insights to review:
+{insights_json}
+
+For each insight, check: does the body/title make claims that are contradicted by the scores above?
+Flag ONLY insights that contain a clear factual error (e.g. claims a company leads a dimension when
+scores show it doesn't, or invents a company not in the scores).
+
+Return JSON:
+{{
+  "flags": [
+    {{
+      "index": <int — 0-based index of the flagged insight>,
+      "reason": "<one sentence: what specifically is inconsistent>"
+    }}
+  ]
+}}
+
+Return an empty list if all insights are consistent. Do NOT flag insights just because they are
+cautious, hedged, or strategic — only flag direct score contradictions."""
+
+
+def validate_insights(
+    insights: list,
+    scores: dict,
+    client: Any,
+    smart_model: str,
+) -> list:
+    """
+    Second-pass validation: flag insights that contradict the dimension scores.
+    Returns the same list with low_confidence=True + confidence_reason added to flagged items.
+    Silent fallback — if LLM call fails, returns insights unchanged.
+    """
+    if not insights or client is None:
+        return insights
+
+    summaries = [
+        {"index": i, "title": ins.get("title", ""), "body": ins.get("body", "")}
+        for i, ins in enumerate(insights)
+    ]
+    prompt = VALIDATION_PROMPT.format(
+        scores_json=json.dumps(scores, separators=(",", ":")),
+        insights_json=json.dumps(summaries, separators=(",", ":")),
+    )
+    try:
+        response = client.chat.completions.create(
+            model=smart_model,
+            messages=[{"role": "user", "content": prompt}],
+            response_format={"type": "json_object"},
+            temperature=0,
+            max_tokens=768,
+        )
+        raw = response.choices[0].message.content
+        raw = raw.replace("\u2192", "->").replace("\u2013", "-").replace("\u2014", "-")
+        parsed = json.loads(raw)
+        flags = parsed.get("flags", [])
+        if not isinstance(flags, list):
+            return insights
+        flagged = {
+            int(f["index"]): str(f.get("reason", ""))
+            for f in flags
+            if isinstance(f.get("index"), int)
+        }
+        result = []
+        for i, ins in enumerate(insights):
+            if i in flagged:
+                ins = dict(ins)
+                ins["low_confidence"] = True
+                ins["confidence_reason"] = flagged[i]
+            result.append(ins)
+        return result
+    except Exception as e:
+        print(f"  Warning: insight validation failed: {e}")
+        return insights
 
 
 def generate_recommendation(

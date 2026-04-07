@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Send, Loader2 } from "lucide-react";
 import { authHeaders } from "../auth";
-import { API_BASE } from "../api";
+import { API_BASE, describeApiNetworkError } from "../api";
 import { cn } from "./ui/utils";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
@@ -18,11 +18,16 @@ async function streamChat(
   audience: string | null,
   onToken: (t: string) => void
 ): Promise<void> {
-  const res = await fetch(`${API_BASE}/chat/stream`, {
-    method: "POST",
-    headers: authHeaders(),
-    body: JSON.stringify({ session_id: sessionId, industry, audience, content }),
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}/chat/stream`, {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify({ session_id: sessionId, industry, audience, content }),
+    });
+  } catch (e) {
+    throw new Error(describeApiNetworkError(e));
+  }
   if (!res.ok) {
     const err = await res.text();
     throw new Error(err || `Chat failed: ${res.status}`);
@@ -61,8 +66,9 @@ export function ChatPanel(props: {
   title?: string;
   disclaimer?: string;
   className?: string;
+  onMessagesChange?: (messages: Msg[]) => void;
 }) {
-  const { sessionId, industry, audience, guidedQuestions, title = "Ask MarketLens", disclaimer, className } = props;
+  const { sessionId, industry, audience, guidedQuestions, title = "Ask MarketLens", disclaimer, className, onMessagesChange } = props;
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
@@ -70,7 +76,8 @@ export function ChatPanel(props: {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    onMessagesChange?.(messages);
+  }, [messages, onMessagesChange]);
 
   const send = async (text: string) => {
     const t = text.slice(0, MAX_LEN).trim();

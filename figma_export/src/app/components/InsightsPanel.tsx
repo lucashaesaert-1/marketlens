@@ -1,5 +1,5 @@
 import { Insight } from "../data/mockData";
-import { TrendingUp, AlertTriangle, Zap, ArrowUpRight } from "lucide-react";
+import { TrendingUp, AlertTriangle, Zap, ArrowUpRight, AlertCircle } from "lucide-react";
 
 interface InsightsPanelProps {
   insights: Insight[];
@@ -94,6 +94,16 @@ function InsightCard({ insight }: { insight: Insight }) {
           {impact.label}
         </span>
       </div>
+
+      {/* Low confidence badge */}
+      {insight.low_confidence && (
+        <div className="mt-3 flex items-start gap-1.5 bg-amber-50 border border-amber-200 rounded px-2 py-1.5">
+          <AlertCircle className="w-3 h-3 text-amber-600 shrink-0 mt-0.5" />
+          <span className="text-xs text-amber-700 leading-snug">
+            {insight.confidence_reason || "Low confidence — verify against source data"}
+          </span>
+        </div>
+      )}
     </div>
   );
 }

@@ -373,25 +373,68 @@ All backend routes are prefixed at `http://localhost:8001`.
 - **Python 3.9** — the venv is Python 3.9. Use `Optional[X]` not `X | None`, `Dict[...]` not `dict[...]` in annotations when writing new code, or use `from __future__ import annotations`.
 
 ### Branch State
-- Current branch: `_lucasbranch`
-- Main branch: `fabrizio`
-- PRs should target `fabrizio`
+- Working branch: `fabrizio` (all work happens here, this is the main branch)
+- Remote: `origin` → `https://github.com/lucashaesaert-1/marketlens.git` (Lucas's repo — the only target)
+- **NEVER push to Fabrizio's repo** — that remote no longer exists in this folder (`~/Desktop/marketlens`)
+
+---
+
+## Product Roadmap — Planned Improvements
+
+> Decided 2026-04-06. Implement phases in order — each phase is independently shippable.
+
+### Phase 1 — High-impact visual wins (demo-ready)
+| # | Feature | Files touched |
+|---|---|---|
+| 1a | **Executive Brief** — single flowing paragraph above InsightsPanel; collapsible toggle to show/hide insight cards below | `pipeline.py`, `industry_service.py`, `InsightsPanel.tsx`, `mockData.ts` |
+| 1b | **Consistent company color system** — one canonical color per company per industry, applied to all charts, cards, and labels | `theme.css`, all chart components, `Dashboard.tsx` |
+| 1c | **Customer comparison table** — companies as columns, dimensions as rows, winner highlighted per row | new `components/cards/ComparisonTableCard.tsx`, `Dashboard.tsx`, `mockData.ts` |
+| 1d | **Customer recommendation card** — "Based on your priorities: X is best for Y" LLM-generated card | new `components/cards/RecommendationCard.tsx`, `pipeline.py` |
+
+### Phase 2 — Investor view
+| # | Feature | Notes |
+|---|---|---|
+| 2a | **Stock chart replacement** — overlaid line chart (all companies), 5-year monthly data from Alpha Vantage `TIME_SERIES_MONTHLY_ADJUSTED`, toggle: actual price vs. % change from start | Replaces `FinanceDataCard` table. Alpha Vantage free tier: 25 req/day — fetch once, cache. |
+| 2b | **PE / PEG ratio display** — shown below the stock chart | Alpha Vantage `OVERVIEW` endpoint per ticker; add to finance payload |
+| 2c | **Event annotation pins on stock chart** — match news headline dates to the price series (Yahoo Finance style) | Join `news_headlines` dates with `TIME_SERIES_MONTHLY` data |
+| 2d | **Sentiment chart time toggle** — 1M / 3M / 6M / 1Y buttons; Google Trends proxy via SerpAPI for now | Store multiple windows in cache; fetch all on run-analysis |
+| 2e | **Remove FactSet** — delete placeholder from `adapters.py` and `audienceConfig.ts` | Simple cleanup |
+| 2f | **Share of Voice — add explanation tooltip** then decide keep/kill after seeing it labelled properly | `ShareOfVoiceChart.tsx` |
+
+### Phase 3 — Companies view
+| # | Feature | Notes |
+|---|---|---|
+| 3a | **Competitor gap card** — standalone card: themes present in competitor reviews but absent in focal company's reviews. LLM pass after scoring. | new `components/cards/CompetitorGapCard.tsx`, `pipeline.py`, `mockData.ts` |
+| 3b | **50 reviews scored, curated display** — fetch up to 50 reviews, score all, then LLM-select most representative 10-15 to show as quotes | Tune `PIPELINE_MAX_REVIEWS=50`. Add curation pass in `pipeline.py`. |
+
+### Phase 4 — LLM improvements
+| # | Feature | Notes |
+|---|---|---|
+| 4a | **LLM Council** — 3 parallel Groq calls with different system prompts (Bull / Bear / Analyst), audience-specific advocacy: investors=most investable company, companies=what actions to take, customers=which company to pick. Council declares a winner. Show synthesis prominently, dissenting views collapsible. | `pipeline.py`, new `council_service.py`, new `CouncilCard.tsx` |
+| 4b | **Onboarding chat → insight context** — extract user perspective from onboarding transcript (stateless, no DB), pass as additional system context to `generate_insights()` in the run-analysis pipeline | `personalization.py`, `run_analysis_core.py`, `chat_service.py` |
+| 4c | **Validation layer** — after LLM insight generation, run a second Groq call to check for inconsistencies / hallucinated companies. Flag with "low confidence" badge on the card. Silent auto-fix where safe. Flag is more important than fix — must not break existing flow. | `pipeline.py`, `InsightCard.tsx` |
+
+### Phase 5 — Late stage
+| # | Feature | Notes |
+|---|---|---|
+| 5a | **Reddit / StockTwits sentiment scraper** — replace Google Trends proxy with real investor sentiment for the sentiment chart | New `resources/reddit_adapter.py` or Apify Reddit actor |
+
+### Key decisions made
+- **No per-user DB storage** — all personalization is stateless. Demo account (`demo@marketlens.ai`) is the primary use case.
+- **Groq for all LLM Council calls** — no OpenRouter dependency for now. 3 parallel calls to `llama-3.3-70b-versatile` with different system prompts.
+- **Stock chart replaces** the current `FinanceDataCard` table entirely.
+- **Company color palette** — keep the current per-industry varied palette style; just make it consistent (same company = same color in every chart on that page).
+- **Validation flags over silent fixes** — a "low confidence" badge must always appear when the validator disagrees; silent fix is optional and only applied when the LLM is >90% confident in the correction.
 
 ---
 
 ## Git Workflow
 
 ```bash
-# Before starting work
-git pull origin fabrizio
-git checkout _lucasbranch
-git merge fabrizio  # keep your branch up to date
-
-# After making changes
+# After making changes — push to Lucas's GitHub only
 git add <specific files>  # never git add -A blindly — .env must never be committed
 git commit -m "feat: description"
-git push origin _lucasbranch
-# Open PR targeting fabrizio
+git push origin fabrizio
 ```
 
 **Never commit `.env`** — it contains live API keys. It is gitignored.

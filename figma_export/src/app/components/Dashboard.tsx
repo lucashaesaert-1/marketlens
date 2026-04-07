@@ -184,8 +184,8 @@ export function Dashboard() {
         {CHARTS_BY_AUDIENCE[audience].has("sentiment") && (
           <div className="py-8 flex flex-col">
             <h2 className="text-base font-serif font-semibold text-[#1A1816]">Sentiment Trends</h2>
-            <p className="text-sm text-[#66605A] mt-0.5">6-month customer sentiment index</p>
-            <div className="flex-1 min-h-[300px] mt-5">
+            <p className="text-sm text-[#66605A] mt-0.5">Customer sentiment index over time</p>
+            <div className="flex-1 min-h-[360px] mt-5">
               <SentimentAnalysis trends={data.sentimentTrends} companies={data.companies} />
             </div>
             <Source>Source: Google Trends · SerpAPI</Source>

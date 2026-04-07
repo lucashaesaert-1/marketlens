@@ -71,11 +71,14 @@ export function Layout() {
     setAnalysisRunning(true);
     setAnalysisMessage(null);
     setAnalysisStage(null);
+    // Pick up onboarding context saved during setup (persists for the browser tab session)
+    const userContext = sessionStorage.getItem("onboarding_user_context") ?? undefined;
     try {
       await runAnalysisStream(currentIndustry, {
         provider: llmProvider,
         resourceKeys: trustpilotKey ? { trustpilot: trustpilotKey } : undefined,
         audience: currentAudience,
+        userContext,
         onEvent: (e) => {
           if (e.message) setAnalysisStage(e.message);
         },

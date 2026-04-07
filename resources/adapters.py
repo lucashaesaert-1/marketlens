@@ -371,17 +371,6 @@ def trustpilot_fetch_reviews(
         return None
 
 
-# ── FactSet (placeholder) ────────────────────────────────────────────────────
-
-
-def factset_fetch_comparables(
-    ticker: str,
-    api_key: Optional[str] = None,
-) -> Optional[dict]:
-    """Placeholder. FactSet API requires enterprise setup."""
-    return None
-
-
 # ── Glassdoor (placeholder) ───────────────────────────────────────────────────
 
 

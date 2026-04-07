@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Building2, Loader2, TrendingUp, Users } from "lucide-react";
 import { authHeaders } from "../auth";
-import { fetchIndustries, API_BASE } from "../api";
+import { fetchIndustries, API_BASE, describeApiNetworkError } from "../api";
 import type { Audience } from "../data/mockData";
 import { audienceDescriptions } from "../data/mockData";
 import { ChatPanel } from "./ChatPanel";
@@ -40,6 +40,7 @@ export function OnboardingPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [chatMessages, setChatMessages] = useState<{ role: string; content: string }[]>([]);
 
   useEffect(() => {
     fetchIndustries()
@@ -77,7 +78,7 @@ export function OnboardingPage() {
         const j = await res.json();
         setSessionId(j.session_id);
       } catch (e) {
-        setErr(e instanceof Error ? e.message : "Session error");
+        setErr(describeApiNetworkError(e));
       } finally {
         setLoading(false);
       }
@@ -96,6 +97,21 @@ export function OnboardingPage() {
     setSubmitting(true);
     setErr(null);
     try {
+      // Save onboarding context to sessionStorage so Run Analysis can use it
+      const userTurns = chatMessages
+        .filter((m) => m.role === "user")
+        .map((m) => m.content)
+        .join(" | ");
+      if (userTurns) {
+        const ctx = `Audience: ${audience}. Industry: ${industry}. User asked: ${userTurns}`;
+        sessionStorage.setItem("onboarding_user_context", ctx.slice(0, 800));
+      } else {
+        sessionStorage.setItem(
+          "onboarding_user_context",
+          `Audience: ${audience}. Industry: ${industry}.`
+        );
+      }
+
       const res = await fetch(`${API_BASE}/onboarding/complete`, {
         method: "POST",
         headers: authHeaders(),
@@ -112,7 +128,7 @@ export function OnboardingPage() {
       // Full load so ProtectedLayout reads fresh profile (server has onboarding_completed=true)
       window.location.assign(`/${industry}/${audience}`);
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Failed");
+      setErr(describeApiNetworkError(e));
     } finally {
       setSubmitting(false);
     }
@@ -132,7 +148,8 @@ export function OnboardingPage() {
         <div className="max-w-md w-full bg-white rounded-xl border border-slate-200 shadow-sm p-6 text-center">
           <h1 className="text-lg font-semibold text-slate-900">Couldn&apos;t start setup</h1>
           <p className="text-sm text-slate-600 mt-2">
-            {err || "Chat session could not be created. Is the API running (port 8001) and are you signed in?"}
+            {err ||
+              "Chat session could not be created. Is the API running (port 8001 by default) and are you signed in?"}
           </p>
           <Button
             type="button"
@@ -156,7 +173,7 @@ export function OnboardingPage() {
                   if (j.session_id != null) setSessionId(j.session_id);
                   else setErr("Invalid response from server");
                 })
-                .catch((e: unknown) => setErr(e instanceof Error ? e.message : "Session error"))
+                .catch((e: unknown) => setErr(describeApiNetworkError(e)))
                 .finally(() => setLoading(false));
             }}
           >
@@ -263,6 +280,7 @@ export function OnboardingPage() {
               title="Onboarding assistant"
               disclaimer="Not financial advice. For research only. Max 1000 characters per message."
               className="flex-1 lg:min-h-[560px]"
+              onMessagesChange={setChatMessages}
             />
           </div>
         </div>

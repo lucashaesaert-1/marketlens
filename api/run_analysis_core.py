@@ -29,15 +29,22 @@ def _sentiment_from_reviews(
     Returns the same shape as _synthetic_sentiment() or None if reviews lack dates.
     """
     # Map "YYYY-MM" prefix → quarter label
+    _MONTH_ABBR = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
     def _month_to_quarter(date_str: str) -> Optional[str]:
         try:
             year, month = int(date_str[:4]), int(date_str[5:7])
         except (ValueError, IndexError):
             return None
-        q = (month - 1) // 3 + 1
         short_year = str(year)[2:]
-        label = f"Q{q} {short_year}"
-        return label if label in quarters else None
+        # Try monthly label first ("Apr '26"), then quarterly ("Q2 26") for backwards compat
+        monthly_label = f"{_MONTH_ABBR[month - 1]} '{short_year}"
+        if monthly_label in quarters:
+            return monthly_label
+        q = (month - 1) // 3 + 1
+        quarterly_label = f"Q{q} {short_year}"
+        return quarterly_label if quarterly_label in quarters else None
 
     # Accumulate ratings per (company, quarter)
     sums: dict = defaultdict(lambda: defaultdict(float))
@@ -191,7 +198,7 @@ def iter_run_analysis_events(req: RunAnalysisRequest) -> Iterator[dict[str, Any]
     Final event is always stage=complete or stage=error.
     """
     from industry_config import INDUSTRY_CONFIG, MOCK_INSIGHTS_BY_INDUSTRY
-    from pipeline import _env_int, build_client, compute_dimension_scores, generate_insights, generate_executive_brief, generate_recommendation, generate_competitor_gap, select_representative_reviews
+    from pipeline import _env_int, build_client, compute_dimension_scores, generate_insights, generate_executive_brief, generate_recommendation, generate_competitor_gap, select_representative_reviews, validate_insights
 
     from api.audience_config import AUDIENCE_CONFIG
     from api.industry_service import set_industry_cache_entry
@@ -333,6 +340,10 @@ def iter_run_analysis_events(req: RunAnalysisRequest) -> Iterator[dict[str, Any]
             industry,
             int((time.perf_counter() - t_ins) * 1000),
         )
+
+        # Validation pass — flags insights that contradict the scores
+        insights = validate_insights(insights, scores, client, smart)
+        log.info("run_analysis validation_done industry=%s", industry)
 
         executive_brief = generate_executive_brief(
             scores,

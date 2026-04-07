@@ -30,6 +30,9 @@ export interface Insight {
   metrics?: string[];
   /** pipeline = default analysis; chat = from onboarding/dashboard conversation */
   source?: "pipeline" | "chat";
+  /** Set by the validation layer when this insight may contradict the underlying scores */
+  low_confidence?: boolean;
+  confidence_reason?: string;
 }
 
 export interface PraiseComplaintTheme {
